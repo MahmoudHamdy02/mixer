@@ -7,6 +7,12 @@ qt_standard_project_setup()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(PMP_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(PMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(PMP_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(PMP_BUILD_VIS OFF CACHE BOOL "" FORCE)
+add_subdirectory(external/pmp-library)
+
 set(UI_SOURCES
     UI/mainwindow.cpp
     UI/mainwindow.h
@@ -25,6 +31,7 @@ target_link_libraries(mixer
         Qt::Core
         Qt::Widgets
         Qt::OpenGLWidgets
+        pmp
 )
 
 include(GNUInstallDirs)
