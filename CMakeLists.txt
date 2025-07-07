@@ -7,11 +7,15 @@ qt_standard_project_setup()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+set(UI_SOURCES
+    UI/mainwindow.cpp
+    UI/mainwindow.h
+)
+
 qt_add_executable(mixer
     WIN32 MACOSX_BUNDLE
     main.cpp
-    mainwindow.cpp
-    mainwindow.h
+    ${UI_SOURCES}
 )
 
 target_link_libraries(mixer
