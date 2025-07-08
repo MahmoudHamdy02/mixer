@@ -1,6 +1,7 @@
 #include "renderer.h"
 
 #include <qfile.h>
+#include <qlogging.h>
 
 #include "mesh.h"
 #include "meshgl.h"
@@ -13,8 +14,16 @@ void Renderer::initialize()
 {
     initializeOpenGLFunctions();
 
+    // Setup shaders
     shader = new Shader(":/Renderer/Shaders/vertex.glsl", ":/Renderer/Shaders/fragment.glsl");
     shader->use();
+
+    // Setup model and view matrices
+    // Projection is set in resize() as it is called automatically on startup
+    model = pmp::mat4::identity();
+    shader->setMatrix4("model", model.data());
+    view = pmp::translation_matrix(pmp::vec3(0.0f, 0.0f, -3.0f));
+    shader->setMatrix4("view", view.data());
 
     // Triangle vertices
     float vertices[] = {
@@ -42,6 +51,8 @@ void Renderer::initialize()
 
 void Renderer::resize(int width, int height)
 {
+    projection = pmp::perspective_matrix(45.0f, (float)width / height, 0.1f, 500.0f);
+    shader->setMatrix4("projection", projection.data());
     glViewport(0, 0, width, height);
 }
 
