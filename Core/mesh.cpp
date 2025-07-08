@@ -6,14 +6,14 @@ Mesh::Mesh()
 {
     // Define 8 cube corners
     std::vector<pmp::Point> vertices = {
-        pmp::Point(-0.1, -0.1, -0.1),  // 0
-        pmp::Point(0.1, -0.1, -0.1),   // 0.1
-        pmp::Point(0.1, 0.1, -0.1),    // 2
-        pmp::Point(-0.1, 0.1, -0.1),   // 3
-        pmp::Point(-0.1, -0.1, 0.1),   // 4
-        pmp::Point(0.1, -0.1, 0.1),    // 5
-        pmp::Point(0.1, 0.1, 0.1),     // 6
-        pmp::Point(-0.1, 0.1, 0.1)     // 7
+        pmp::Point(-1, -1, -1),  // 0
+        pmp::Point(1, -1, -1),   // 1
+        pmp::Point(1, 1, -1),    // 2
+        pmp::Point(-1, 1, -1),   // 3
+        pmp::Point(-1, -1, 1),   // 4
+        pmp::Point(1, -1, 1),    // 5
+        pmp::Point(1, 1, 1),     // 6
+        pmp::Point(-1, 1, 1)     // 7
     };
 
     // Add vertices to the mesh

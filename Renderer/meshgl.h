@@ -4,7 +4,7 @@
 
 #include "mesh.h"
 
-class MeshGL : public QOpenGLExtraFunctions
+class MeshGL : private QOpenGLExtraFunctions
 {
     unsigned int VBO, VAO, EBO;
     unsigned int numIndices;
