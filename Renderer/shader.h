@@ -1,5 +1,6 @@
 #pragma once
 
+#include <GL/gl.h>
 #include <qopenglextrafunctions.h>
 
 #include <string>
@@ -18,5 +19,5 @@ public:
     void setMatrix4(const std::string &name, float *value);
 
 private:
-    void checkCompileErrors(unsigned int shader, std::string type);
+    GLuint compileShader(const char *source, GLenum type);
 };

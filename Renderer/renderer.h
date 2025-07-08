@@ -8,6 +8,7 @@
 #include "meshgl.h"
 #include "pmp/mat_vec.h"
 #include "scenecontroller.h"
+#include "shader.h"
 
 class Renderer : public QOpenGLExtraFunctions
 {
@@ -19,12 +20,8 @@ class Renderer : public QOpenGLExtraFunctions
     pmp::mat4 model;
 
     std::vector<MeshGL> meshGLs;
-
+    Shader* shader;
     GLuint VAO, VBO;
-    GLuint shaderProgram;
-
-    GLuint compileShader(const char* source, GLenum type);
-    GLuint createShaderProgram();
 
 public:
     Renderer(SceneController* scene);
