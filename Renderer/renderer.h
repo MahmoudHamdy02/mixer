@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "camera.h"
+#include "grid.h"
 #include "meshgl.h"
 #include "pmp/mat_vec.h"
 #include "scenecontroller.h"
@@ -24,14 +25,7 @@ class Renderer : private QOpenGLExtraFunctions
     Shader* shader;
     GLuint VAO, VBO;
 
-    struct Grid {
-        GLuint VAO, VBO;
-        Shader* shader;
-    };
-    Grid grid;
-
-    void setupGrid();
-    void renderGrid();
+    std::unique_ptr<Grid> grid;
 
 public:
     Renderer(SceneController* scene);

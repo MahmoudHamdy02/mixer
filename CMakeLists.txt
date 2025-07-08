@@ -29,6 +29,8 @@ set(RENDERER_SOURCES
     Renderer/shader.h
     Renderer/camera.cpp
     Renderer/camera.h
+    Renderer/grid.cpp
+    Renderer/grid.h
 )
 
 set(CORE_SOURCES
