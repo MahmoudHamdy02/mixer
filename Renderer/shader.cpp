@@ -44,27 +44,27 @@ void Shader::use()
 // utility uniform functions
 void Shader::setBool(const std::string &name, bool value)
 {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
+    glProgramUniform1i(ID, glGetUniformLocation(ID, name.c_str()), (int)value);
 }
 
 void Shader::setInt(const std::string &name, int value)
 {
-    glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
+    glProgramUniform1i(ID, glGetUniformLocation(ID, name.c_str()), value);
 }
 
 void Shader::setFloat(const std::string &name, float value)
 {
-    glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
+    glProgramUniform1f(ID, glGetUniformLocation(ID, name.c_str()), value);
 }
 
 void Shader::setVec3(const std::string &name, float v1, float v2, float v3)
 {
-    glUniform3f(glGetUniformLocation(ID, name.c_str()), v1, v2, v3);
+    glProgramUniform3f(ID, glGetUniformLocation(ID, name.c_str()), v1, v2, v3);
 }
 
 void Shader::setMatrix4(const std::string &name, float *value)
 {
-    glUniformMatrix4fv(glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, value);
+    glProgramUniformMatrix4fv(ID, glGetUniformLocation(ID, name.c_str()), 1, GL_FALSE, value);
 }
 
 GLuint Shader::compileShader(const char *source, GLenum type)

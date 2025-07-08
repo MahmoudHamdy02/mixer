@@ -66,6 +66,7 @@ void Renderer::resize(int width, int height)
 {
     projection = pmp::perspective_matrix(45.0f, (float)width / height, 0.1f, 100.0f);
     shader->setMatrix4("projection", projection.data());
+    grid.shader->setMatrix4("projection", projection.data());
     glViewport(0, 0, width, height);
 }
 
@@ -96,9 +97,6 @@ void Renderer::renderGrid()
 {
     glBindVertexArray(grid.VAO);
     grid.shader->use();
-    // TODO: This should be static
-    grid.shader->setMatrix4("projection", projection.data());
-    grid.shader->setMatrix4("view", view.data());
     glDrawArrays(GL_TRIANGLES, 0, 6);
 }
 
@@ -111,6 +109,7 @@ void Renderer::render()
     // Set camera view matrix
     view = camera.GetViewMatrix();
     shader->setMatrix4("view", view.data());
+    grid.shader->setMatrix4("view", view.data());
 
     glBindVertexArray(VAO);
     glDrawArrays(GL_TRIANGLES, 0, 36);
