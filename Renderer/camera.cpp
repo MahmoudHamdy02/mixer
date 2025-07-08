@@ -1,6 +1,7 @@
 #include "camera.h"
 
 #include <iostream>
+#include <numbers>
 
 #include "pmp/mat_vec.h"
 
@@ -24,13 +25,16 @@ void Camera::processMouse(float xOffset, float yOffset)
     yaw = fmod(yaw + xOffset, 360.f);
     pitch += yOffset;
 
+    std::cout << pitch << " " << yaw << std::endl;
+
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
 
+    float rad = std::numbers::pi / 180.0f;
     pmp::vec3 direction;
-    direction[0] = cos(yaw) * cos(pitch);
-    direction[1] = sin(pitch);
-    direction[2] = sin(yaw) * cos(pitch);
+    direction[0] = cos(yaw * rad) * cos(pitch * rad);
+    direction[1] = sin(pitch * rad);
+    direction[2] = sin(yaw * rad) * cos(pitch * rad);
     position = target + pmp::normalize(direction) * distance;
     front = pmp::normalize(position * -1.0f);
 }

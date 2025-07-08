@@ -12,8 +12,8 @@ class Camera
     pmp::vec3 up = pmp::vec3(0.0f, 1.0f, 0.0f);
 
 public:
-    float distance = 100.0f;
-    pmp::vec3 position = pmp::vec3(20.0f, 20.0f, distance - 1000.0f);
+    float distance = 10.0f;
+    pmp::vec3 position = pmp::vec3(0.0f, 0.0f, distance);
     pmp::vec3 front = pmp::vec3(0.0f, 0.0f, -1.0f);
     pmp::vec3 target = pmp::vec3(0.0f);
     pmp::mat4 GetViewMatrix();

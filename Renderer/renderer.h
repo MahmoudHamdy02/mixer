@@ -28,4 +28,6 @@ public:
     void initialize();
     void resize(int width, int height);
     void render();
+
+    void moveCamera(float offsetX, float offsetY);
 };
