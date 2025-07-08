@@ -8,19 +8,18 @@
 #include "meshgl.h"
 #include "pmp/mat_vec.h"
 #include "scenecontroller.h"
-#include "shader.h"
 
 class Renderer : public QOpenGLExtraFunctions
 {
     SceneController* scene;
 
     Camera camera;
-    Shader* shader;
     pmp::mat4 projection;
     pmp::mat4 view;
     pmp::mat4 model;
 
     std::vector<MeshGL> meshGLs;
+
     GLuint VAO, VBO;
     GLuint shaderProgram;
 

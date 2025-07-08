@@ -38,12 +38,15 @@ set(CORE_SOURCES
     Core/mesh.h
 )
 
+qt_add_resources(RESOURCES resources.qrc)
+
 qt_add_executable(mixer
     WIN32 MACOSX_BUNDLE
     main.cpp
     ${UI_SOURCES}
     ${RENDERER_SOURCES}
     ${CORE_SOURCES}
+    ${RESOURCES}
 )
 
 target_include_directories(mixer

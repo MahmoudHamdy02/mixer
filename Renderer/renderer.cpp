@@ -2,12 +2,9 @@
 
 #include <qfile.h>
 
-#include <iostream>
-
 #include "mesh.h"
 #include "meshgl.h"
 #include "pmp/mat_vec.h"
-#include "shader.h"
 
 Renderer::Renderer(SceneController* scene) : scene(scene) {}
 
@@ -72,8 +69,8 @@ GLuint Renderer::compileShader(const char* source, GLenum type)
 GLuint Renderer::createShaderProgram()
 {
     // Read shaders from file
-    QFile vfile("/home/mahmoud/Work/Projects/CG/mixer/Renderer/Shaders/vertex.glsl");
-    QFile ffile("/home/mahmoud/Work/Projects/CG/mixer/Renderer/Shaders/fragment.glsl");
+    QFile vfile(":/Renderer/Shaders/vertex.glsl");
+    QFile ffile(":/Renderer/Shaders/fragment.glsl");
     vfile.open(QIODevice::ReadOnly | QIODevice::Text);
     ffile.open(QIODevice::ReadOnly | QIODevice::Text);
     QByteArray vsrc = vfile.readAll();
