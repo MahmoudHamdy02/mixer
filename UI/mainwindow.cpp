@@ -5,18 +5,23 @@
 #include <qwidget.h>
 
 #include "Widgets/glwidget.h"
+#include "renderer.h"
 
-MainWindow::MainWindow(QWidget* parent) : QMainWindow(parent)
+MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent)
 {
     setupMenubar();
 
     QWidget* central = new QWidget(this);
-    layout = new QHBoxLayout(central);
+    QHBoxLayout* layout = new QHBoxLayout(central);
     layout->setContentsMargins(0, 0, 0, 0);
-    setCentralWidget(central);
 
-    glWidget = new GLWidget(this);
+    // Correct parent: pass central
+    glWidget = new GLWidget(renderer, central);
+    glWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     layout->addWidget(glWidget);
+
+    central->setLayout(layout);  // make sure layout is set
+    setCentralWidget(central);
 }
 
 MainWindow::~MainWindow() {}

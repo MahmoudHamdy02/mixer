@@ -1,18 +1,22 @@
 #include "glwidget.h"
 
-#include <GL/gl.h>
 #include <qopenglwidget.h>
 
-GLWidget::GLWidget(QWidget* parent) : QOpenGLWidget(parent) {}
+#include "renderer.h"
+
+GLWidget::GLWidget(Renderer* renderer, QWidget* parent) : QOpenGLWidget(parent), renderer(renderer) {}
 
 void GLWidget::initializeGL()
 {
-    glClearColor(0.1f, 0.1f, 0.15f, 1.0f);
+    renderer->initialize();
 }
 
-void GLWidget::resizeGL(int w, int h) {}
+void GLWidget::resizeGL(int w, int h)
+{
+    renderer->resize(w, h);
+}
 
 void GLWidget::paintGL()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    renderer->render();
 }

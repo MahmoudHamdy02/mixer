@@ -7,6 +7,8 @@
 #include <QHBoxLayout>
 #include <QMainWindow>
 
+#include "renderer.h"
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -18,6 +20,6 @@ class MainWindow : public QMainWindow
     void setupMenubar();
 
 public:
-    MainWindow(QWidget *parent = nullptr);
+    MainWindow(Renderer *renderer, QWidget *parent = nullptr);
     ~MainWindow();
 };

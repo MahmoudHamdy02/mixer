@@ -20,10 +20,37 @@ set(UI_SOURCES
     UI/Widgets/glwidget.h
 )
 
+set(RENDERER_SOURCES
+    Renderer/renderer.cpp
+    Renderer/renderer.h
+    Renderer/meshgl.cpp
+    Renderer/meshgl.h
+    Renderer/shader.cpp
+    Renderer/shader.h
+    Renderer/camera.cpp
+    Renderer/camera.h
+)
+
+set(CORE_SOURCES
+    Core/scenecontroller.cpp
+    Core/scenecontroller.h
+    Core/mesh.cpp
+    Core/mesh.h
+)
+
 qt_add_executable(mixer
     WIN32 MACOSX_BUNDLE
     main.cpp
     ${UI_SOURCES}
+    ${RENDERER_SOURCES}
+    ${CORE_SOURCES}
+)
+
+target_include_directories(mixer
+    PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/Core
+        ${CMAKE_CURRENT_SOURCE_DIR}/Renderer
+        ${CMAKE_CURRENT_SOURCE_DIR}/UI
 )
 
 target_link_libraries(mixer
