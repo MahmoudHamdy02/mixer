@@ -1,5 +1,6 @@
 #pragma once
 
+#include <GL/gl.h>
 #include <qopenglextrafunctions.h>
 
 #include <vector>
@@ -10,7 +11,7 @@
 #include "scenecontroller.h"
 #include "shader.h"
 
-class Renderer : public QOpenGLExtraFunctions
+class Renderer : private QOpenGLExtraFunctions
 {
     SceneController* scene;
 
@@ -22,6 +23,15 @@ class Renderer : public QOpenGLExtraFunctions
     std::vector<MeshGL> meshGLs;
     Shader* shader;
     GLuint VAO, VBO;
+
+    struct Grid {
+        GLuint VAO, VBO;
+        Shader* shader;
+    };
+    Grid grid;
+
+    void setupGrid();
+    void renderGrid();
 
 public:
     Renderer(SceneController* scene);

@@ -25,8 +25,6 @@ void Camera::processMouse(float xOffset, float yOffset)
     yaw = fmod(yaw + xOffset, 360.f);
     pitch += yOffset;
 
-    std::cout << pitch << " " << yaw << std::endl;
-
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
 

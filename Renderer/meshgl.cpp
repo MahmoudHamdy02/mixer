@@ -67,7 +67,6 @@ void MeshGL::setup(Mesh& mesh)
 
 MeshGL::MeshGL(Mesh& mesh)
 {
-    std::cout << "About to setup MeshGL" << std::endl;
     initializeOpenGLFunctions();
     setup(mesh);
 }
