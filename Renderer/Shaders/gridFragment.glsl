@@ -37,7 +37,7 @@ float computeLinearDepth(vec3 pos) {
     float near = 0.1;
     float far = 100.0;
     vec4 clip_space_pos = projection * view * vec4(pos.xyz, 1.0);
-    float clip_space_depth = (clip_space_pos.z / clip_space_pos.w) * 2.0 - 1.0; // put back between -1 and 1
+    float clip_space_depth = (clip_space_pos.z / clip_space_pos.w) * 0.5 + 0.5; // put back between -1 and 1
     float linearDepth = (2.0 * near * far) / (far + near - clip_space_depth * (far - near)); // get linear value between 0.01 and 100
     return linearDepth / far; // normalize
 }
@@ -52,6 +52,6 @@ void main() {
     float linearDepth = computeLinearDepth(xyPlanePos);
     float fading = max(0, (0.5 - linearDepth));
 
-    FragColor = grid(xyPlanePos, 1, true)* float(t > 0); // adding multiple resolution for the grid
+    FragColor = grid(xyPlanePos, 1, true); // adding multiple resolution for the grid
     FragColor.a *= fading;
 };
