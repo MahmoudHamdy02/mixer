@@ -7,18 +7,21 @@
 
 #include "Widgets/glwidget.h"
 #include "Widgets/lefttoolbar.h"
+#include "Widgets/toptoolbar.h"
 #include "renderer.h"
 
 MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent)
 {
     setupMenubar();
     setupLeftToolbar();
+    setupTopToolbar();
+
+    addToolBar(Qt::LeftToolBarArea, leftToolbar);
+    addToolBar(Qt::TopToolBarArea, topToolbar);
 
     QWidget* central = new QWidget(this);
     QHBoxLayout* layout = new QHBoxLayout(central);
     layout->setContentsMargins(0, 0, 0, 0);
-
-    addToolBar(Qt::LeftToolBarArea, leftToolbar);
 
     glWidget = new GLWidget(renderer, central);
     glWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -49,4 +52,9 @@ void MainWindow::setupMenubar()
 void MainWindow::setupLeftToolbar()
 {
     leftToolbar = new LeftToolbar(this);
+}
+
+void MainWindow::setupTopToolbar()
+{
+    topToolbar = new TopToolbar(this);
 }
