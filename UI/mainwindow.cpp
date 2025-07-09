@@ -5,15 +5,19 @@
 #include <qwidget.h>
 
 #include "Widgets/glwidget.h"
+#include "Widgets/toolbar.h"
 #include "renderer.h"
 
 MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent)
 {
     setupMenubar();
+    setupToolbar();
 
     QWidget* central = new QWidget(this);
     QHBoxLayout* layout = new QHBoxLayout(central);
     layout->setContentsMargins(0, 0, 0, 0);
+
+    layout->addWidget(toolbar);
 
     glWidget = new GLWidget(renderer, central);
     glWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -39,4 +43,9 @@ void MainWindow::setupMenubar()
     connect(exitAction, &QAction::triggered, this, &MainWindow::close);
 
     setMenuBar(menubar);
+}
+
+void MainWindow::setupToolbar()
+{
+    toolbar = new Toolbar(this);
 }

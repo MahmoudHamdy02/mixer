@@ -4,7 +4,6 @@
 #include <qopenglwidget.h>
 
 #include <QMouseEvent>
-#include <iostream>
 
 #include "renderer.h"
 
