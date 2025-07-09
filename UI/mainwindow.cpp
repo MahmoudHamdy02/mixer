@@ -1,12 +1,16 @@
 #include "mainwindow.h"
 
 #include <qboxlayout.h>
+#include <qlabel.h>
 #include <qmenubar.h>
 #include <qnamespace.h>
+#include <qsplitter.h>
+#include <qtextedit.h>
 #include <qwidget.h>
 
 #include "Widgets/glwidget.h"
 #include "Widgets/lefttoolbar.h"
+#include "Widgets/rightsidebar.h"
 #include "Widgets/toptoolbar.h"
 #include "renderer.h"
 
@@ -19,16 +23,25 @@ MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent
     addToolBar(Qt::LeftToolBarArea, leftToolbar);
     addToolBar(Qt::TopToolBarArea, topToolbar);
 
-    QWidget* central = new QWidget(this);
-    QHBoxLayout* layout = new QHBoxLayout(central);
-    layout->setContentsMargins(0, 0, 0, 0);
+    // Resizable horizontal layout
+    QSplitter* horizontalLayout = new QSplitter(this);
+    horizontalLayout->setChildrenCollapsible(false);
 
-    glWidget = new GLWidget(renderer, central);
+    // OpenGL Viewport
+    glWidget = new GLWidget(renderer, horizontalLayout);
     glWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-    layout->addWidget(glWidget);
+    glWidget->setMinimumWidth(300);
+    horizontalLayout->addWidget(glWidget);
 
-    central->setLayout(layout);
-    setCentralWidget(central);
+    // Right sidebar
+    rightSidebar = new RightSidebar(this);
+    rightSidebar->setMinimumWidth(200);
+    horizontalLayout->addWidget(rightSidebar);
+
+    horizontalLayout->setStretchFactor(0, 3);
+    horizontalLayout->setStretchFactor(1, 1);
+
+    setCentralWidget(horizontalLayout);
 }
 
 MainWindow::~MainWindow() {}

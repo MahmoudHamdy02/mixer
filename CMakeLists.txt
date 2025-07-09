@@ -22,6 +22,8 @@ set(UI_SOURCES
     UI/Widgets/lefttoolbar.h
     UI/Widgets/toptoolbar.cpp
     UI/Widgets/toptoolbar.h
+    UI/Widgets/rightsidebar.cpp
+    UI/Widgets/rightsidebar.h
 )
 
 set(RENDERER_SOURCES
