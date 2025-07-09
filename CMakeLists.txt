@@ -18,8 +18,8 @@ set(UI_SOURCES
     UI/mainwindow.h
     UI/Widgets/glwidget.cpp
     UI/Widgets/glwidget.h
-    UI/Widgets/toolbar.cpp
-    UI/Widgets/toolbar.h
+    UI/Widgets/lefttoolbar.cpp
+    UI/Widgets/lefttoolbar.h
 )
 
 set(RENDERER_SOURCES

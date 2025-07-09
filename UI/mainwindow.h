@@ -7,7 +7,7 @@
 #include <QHBoxLayout>
 #include <QMainWindow>
 
-#include "Widgets/toolbar.h"
+#include "Widgets/lefttoolbar.h"
 #include "renderer.h"
 
 class MainWindow : public QMainWindow
@@ -15,12 +15,12 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
     QMenuBar *menubar;
-    Toolbar *toolbar;
+    LeftToolbar *leftToolbar;
     QHBoxLayout *layout;
     QOpenGLWidget *glWidget;
 
     void setupMenubar();
-    void setupToolbar();
+    void setupLeftToolbar();
 
 public:
     MainWindow(Renderer *renderer, QWidget *parent = nullptr);

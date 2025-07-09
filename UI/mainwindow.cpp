@@ -2,22 +2,23 @@
 
 #include <qboxlayout.h>
 #include <qmenubar.h>
+#include <qnamespace.h>
 #include <qwidget.h>
 
 #include "Widgets/glwidget.h"
-#include "Widgets/toolbar.h"
+#include "Widgets/lefttoolbar.h"
 #include "renderer.h"
 
 MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent)
 {
     setupMenubar();
-    setupToolbar();
+    setupLeftToolbar();
 
     QWidget* central = new QWidget(this);
     QHBoxLayout* layout = new QHBoxLayout(central);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    layout->addWidget(toolbar);
+    addToolBar(Qt::LeftToolBarArea, leftToolbar);
 
     glWidget = new GLWidget(renderer, central);
     glWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
@@ -45,7 +46,7 @@ void MainWindow::setupMenubar()
     setMenuBar(menubar);
 }
 
-void MainWindow::setupToolbar()
+void MainWindow::setupLeftToolbar()
 {
-    toolbar = new Toolbar(this);
+    leftToolbar = new LeftToolbar(this);
 }

@@ -1,11 +1,11 @@
-#include "toolbar.h"
+#include "lefttoolbar.h"
 
 #include <qaction.h>
 #include <qactiongroup.h>
 #include <qnamespace.h>
 #include <qtoolbar.h>
 
-Toolbar::Toolbar(QWidget* parent) : QToolBar(parent)
+LeftToolbar::LeftToolbar(QWidget* parent) : QToolBar(parent)
 {
     setFloatable(false);
     setMovable(false);

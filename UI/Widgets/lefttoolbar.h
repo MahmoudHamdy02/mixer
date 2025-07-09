@@ -6,12 +6,12 @@
 #include <qtoolbar.h>
 #include <qwidget.h>
 
-class Toolbar : public QToolBar
+class LeftToolbar : public QToolBar
 {
     Q_OBJECT
 
     QActionGroup* actionGroup;
 
 public:
-    Toolbar(QWidget* parent = nullptr);
+    LeftToolbar(QWidget* parent = nullptr);
 };
