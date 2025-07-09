@@ -1,5 +1,6 @@
 #include "mesh.h"
 
+#include "pmp/algorithms/normals.h"
 #include "pmp/types.h"
 
 Mesh::Mesh()
@@ -44,6 +45,7 @@ Mesh::Mesh()
     for (const auto& tri : triangles) {
         surfaceMesh.add_face({v[tri[0]], v[tri[1]], v[tri[2]]});
     }
+    pmp::face_normals(surfaceMesh);
 }
 
 pmp::SurfaceMesh& Mesh::getSurfaceMesh()

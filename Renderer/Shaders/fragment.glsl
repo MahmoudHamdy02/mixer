@@ -1,8 +1,8 @@
 #version 460 core
 
-uniform vec3 color;
+uniform vec3 cameraDirection;
 
-in vec3 Normal;
+in vec3 normal;
 in vec3 FragPos;
 
 out vec4 FragColor;
@@ -19,5 +19,9 @@ void main() {
     // vec3 diffuse = diff * lightColor;
     //
     // vec3 result = (ambient + diffuse) * color;
-    FragColor = vec4(8.0, 0.0, 0.0, 1.0);
+
+    float lightStrength = dot(normal, normalize(cameraDirection));
+    vec3 color = lightStrength * vec3(0.8); // Cap brightest color to 0.8
+
+    FragColor = vec4(color, 1.0);
 };

@@ -3,6 +3,8 @@
 #include <GL/gl.h>
 #include <qfile.h>
 
+#include "pmp/mat_vec.h"
+
 // constructor generates the shader on the fly
 Shader::Shader(const char *vertexPath, const char *fragmentPath)
 {
@@ -55,6 +57,11 @@ void Shader::setInt(const std::string &name, int value)
 void Shader::setFloat(const std::string &name, float value)
 {
     glProgramUniform1f(ID, glGetUniformLocation(ID, name.c_str()), value);
+}
+
+void Shader::setVec3(const std::string &name, pmp::vec3 vec)
+{
+    glProgramUniform3f(ID, glGetUniformLocation(ID, name.c_str()), vec[0], vec[1], vec[2]);
 }
 
 void Shader::setVec3(const std::string &name, float v1, float v2, float v3)

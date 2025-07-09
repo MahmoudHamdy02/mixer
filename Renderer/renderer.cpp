@@ -52,6 +52,8 @@ void Renderer::render()
     shader->setMatrix4("view", view.data());
     grid->shader->setMatrix4("view", view.data());
 
+    shader->setVec3("cameraDirection", camera.front);
+
     for (MeshGL& mesh : meshGLs) {
         mesh.draw();
     }
