@@ -19,7 +19,7 @@ vec4 grid(vec3 worldPos, float scale, bool drawAxis) {
     // High everywhere except for its axis
     float axisX = smoothstep(0.0, fwidth(worldPos.z), abs(worldPos.z));
     float axisZ = smoothstep(0.0, fwidth(worldPos.x), abs(worldPos.x));
-    vec3 base = vec3(0.2);
+    vec3 base = vec3(0.3);
     base.x = mix(1.0, base.x, axisX);  // Red for X axis
     base.z = mix(1.0, base.z, axisZ);  // Blue for Z axis
 
@@ -34,7 +34,7 @@ float computeDepth(vec3 pos) {
 
 float computeLinearDepth(float depth) {
     float near = 0.1;
-    float far = 100.0;
+    float far = 200.0;
     float linearDepth = (2.0 * near * far) / (far + near - depth * (far - near)); // get linear value between 0.01 and 100
     return linearDepth / far; // normalize to near/far -> 1.0
 }
@@ -50,7 +50,7 @@ void main() {
 
     float linearDepth = computeLinearDepth(depth);
     // Clamp to 0.5. Higher value -> less fading
-    float fading = max(0, (0.5 - linearDepth));
+    float fading = max(0, (0.6 - linearDepth));
 
     FragColor = grid(worldPos, 1, true);
     FragColor.a *= fading;

@@ -34,7 +34,8 @@ void Renderer::initialize()
 
 void Renderer::resize(int width, int height)
 {
-    projection = pmp::perspective_matrix(45.0f, (float)width / height, 0.1f, 100.0f);
+    // TODO: Bind near and far values to grid fragment shader
+    projection = pmp::perspective_matrix(45.0f, (float)width / height, 0.1f, 200.0f);
     shader->setMatrix4("projection", projection.data());
     grid->shader->setMatrix4("projection", projection.data());
     glViewport(0, 0, width, height);
@@ -47,7 +48,7 @@ void Renderer::render()
     shader->use();
 
     // Set camera view matrix
-    view = camera.GetViewMatrix();
+    view = camera.getViewMatrix();
     shader->setMatrix4("view", view.data());
     grid->shader->setMatrix4("view", view.data());
 
@@ -64,4 +65,13 @@ void Renderer::render()
 void Renderer::moveCamera(float offsetX, float offsetY)
 {
     camera.processMouse(offsetX, offsetY);
+}
+void Renderer::panCamera(float offsetX, float offsetY)
+{
+    camera.processMove(offsetX, offsetY);
+}
+
+void Renderer::zoomCamera(float distance)
+{
+    camera.addDistance(distance);
 }

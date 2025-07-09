@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
 
     MainWindow w(renderer);
 
-    w.resize(800, 600);
+    w.resize(1200, 900);
     w.show();
     return a.exec();
 }

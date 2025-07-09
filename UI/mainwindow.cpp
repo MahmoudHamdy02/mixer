@@ -15,12 +15,11 @@ MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent
     QHBoxLayout* layout = new QHBoxLayout(central);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    // Correct parent: pass central
     glWidget = new GLWidget(renderer, central);
     glWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     layout->addWidget(glWidget);
 
-    central->setLayout(layout);  // make sure layout is set
+    central->setLayout(layout);
     setCentralWidget(central);
 }
 

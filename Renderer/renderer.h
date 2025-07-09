@@ -34,4 +34,6 @@ public:
     void render();
 
     void moveCamera(float offsetX, float offsetY);
+    void panCamera(float offsetX, float offsetY);
+    void zoomCamera(float distance);
 };

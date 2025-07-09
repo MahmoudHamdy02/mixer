@@ -1,12 +1,17 @@
 #include "glwidget.h"
 
+#include <qnamespace.h>
 #include <qopenglwidget.h>
 
 #include <QMouseEvent>
+#include <iostream>
 
 #include "renderer.h"
 
-GLWidget::GLWidget(Renderer* renderer, QWidget* parent) : QOpenGLWidget(parent), renderer(renderer) {}
+GLWidget::GLWidget(Renderer* renderer, QWidget* parent) : QOpenGLWidget(parent), renderer(renderer)
+{
+    setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+}
 
 void GLWidget::initializeGL()
 {
@@ -40,7 +45,11 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
     float offsetX = newMousePosX - mousePosX;
     float offsetY = newMousePosY - mousePosY;
 
-    renderer->moveCamera(offsetX, offsetY);
+    if (isCtrlHeld) {
+        renderer->panCamera(offsetX, offsetY);
+    } else {
+        renderer->moveCamera(offsetX, offsetY);
+    }
     mousePosX = newMousePosX;
     mousePosY = newMousePosY;
     update();
@@ -48,9 +57,40 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
 
 void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
+    // TODO: Create InputHandler class
     if (event->button() == Qt::LeftButton) {
         isMouseButtonDown = false;
     }
 }
 
-void GLWidget::wheelEvent(QWheelEvent* event) {}
+void GLWidget::wheelEvent(QWheelEvent* event)
+{
+    QPoint numPixels = event->pixelDelta();
+    QPoint numDegrees = event->angleDelta() / 8;
+
+    if (!numPixels.isNull()) {
+        renderer->zoomCamera(numPixels.y());
+    } else if (!numDegrees.isNull()) {
+        QPoint numSteps = numDegrees / 15;
+        renderer->zoomCamera(numSteps.y());
+    }
+
+    event->accept();
+    update();
+}
+
+void GLWidget::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Control) {
+        isCtrlHeld = true;
+    }
+    QOpenGLWidget::keyPressEvent(event);
+}
+
+void GLWidget::keyReleaseEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Control) {
+        isCtrlHeld = false;
+    }
+    QOpenGLWidget::keyReleaseEvent(event);
+}

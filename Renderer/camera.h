@@ -7,8 +7,11 @@ class Camera
     float pitch = 0.0f;
     float yaw = 90.0f;
     float sensitivity = 0.2f;
-    float min_sensitivity = 0.05f;
-    float max_sensitivity = 0.4f;
+    float minSensitivity = 0.05f;
+    float maxSensitivity = 0.4f;
+    float panSensitivity = 0.05;
+    float minDistance = 5.0f;
+    float maxDistance = 100.0f;
     pmp::vec3 up = pmp::vec3(0.0f, 1.0f, 0.0f);
 
 public:
@@ -16,7 +19,7 @@ public:
     pmp::vec3 position = pmp::vec3(0.0f, 0.0f, distance);
     pmp::vec3 front = pmp::vec3(0.0f, 0.0f, -1.0f);
     pmp::vec3 target = pmp::vec3(0.0f);
-    pmp::mat4 GetViewMatrix();
+    pmp::mat4 getViewMatrix();
 
     void resetPosition();
     void processMouse(float xOffset, float yOffset);
@@ -24,7 +27,7 @@ public:
     void addDistance(float distance);
     void setSensitivity(int percentage);
 
-    static void ScreenPosToWorldRay(
+    static void screenPosToWorldRay(
         int mouseX, int mouseY,             // Mouse position, in pixels, from bottom-left corner of the window
         int screenWidth, int screenHeight,  // Window size, in pixels
         pmp::mat4 ViewMatrix,               // Camera position and orientation

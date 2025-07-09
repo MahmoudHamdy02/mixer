@@ -1,11 +1,12 @@
 #include "camera.h"
 
+#include <algorithm>
 #include <iostream>
 #include <numbers>
 
 #include "pmp/mat_vec.h"
 
-pmp::mat4 Camera::GetViewMatrix()
+pmp::mat4 Camera::getViewMatrix()
 {
     return pmp::look_at_matrix(position, target, up);
 }
@@ -39,8 +40,8 @@ void Camera::processMouse(float xOffset, float yOffset)
 
 void Camera::processMove(float xPan, float yPan)
 {
-    xPan *= sensitivity;
-    yPan *= sensitivity;
+    xPan *= panSensitivity;
+    yPan *= panSensitivity;
 
     pmp::vec3 right = pmp::normalize(pmp::cross(front, up));
     pmp::vec3 cameraUp = pmp::normalize(pmp::cross(right, front));
@@ -51,18 +52,17 @@ void Camera::processMove(float xPan, float yPan)
 void Camera::addDistance(float offset)
 {
     distance -= offset;
-    if (distance < 5.0f) distance = 5.0f;
-    if (distance > 150.0f) distance = 150.0f;
+    distance = std::clamp(distance, minDistance, maxDistance);
 
     position = target + pmp::normalize(position - target) * distance;
 }
 
 void Camera::setSensitivity(int percentage)
 {
-    sensitivity = float(percentage) / 100.0f * (max_sensitivity - min_sensitivity);
+    sensitivity = float(percentage) / 100.0f * (maxSensitivity - minSensitivity);
 }
 
-void Camera::ScreenPosToWorldRay(int mouseX, int mouseY, int screenWidth, int screenHeight, pmp::mat4 ViewMatrix,
+void Camera::screenPosToWorldRay(int mouseX, int mouseY, int screenWidth, int screenHeight, pmp::mat4 ViewMatrix,
                                  pmp::mat4 ProjectionMatrix, pmp::vec3& out_direction)
 {
     // 1. Screen to NDC
