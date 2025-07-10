@@ -16,6 +16,8 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    Renderer *renderer;
+
     QMenuBar *menubar;
     LeftToolbar *leftToolbar;
     TopToolbar *topToolbar;

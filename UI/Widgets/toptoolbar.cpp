@@ -2,6 +2,7 @@
 
 #include <qaction.h>
 #include <qactiongroup.h>
+#include <qkeysequence.h>
 #include <qnamespace.h>
 #include <qsizepolicy.h>
 #include <qtoolbar.h>
@@ -19,14 +20,14 @@ TopToolbar::TopToolbar(QWidget* parent) : QToolBar(parent)
 
     actionGroup = new QActionGroup(this);
 
-    QAction* wireframeAction = new QAction("Wireframe", actionGroup);
+    QAction* wireframeAction = new QAction(Actions::WIREFRAME, actionGroup);
     wireframeAction->setCheckable(true);
-    wireframeAction->setChecked(true);
 
-    QAction* flatAction = new QAction("Flat", actionGroup);
+    QAction* flatAction = new QAction(Actions::FLAT, actionGroup);
     flatAction->setCheckable(true);
+    flatAction->setChecked(true);
 
-    QAction* renderAction = new QAction("Render", actionGroup);
+    QAction* renderAction = new QAction(Actions::RENDERED, actionGroup);
     renderAction->setCheckable(true);
 
     addAction(wireframeAction);

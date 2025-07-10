@@ -22,18 +22,24 @@ class Renderer : private QOpenGLExtraFunctions
     pmp::mat4 model;
 
     std::vector<MeshGL> meshGLs;
-    Shader* shader;
-    GLuint VAO, VBO;
+    Shader* flatShader;
 
     std::unique_ptr<Grid> grid;
 
 public:
+    enum class RenderMode { Flat, Wireframe, Rendered };
+
     Renderer(SceneController* scene);
     void initialize();
     void resize(int width, int height);
     void render();
 
+    void setRenderMode(RenderMode mode);
+
     void moveCamera(float offsetX, float offsetY);
     void panCamera(float offsetX, float offsetY);
     void zoomCamera(float distance);
+
+private:
+    RenderMode renderMode = RenderMode::Flat;
 };

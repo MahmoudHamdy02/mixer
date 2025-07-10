@@ -1,5 +1,7 @@
 #include "mainwindow.h"
 
+#include <qaction.h>
+#include <qactiongroup.h>
 #include <qboxlayout.h>
 #include <qlabel.h>
 #include <qmenubar.h>
@@ -14,7 +16,7 @@
 #include "Widgets/toptoolbar.h"
 #include "renderer.h"
 
-MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent)
+MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent), renderer(renderer)
 {
     setupMenubar();
     setupLeftToolbar();
@@ -70,4 +72,13 @@ void MainWindow::setupLeftToolbar()
 void MainWindow::setupTopToolbar()
 {
     topToolbar = new TopToolbar(this);
+
+    connect(topToolbar->actionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
+        std::string mode = action->text().toStdString();
+        if (mode == TopToolbar::Actions::FLAT) renderer->setRenderMode(Renderer::RenderMode::Flat);
+        if (mode == TopToolbar::Actions::WIREFRAME) renderer->setRenderMode(Renderer::RenderMode::Wireframe);
+        if (mode == TopToolbar::Actions::RENDERED) renderer->setRenderMode(Renderer::RenderMode::Rendered);
+
+        glWidget->update();
+    });
 }
