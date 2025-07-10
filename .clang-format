@@ -17,3 +17,4 @@ BraceWrapping:
   BeforeElse: false
   IndentBraces: false
 AccessModifierOffset: -4
+AllowShortIfStatementsOnASingleLine: false

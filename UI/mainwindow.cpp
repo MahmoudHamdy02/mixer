@@ -75,9 +75,12 @@ void MainWindow::setupTopToolbar()
 
     connect(topToolbar->actionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
         std::string mode = action->text().toStdString();
-        if (mode == TopToolbar::Actions::FLAT) renderer->setRenderMode(Renderer::RenderMode::Flat);
-        if (mode == TopToolbar::Actions::WIREFRAME) renderer->setRenderMode(Renderer::RenderMode::Wireframe);
-        if (mode == TopToolbar::Actions::RENDERED) renderer->setRenderMode(Renderer::RenderMode::Rendered);
+        if (mode == TopToolbar::Actions::FLAT)
+            renderer->setRenderMode(Renderer::RenderMode::Flat);
+        if (mode == TopToolbar::Actions::WIREFRAME)
+            renderer->setRenderMode(Renderer::RenderMode::Wireframe);
+        if (mode == TopToolbar::Actions::RENDERED)
+            renderer->setRenderMode(Renderer::RenderMode::Rendered);
 
         glWidget->update();
     });

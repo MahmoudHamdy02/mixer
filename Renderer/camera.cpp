@@ -26,8 +26,10 @@ void Camera::processMouse(float xOffset, float yOffset)
     yaw = fmod(yaw + xOffset, 360.f);
     pitch += yOffset;
 
-    if (pitch > 89.0f) pitch = 89.0f;
-    if (pitch < -89.0f) pitch = -89.0f;
+    if (pitch > 89.0f)
+        pitch = 89.0f;
+    if (pitch < -89.0f)
+        pitch = -89.0f;
 
     float rad = std::numbers::pi / 180.0f;
     pmp::vec3 direction;
