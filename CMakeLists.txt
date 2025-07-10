@@ -44,6 +44,8 @@ set(CORE_SOURCES
     Core/scenecontroller.h
     Core/mesh.cpp
     Core/mesh.h
+    Core/Geometry/primitives.cpp
+    Core/Geometry/primitives.h
 )
 
 qt_add_resources(RESOURCES resources.qrc)

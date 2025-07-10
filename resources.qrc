@@ -4,5 +4,7 @@
         <file>Renderer/Shaders/fragment.glsl</file>
         <file>Renderer/Shaders/gridVertex.glsl</file>
         <file>Renderer/Shaders/gridFragment.glsl</file>
+        <file>Renderer/Shaders/wireframeVertex.glsl</file>
+        <file>Renderer/Shaders/wireframeFragment.glsl</file>
     </qresource>
 </RCC>
