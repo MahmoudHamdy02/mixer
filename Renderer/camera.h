@@ -4,8 +4,8 @@ enum MovementDirection { FORWARD, BACK, RIGHT, LEFT };
 
 class Camera
 {
-    float pitch = 0.0f;
-    float yaw = 90.0f;
+    float pitch = 25.0f;
+    float yaw = -135.0f;
     float sensitivity = 0.2f;
     float minSensitivity = 0.05f;
     float maxSensitivity = 0.4f;
@@ -16,10 +16,12 @@ class Camera
 
 public:
     float distance = 10.0f;
-    pmp::vec3 position = pmp::vec3(0.0f, 0.0f, distance);
-    pmp::vec3 front = pmp::vec3(0.0f, 0.0f, -1.0f);
+    pmp::vec3 position;
+    pmp::vec3 front;
     pmp::vec3 target = pmp::vec3(0.0f);
     pmp::mat4 getViewMatrix();
+
+    Camera();
 
     void resetPosition();
     void processMouse(float xOffset, float yOffset);

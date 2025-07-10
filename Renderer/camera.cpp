@@ -6,6 +6,17 @@
 
 #include "pmp/mat_vec.h"
 
+Camera::Camera()
+{
+    float rad = std::numbers::pi / 180.0f;
+    pmp::vec3 direction;
+    direction[0] = cos(yaw * rad) * cos(pitch * rad);
+    direction[1] = sin(pitch * rad);
+    direction[2] = sin(yaw * rad) * cos(pitch * rad);
+    position = target + pmp::normalize(direction) * distance;
+    front = pmp::normalize(position * -1.0f);
+}
+
 pmp::mat4 Camera::getViewMatrix()
 {
     return pmp::look_at_matrix(position, target, up);
