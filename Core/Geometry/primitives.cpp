@@ -4,7 +4,6 @@
 
 #include "pmp/algorithms/normals.h"
 #include "pmp/algorithms/shapes.h"
-#include "pmp/algorithms/triangulation.h"
 #include "pmp/surface_mesh.h"
 #include "pmp/types.h"
 
@@ -39,6 +38,5 @@ void Primitives::createCube(pmp::SurfaceMesh& mesh)
 void Primitives::createSphere(pmp::SurfaceMesh& mesh, int slices, int stacks)
 {
     mesh = pmp::uv_sphere(pmp::Point(0, 0, 0), 1.0, slices, stacks);
-    pmp::triangulate(mesh);
     pmp::face_normals(mesh);
 }

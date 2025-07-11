@@ -1,24 +1,29 @@
 #include "meshgl.h"
 
 #include "mesh.h"
+#include "pmp/algorithms/normals.h"
+#include "pmp/algorithms/triangulation.h"
 #include "pmp/surface_mesh.h"
 
 void MeshGL::setup(Mesh& mesh)
 {
-    pmp::SurfaceMesh& surfaceMesh = mesh.getSurfaceMesh();
-    auto vpos = surfaceMesh.vertex_property<pmp::Point>("v:point");
-    auto fnormal = surfaceMesh.face_property<pmp::Normal>("f:normal");
+    meshGL = mesh.getSurfaceMesh();
+    pmp::triangulate(meshGL);
+    pmp::face_normals(meshGL);
+
+    auto vpos = meshGL.vertex_property<pmp::Point>("v:point");
+    auto fnormal = meshGL.face_property<pmp::Normal>("f:normal");
 
     // Stores position and normals
     std::vector<float> vertices = {};
     std::vector<unsigned int> indices = {};
 
     unsigned int index = 0;
-    for (auto f : surfaceMesh.faces()) {
+    for (auto f : meshGL.faces()) {
         pmp::Normal n = fnormal[f];
         std::vector<unsigned int> faceIndices;
 
-        for (auto v : surfaceMesh.vertices(f)) {
+        for (auto v : meshGL.vertices(f)) {
             pmp::Point p = vpos[v];
 
             vertices.push_back(p[0]);
