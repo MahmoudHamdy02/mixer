@@ -5,7 +5,7 @@ enum MovementDirection { FORWARD, BACK, RIGHT, LEFT };
 class Camera
 {
     float pitch = 25.0f;
-    float yaw = -135.0f;
+    float yaw = 45.0f;
     float sensitivity = 0.2f;
     float minSensitivity = 0.05f;
     float maxSensitivity = 0.4f;

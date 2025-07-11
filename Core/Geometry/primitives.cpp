@@ -1,6 +1,11 @@
 #include "primitives.h"
 
+#include <vector>
+
 #include "pmp/algorithms/normals.h"
+#include "pmp/algorithms/shapes.h"
+#include "pmp/algorithms/triangulation.h"
+#include "pmp/surface_mesh.h"
 #include "pmp/types.h"
 
 void Primitives::createCube(pmp::SurfaceMesh& mesh)
@@ -21,28 +26,19 @@ void Primitives::createCube(pmp::SurfaceMesh& mesh)
     for (const auto& p : vertices) v.push_back(mesh.add_vertex(p));
 
     // Define 12 triangles (2 per cube face)
-    std::vector<std::array<int, 3>> triangles = {// bottom
-                                                 {0, 1, 2},
-                                                 {0, 2, 3},
-                                                 // top
-                                                 {4, 6, 5},
-                                                 {4, 7, 6},
-                                                 // front
-                                                 {0, 5, 1},
-                                                 {0, 4, 5},
-                                                 // right
-                                                 {1, 6, 2},
-                                                 {1, 5, 6},
-                                                 // back
-                                                 {2, 7, 3},
-                                                 {2, 6, 7},
-                                                 // left
-                                                 {3, 4, 0},
-                                                 {3, 7, 4}};
+    std::vector<std::array<int, 3>> triangles = {{0, 3, 1}, {3, 2, 1}, {1, 2, 5}, {2, 6, 5}, {5, 6, 4}, {6, 7, 4},
+                                                 {4, 7, 0}, {7, 3, 0}, {3, 7, 2}, {7, 6, 2}, {4, 0, 5}, {0, 1, 5}};
 
     for (const auto& tri : triangles) {
         mesh.add_face({v[tri[0]], v[tri[1]], v[tri[2]]});
     }
 
+    pmp::face_normals(mesh);
+}
+
+void Primitives::createSphere(pmp::SurfaceMesh& mesh, int slices, int stacks)
+{
+    mesh = pmp::uv_sphere(pmp::Point(0, 0, 0), 1.0, slices, stacks);
+    pmp::triangulate(mesh);
     pmp::face_normals(mesh);
 }
