@@ -82,3 +82,10 @@ void MeshGL::draw()
     glDrawElements(GL_TRIANGLES, numIndices, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
+
+void MeshGL::drawVertices()
+{
+    glBindVertexArray(VAO);
+    glDrawElements(GL_POINTS, numIndices, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}

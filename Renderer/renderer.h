@@ -24,6 +24,7 @@ class Renderer : private QOpenGLExtraFunctions
     std::vector<MeshGL> meshGLs;
     Shader* flatShader;
     Shader* wireframeShader;
+    Shader* pointsShader;
 
     std::unique_ptr<Grid> grid;
 

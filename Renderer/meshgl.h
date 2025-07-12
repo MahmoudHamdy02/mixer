@@ -16,4 +16,5 @@ class MeshGL : private QOpenGLExtraFunctions
 public:
     MeshGL(Mesh& mesh);
     void draw();
+    void drawVertices();
 };
