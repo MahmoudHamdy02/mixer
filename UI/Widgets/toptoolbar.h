@@ -1,8 +1,6 @@
 #pragma once
 
 #include <qaction.h>
-#include <qkeysequence.h>
-#include <qmainwindow.h>
 #include <qobject.h>
 #include <qtmetamacros.h>
 #include <qtoolbar.h>

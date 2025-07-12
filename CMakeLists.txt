@@ -48,6 +48,11 @@ set(CORE_SOURCES
     Core/Geometry/primitives.h
 )
 
+set(APPSTATE_SOURCES
+    ApplicationState/toolmanager.cpp
+    ApplicationState/toolmanager.h
+)
+
 qt_add_resources(RESOURCES resources.qrc)
 
 qt_add_executable(mixer
@@ -56,6 +61,7 @@ qt_add_executable(mixer
     ${UI_SOURCES}
     ${RENDERER_SOURCES}
     ${CORE_SOURCES}
+    ${APPSTATE_SOURCES}
     ${RESOURCES}
 )
 
@@ -64,6 +70,7 @@ target_include_directories(mixer
         ${CMAKE_CURRENT_SOURCE_DIR}/Core
         ${CMAKE_CURRENT_SOURCE_DIR}/Renderer
         ${CMAKE_CURRENT_SOURCE_DIR}/UI
+        ${CMAKE_CURRENT_SOURCE_DIR}/ApplicationState
 )
 
 target_link_libraries(mixer

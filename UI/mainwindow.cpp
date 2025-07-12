@@ -15,6 +15,7 @@
 #include "Widgets/rightsidebar.h"
 #include "Widgets/toptoolbar.h"
 #include "renderer.h"
+#include "toolmanager.h"
 
 MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent), renderer(renderer)
 {
@@ -67,6 +68,16 @@ void MainWindow::setupMenubar()
 void MainWindow::setupLeftToolbar()
 {
     leftToolbar = new LeftToolbar(this);
+
+    connect(leftToolbar->actionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
+        std::string tool = action->text().toStdString();
+        if (tool == LeftToolbar::Tools::CAMERA)
+            ToolManager::selectedTool = ToolManager::Tool::Camera;
+        if (tool == LeftToolbar::Tools::SELECT)
+            ToolManager::selectedTool = ToolManager::Tool::Select;
+        if (tool == LeftToolbar::Tools::MOVE)
+            ToolManager::selectedTool = ToolManager::Tool::Move;
+    });
 }
 
 void MainWindow::setupTopToolbar()

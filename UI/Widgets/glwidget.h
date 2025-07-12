@@ -15,6 +15,8 @@ class GLWidget : public QOpenGLWidget, QOpenGLExtraFunctions
     float mousePosX = 0;
     float mousePosY = 0;
 
+    pmp::vec2 screenSpaceToNDC(pmp::vec2);
+
 protected:
     void initializeGL() override;
     void resizeGL(int w, int h) override;
