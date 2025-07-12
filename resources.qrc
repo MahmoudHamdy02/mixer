@@ -8,5 +8,7 @@
         <file>Renderer/Shaders/wireframeFragment.glsl</file>
         <file>Renderer/Shaders/pointsVertex.glsl</file>
         <file>Renderer/Shaders/pointsFragment.glsl</file>
+        <file>Renderer/Shaders/selectionRectangleVertex.glsl</file>
+        <file>Renderer/Shaders/selectionRectangleFragment.glsl</file>
     </qresource>
 </RCC>

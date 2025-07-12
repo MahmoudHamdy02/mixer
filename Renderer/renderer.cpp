@@ -9,6 +9,7 @@
 #include "mesh.h"
 #include "pmp/mat_vec.h"
 #include "pmp/surface_mesh.h"
+#include "selectionrectangle.h"
 #include "shader.h"
 
 Renderer::Renderer(SceneController* scene) : scene(scene) {}
@@ -43,6 +44,7 @@ void Renderer::initialize()
     meshGLs.push_back(MeshGL(mesh));
 
     grid = std::make_unique<Grid>();
+    selectionRectangle = std::make_unique<SelectionRectangle>();
 }
 
 void Renderer::resize(int width, int height)
@@ -78,18 +80,25 @@ void Renderer::render()
     flatShader->setVec3("cameraDirection", camera.front);
     pointsShader->setVec3("cameraDirection", camera.front);
 
-    for (MeshGL& mesh : meshGLs) {
-        mesh.draw();
-    }
+    // Scene meshes
+    // for (MeshGL& mesh : meshGLs) {
+    //     mesh.draw();
+    // }
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    grid->render();
+    // Floor grid
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    // grid->render();
 
-    glDisable(GL_DEPTH_TEST);
-    pointsShader->use();
-    for (MeshGL& mesh : meshGLs) {
-        mesh.drawVertices();
-    }
+    // Vertex handles
+    // glDisable(GL_DEPTH_TEST);
+    // pointsShader->use();
+    // for (MeshGL& mesh : meshGLs) {
+    //     mesh.drawVertices();
+    // }
+
+    // Selection rectangle
+    glEnable(GL_DEPTH_TEST);
+    selectionRectangle->render();
 }
 
 void Renderer::setRenderMode(RenderMode mode)

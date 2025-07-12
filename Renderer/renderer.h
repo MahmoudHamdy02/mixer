@@ -10,6 +10,7 @@
 #include "meshgl.h"
 #include "pmp/mat_vec.h"
 #include "scenecontroller.h"
+#include "selectionrectangle.h"
 #include "shader.h"
 
 class Renderer : private QOpenGLExtraFunctions
@@ -27,6 +28,7 @@ class Renderer : private QOpenGLExtraFunctions
     Shader* pointsShader;
 
     std::unique_ptr<Grid> grid;
+    std::unique_ptr<SelectionRectangle> selectionRectangle;
 
 public:
     enum class RenderMode { Flat, Wireframe, Rendered };

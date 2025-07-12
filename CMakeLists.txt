@@ -37,6 +37,8 @@ set(RENDERER_SOURCES
     Renderer/camera.h
     Renderer/grid.cpp
     Renderer/grid.h
+    Renderer/selectionrectangle.cpp
+    Renderer/selectionrectangle.h
 )
 
 set(CORE_SOURCES
