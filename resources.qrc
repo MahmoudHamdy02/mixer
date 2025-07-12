@@ -1,7 +1,7 @@
 <RCC>
     <qresource prefix="/">
-        <file>Renderer/Shaders/vertex.glsl</file>
-        <file>Renderer/Shaders/fragment.glsl</file>
+        <file>Renderer/Shaders/flatVertex.glsl</file>
+        <file>Renderer/Shaders/flatFragment.glsl</file>
         <file>Renderer/Shaders/gridVertex.glsl</file>
         <file>Renderer/Shaders/gridFragment.glsl</file>
         <file>Renderer/Shaders/wireframeVertex.glsl</file>

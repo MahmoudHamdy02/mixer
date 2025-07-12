@@ -25,7 +25,7 @@ void Renderer::initialize()
     // Setup shaders
     wireframeShader =
         new Shader(":/Renderer/Shaders/wireframeVertex.glsl", ":/Renderer/Shaders/wireframeFragment.glsl");
-    flatShader = new Shader(":/Renderer/Shaders/vertex.glsl", ":/Renderer/Shaders/fragment.glsl");
+    flatShader = new Shader(":/Renderer/Shaders/flatVertex.glsl", ":/Renderer/Shaders/flatFragment.glsl");
     pointsShader = new Shader(":/Renderer/Shaders/pointsVertex.glsl", ":/Renderer/Shaders/pointsFragment.glsl");
     flatShader->use();
 
