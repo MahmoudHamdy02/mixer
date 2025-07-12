@@ -56,9 +56,9 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
         mousePosY = newMousePosY;
     } else if (ToolManager::selectedTool == ToolManager::Tool::Select) {
         float minX = std::min(mousePosX, newMousePosX);
-        float minY = std::min(mousePosY, newMousePosY);
+        float minY = height() - std::min(mousePosY, newMousePosY);
         float maxX = std::max(mousePosX, newMousePosX);
-        float maxY = std::max(mousePosY, newMousePosY);
+        float maxY = height() - std::max(mousePosY, newMousePosY);
 
         pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
         pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
