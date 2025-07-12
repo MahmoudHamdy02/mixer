@@ -4,9 +4,11 @@
 #include <qopenglext.h>
 
 #include <memory>
+#include <vector>
 
 #include "mesh.h"
 #include "pmp/mat_vec.h"
+#include "pmp/surface_mesh.h"
 #include "shader.h"
 
 Renderer::Renderer(SceneController* scene) : scene(scene) {}
@@ -108,4 +110,22 @@ void Renderer::panCamera(float offsetX, float offsetY)
 void Renderer::zoomCamera(float distance)
 {
     camera.addDistance(distance);
+}
+
+const void Renderer::selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max) const
+{
+    int numVertices = 0;
+    const std::vector<Mesh>& meshes = scene->getMeshes();
+    for (const Mesh& mesh : meshes) {
+        const pmp::SurfaceMesh& s = mesh.getSurfaceMesh();
+        for (pmp::Vertex v : s.vertices()) {
+            pmp::vec4 c = projection * view * model * pmp::vec4(s.position(v), 1.0);
+            pmp::vec3 clipSpacePos = pmp::vec3(c[0] / c[3], c[1] / c[3], c[2] / c[3]);
+            if (clipSpacePos[0] > min[0] && clipSpacePos[0] < max[0] && clipSpacePos[1] > min[1] &&
+                clipSpacePos[1] < max[1]) {
+                numVertices++;
+            }
+        }
+        std::cout << "Vertices hit: " << numVertices << std::endl;
+    }
 }

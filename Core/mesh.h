@@ -8,5 +8,5 @@ class Mesh
 
 public:
     Mesh();
-    pmp::SurfaceMesh& getSurfaceMesh();
+    const pmp::SurfaceMesh& getSurfaceMesh() const;
 };

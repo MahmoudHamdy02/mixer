@@ -9,7 +9,7 @@ Mesh::Mesh()
     Primitives::createSphere(surfaceMesh, 32, 16);
 }
 
-pmp::SurfaceMesh& Mesh::getSurfaceMesh()
+const pmp::SurfaceMesh& Mesh::getSurfaceMesh() const
 {
     return surfaceMesh;
 }
