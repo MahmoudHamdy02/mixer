@@ -10,8 +10,6 @@ class SelectionRectangle : private QOpenGLExtraFunctions
 {
     GLuint VAO, VBO, EBO;
 
-    void updateBuffer();
-
 public:
     Shader* shader;
 

@@ -7,7 +7,8 @@ SelectionRectangle::SelectionRectangle()
     initializeOpenGLFunctions();
 
     // Defined in counter-clockwise order starting from bottom left
-    float vertices[] = {-0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f, -0.5f, 0.5f, 0.0f};
+    // TODO: Don't render when not actively selecting
+    float vertices[] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
     unsigned int indices[] = {0, 1, 3, 1, 2, 3};
 
     // Vertex Array Object + Vertex Buffer Object
@@ -35,9 +36,13 @@ SelectionRectangle::SelectionRectangle()
                         ":/Renderer/Shaders/selectionRectangleFragment.glsl");
 }
 
-void SelectionRectangle::setVertices(const pmp::vec2& min, const pmp::vec2& max) {}
-
-void SelectionRectangle::updateBuffer() {}
+void SelectionRectangle::setVertices(const pmp::vec2& min, const pmp::vec2& max)
+{
+    float vertices[] = {min[0], min[1], 0.0f, max[0], min[1], 0.0f, max[0], max[1], 0.0f, min[0], max[1], 0.0f};
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+}
 
 void SelectionRectangle::render()
 {

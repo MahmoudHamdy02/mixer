@@ -81,20 +81,20 @@ void Renderer::render()
     pointsShader->setVec3("cameraDirection", camera.front);
 
     // Scene meshes
-    // for (MeshGL& mesh : meshGLs) {
-    //     mesh.draw();
-    // }
+    for (MeshGL& mesh : meshGLs) {
+        mesh.draw();
+    }
 
     // Floor grid
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    // grid->render();
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    grid->render();
 
     // Vertex handles
-    // glDisable(GL_DEPTH_TEST);
-    // pointsShader->use();
-    // for (MeshGL& mesh : meshGLs) {
-    //     mesh.drawVertices();
-    // }
+    glDisable(GL_DEPTH_TEST);
+    pointsShader->use();
+    for (MeshGL& mesh : meshGLs) {
+        mesh.drawVertices();
+    }
 
     // Selection rectangle
     glEnable(GL_DEPTH_TEST);
@@ -119,6 +119,11 @@ void Renderer::panCamera(float offsetX, float offsetY)
 void Renderer::zoomCamera(float distance)
 {
     camera.addDistance(distance);
+}
+
+void Renderer::setSelectionRectangleVertices(const pmp::vec2& min, const pmp::vec2& max)
+{
+    selectionRectangle->setVertices(min, max);
 }
 
 const void Renderer::selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max) const

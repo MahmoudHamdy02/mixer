@@ -40,13 +40,13 @@ void GLWidget::mousePressEvent(QMouseEvent* event)
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)
 {
+    float newMousePosX = event->position().x();
+    float newMousePosY = event->position().y();
+
+    float offsetX = newMousePosX - mousePosX;
+    float offsetY = newMousePosY - mousePosY;
+
     if (ToolManager::selectedTool == ToolManager::Tool::Camera) {
-        float newMousePosX = event->position().x();
-        float newMousePosY = event->position().y();
-
-        float offsetX = newMousePosX - mousePosX;
-        float offsetY = newMousePosY - mousePosY;
-
         if (isCtrlHeld) {
             renderer->panCamera(offsetX, offsetY);
         } else {
@@ -54,8 +54,17 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
         }
         mousePosX = newMousePosX;
         mousePosY = newMousePosY;
-        update();
+    } else if (ToolManager::selectedTool == ToolManager::Tool::Select) {
+        float minX = std::min(mousePosX, newMousePosX);
+        float minY = std::min(mousePosY, newMousePosY);
+        float maxX = std::max(mousePosX, newMousePosX);
+        float maxY = std::max(mousePosY, newMousePosY);
+
+        pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
+        pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
+        renderer->setSelectionRectangleVertices(min, max);
     }
+    update();
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent* event)
@@ -75,7 +84,9 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 
         pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
         pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
+        renderer->setSelectionRectangleVertices(pmp::vec2(0, 0), pmp::vec2(0, 0));
         renderer->selectInsideRectangle(min, max);
+        update();
     }
 }
 

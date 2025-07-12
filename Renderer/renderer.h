@@ -44,6 +44,7 @@ public:
     void panCamera(float offsetX, float offsetY);
     void zoomCamera(float distance);
 
+    void setSelectionRectangleVertices(const pmp::vec2& min, const pmp::vec2& max);
     const void selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max) const;
 
 private:
