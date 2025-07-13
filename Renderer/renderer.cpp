@@ -7,6 +7,8 @@
 #include <vector>
 
 #include "mesh.h"
+#include "pmp/algorithms/normals.h"
+#include "pmp/algorithms/triangulation.h"
 #include "pmp/mat_vec.h"
 #include "pmp/surface_mesh.h"
 #include "selectionrectangle.h"
@@ -126,20 +128,30 @@ void Renderer::setSelectionRectangleVertices(const pmp::vec2& min, const pmp::ve
     selectionRectangle->setVertices(min, max);
 }
 
-const void Renderer::selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max) const
+void Renderer::selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max)
 {
-    int numVertices = 0;
-    const std::vector<Mesh>& meshes = scene->getMeshes();
+    std::vector<Mesh>& meshes = scene->getMeshes();
+
     for (const Mesh& mesh : meshes) {
         const pmp::SurfaceMesh& s = mesh.getSurfaceMesh();
+
+        auto selected = s.get_vertex_property<float>("v:selected");
+
         for (pmp::Vertex v : s.vertices()) {
             pmp::vec4 c = projection * view * model * pmp::vec4(s.position(v), 1.0);
-            pmp::vec3 clipSpacePos = pmp::vec3(c[0] / c[3], c[1] / c[3], c[2] / c[3]);
-            if (clipSpacePos[0] > min[0] && clipSpacePos[0] < max[0] && clipSpacePos[1] > min[1] &&
-                clipSpacePos[1] < max[1]) {
-                numVertices++;
+            // Clip space position
+            pmp::vec3 pos = pmp::vec3(c[0] / c[3], c[1] / c[3], c[2] / c[3]);
+            if (pos[0] > min[0] && pos[0] < max[0] && pos[1] > min[1] && pos[1] < max[1]) {
+                selected[v] = 1.0f;
+            } else {
+                selected[v] = 0.0f;
             }
         }
-        std::cout << "Vertices hit: " << numVertices << std::endl;
+
+        // TODO: This whole mess
+        meshGLs[0].meshGL = s;
+        pmp::triangulate(meshGLs[0].meshGL);
+        pmp::face_normals(meshGLs[0].meshGL);
+        meshGLs[0].updateBuffers();
     }
 }

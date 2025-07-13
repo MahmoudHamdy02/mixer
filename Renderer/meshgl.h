@@ -9,12 +9,15 @@ class MeshGL : private QOpenGLExtraFunctions
 {
     unsigned int VBO, VAO, EBO;
     unsigned int numIndices;
-    pmp::SurfaceMesh meshGL;
 
     void setup(Mesh& mesh);
 
 public:
+    pmp::SurfaceMesh meshGL;
     MeshGL(Mesh& mesh);
+
+    void updateBuffers();
+
     void draw();
     void drawVertices();
 };

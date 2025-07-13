@@ -78,9 +78,9 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
         float newMousePosY = event->position().y();
 
         float minX = std::min(mousePosX, newMousePosX);
-        float minY = std::min(mousePosY, newMousePosY);
+        float maxY = height() - std::min(mousePosY, newMousePosY);
         float maxX = std::max(mousePosX, newMousePosX);
-        float maxY = std::max(mousePosY, newMousePosY);
+        float minY = height() - std::max(mousePosY, newMousePosY);
 
         pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
         pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));

@@ -9,7 +9,7 @@ SceneController::SceneController()
     meshes.emplace_back();
 }
 
-const std::vector<Mesh>& SceneController::getMeshes() const
+std::vector<Mesh>& SceneController::getMeshes()
 {
     return meshes;
 }

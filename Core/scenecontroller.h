@@ -10,5 +10,5 @@ class SceneController
 
 public:
     SceneController();
-    const std::vector<Mesh>& getMeshes() const;
+    std::vector<Mesh>& getMeshes();
 };
