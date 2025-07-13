@@ -7,7 +7,8 @@
 
 void MeshGL::setup(Mesh& mesh)
 {
-    meshGL = mesh.getSurfaceMesh();
+    this->mesh = &mesh;
+    pmp::SurfaceMesh& meshGL = mesh.getSurfaceMesh();
     pmp::triangulate(meshGL);
     pmp::face_normals(meshGL);
 
@@ -79,9 +80,10 @@ void MeshGL::setup(Mesh& mesh)
 
 void MeshGL::updateBuffers()
 {
-    auto vpos = meshGL.vertex_property<pmp::Point>("v:point");
-    auto vselected = meshGL.vertex_property<float>("v:selected");
-    auto fnormal = meshGL.face_property<pmp::Normal>("f:normal");
+    const pmp::SurfaceMesh& meshGL = mesh->getSurfaceMesh();
+    auto vpos = meshGL.get_vertex_property<pmp::Point>("v:point");
+    auto vselected = meshGL.get_vertex_property<float>("v:selected");
+    auto fnormal = meshGL.get_face_property<pmp::Normal>("f:normal");
 
     // Stores position and normals
     std::vector<float> vertices = {};

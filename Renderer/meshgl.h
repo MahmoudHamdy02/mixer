@@ -3,7 +3,6 @@
 #include <qopenglextrafunctions.h>
 
 #include "mesh.h"
-#include "pmp/surface_mesh.h"
 
 class MeshGL : private QOpenGLExtraFunctions
 {
@@ -13,7 +12,8 @@ class MeshGL : private QOpenGLExtraFunctions
     void setup(Mesh& mesh);
 
 public:
-    pmp::SurfaceMesh meshGL;
+    Mesh* mesh;
+
     MeshGL(Mesh& mesh);
 
     void updateBuffers();

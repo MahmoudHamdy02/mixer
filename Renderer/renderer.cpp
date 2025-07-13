@@ -7,8 +7,6 @@
 #include <vector>
 
 #include "mesh.h"
-#include "pmp/algorithms/normals.h"
-#include "pmp/algorithms/triangulation.h"
 #include "pmp/mat_vec.h"
 #include "pmp/surface_mesh.h"
 #include "selectionrectangle.h"
@@ -42,8 +40,8 @@ void Renderer::initialize()
     wireframeShader->setMatrix4("model", model.data());
     pointsShader->setMatrix4("model", model.data());
 
-    Mesh mesh = scene->getMeshes()[0];
-    meshGLs.push_back(MeshGL(mesh));
+    Mesh& mesh = scene->getMeshes()[0];
+    meshGLs.emplace_back(mesh);
 
     grid = std::make_unique<Grid>();
     selectionRectangle = std::make_unique<SelectionRectangle>();
@@ -142,10 +140,8 @@ void Renderer::setSelectionRectangleVertices(const pmp::vec2& min, const pmp::ve
 
 void Renderer::selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max)
 {
-    std::vector<Mesh>& meshes = scene->getMeshes();
-
-    for (const Mesh& mesh : meshes) {
-        const pmp::SurfaceMesh& s = mesh.getSurfaceMesh();
+    for (MeshGL& meshGL : meshGLs) {
+        const pmp::SurfaceMesh& s = meshGL.mesh->getSurfaceMesh();
 
         auto selected = s.get_vertex_property<float>("v:selected");
 
@@ -160,10 +156,6 @@ void Renderer::selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max)
             }
         }
 
-        // TODO: This whole mess
-        meshGLs[0].meshGL = s;
-        pmp::triangulate(meshGLs[0].meshGL);
-        pmp::face_normals(meshGLs[0].meshGL);
-        meshGLs[0].updateBuffers();
+        meshGL.updateBuffers();
     }
 }
