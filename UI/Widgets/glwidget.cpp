@@ -54,7 +54,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
         }
         mousePosX = newMousePosX;
         mousePosY = newMousePosY;
-    } else if (ToolManager::selectedTool == ToolManager::Tool::Select) {
+    } else if (renderer->getEditMode() == Renderer::EditMode::Vertex &&
+               ToolManager::selectedTool == ToolManager::Tool::Select) {
         float minX = std::min(mousePosX, newMousePosX);
         float minY = height() - std::min(mousePosY, newMousePosY);
         float maxX = std::max(mousePosX, newMousePosX);
@@ -73,7 +74,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
     if (event->button() == Qt::LeftButton) {
         isMouseButtonDown = false;
     }
-    if (ToolManager::selectedTool == ToolManager::Tool::Select) {
+    if (renderer->getEditMode() == Renderer::EditMode::Vertex &&
+        ToolManager::selectedTool == ToolManager::Tool::Select) {
         float newMousePosX = event->position().x();
         float newMousePosY = event->position().y();
 

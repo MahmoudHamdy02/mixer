@@ -15,6 +15,28 @@
 
 class Renderer : private QOpenGLExtraFunctions
 {
+public:
+    // TODO: Connect this to toolbar state
+    enum class RenderMode { Flat, Wireframe, Rendered };
+    enum class EditMode { Object, Vertex };
+
+    Renderer(SceneController* scene);
+    void initialize();
+    void resize(int width, int height);
+    void render();
+
+    void setRenderMode(RenderMode mode);
+    EditMode getEditMode();
+    void setEditMode(EditMode mode);
+
+    void moveCamera(float offsetX, float offsetY);
+    void panCamera(float offsetX, float offsetY);
+    void zoomCamera(float distance);
+
+    void setSelectionRectangleVertices(const pmp::vec2& min, const pmp::vec2& max);
+    void selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max);
+
+private:
     SceneController* scene;
 
     Camera camera;
@@ -30,23 +52,6 @@ class Renderer : private QOpenGLExtraFunctions
     std::unique_ptr<Grid> grid;
     std::unique_ptr<SelectionRectangle> selectionRectangle;
 
-public:
-    enum class RenderMode { Flat, Wireframe, Rendered };
-
-    Renderer(SceneController* scene);
-    void initialize();
-    void resize(int width, int height);
-    void render();
-
-    void setRenderMode(RenderMode mode);
-
-    void moveCamera(float offsetX, float offsetY);
-    void panCamera(float offsetX, float offsetY);
-    void zoomCamera(float distance);
-
-    void setSelectionRectangleVertices(const pmp::vec2& min, const pmp::vec2& max);
-    void selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max);
-
-private:
     RenderMode renderMode = RenderMode::Flat;
+    EditMode editMode = EditMode::Object;
 };

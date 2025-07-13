@@ -84,14 +84,24 @@ void MainWindow::setupTopToolbar()
 {
     topToolbar = new TopToolbar(this);
 
-    connect(topToolbar->actionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
+    connect(topToolbar->renderModeActionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
         std::string mode = action->text().toStdString();
-        if (mode == TopToolbar::Actions::FLAT)
+        if (mode == TopToolbar::RenderMode::FLAT)
             renderer->setRenderMode(Renderer::RenderMode::Flat);
-        if (mode == TopToolbar::Actions::WIREFRAME)
+        else if (mode == TopToolbar::RenderMode::WIREFRAME)
             renderer->setRenderMode(Renderer::RenderMode::Wireframe);
-        if (mode == TopToolbar::Actions::RENDERED)
+        else if (mode == TopToolbar::RenderMode::RENDERED)
             renderer->setRenderMode(Renderer::RenderMode::Rendered);
+
+        glWidget->update();
+    });
+
+    connect(topToolbar->editModeActionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
+        std::string mode = action->text().toStdString();
+        if (mode == TopToolbar::EditMode::OBJECT)
+            renderer->setEditMode(Renderer::EditMode::Object);
+        else if (mode == TopToolbar::EditMode::VERTEX)
+            renderer->setEditMode(Renderer::EditMode::Vertex);
 
         glWidget->update();
     });

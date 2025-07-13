@@ -91,11 +91,13 @@ void Renderer::render()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     grid->render();
 
-    // Vertex handles
-    glDisable(GL_DEPTH_TEST);
-    pointsShader->use();
-    for (MeshGL& mesh : meshGLs) {
-        mesh.drawVertices();
+    if (editMode == EditMode::Vertex) {
+        // Vertex handles
+        glDisable(GL_DEPTH_TEST);
+        pointsShader->use();
+        for (MeshGL& mesh : meshGLs) {
+            mesh.drawVertices();
+        }
     }
 
     // Selection rectangle
@@ -106,6 +108,16 @@ void Renderer::render()
 void Renderer::setRenderMode(RenderMode mode)
 {
     renderMode = mode;
+}
+
+Renderer::EditMode Renderer::getEditMode()
+{
+    return editMode;
+}
+
+void Renderer::setEditMode(EditMode mode)
+{
+    editMode = mode;
 }
 
 void Renderer::moveCamera(float offsetX, float offsetY)
