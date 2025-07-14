@@ -8,7 +8,8 @@
 void MeshGL::setup(Mesh& mesh)
 {
     this->mesh = &mesh;
-    pmp::SurfaceMesh& meshGL = mesh.getSurfaceMesh();
+    const pmp::SurfaceMesh& surfaceMesh = mesh.getSurfaceMesh();
+    pmp::SurfaceMesh meshGL = surfaceMesh;
     pmp::triangulate(meshGL);
     pmp::face_normals(meshGL);
 
@@ -80,7 +81,10 @@ void MeshGL::setup(Mesh& mesh)
 
 void MeshGL::updateBuffers()
 {
-    const pmp::SurfaceMesh& meshGL = mesh->getSurfaceMesh();
+    const pmp::SurfaceMesh& surfaceMesh = mesh->getSurfaceMesh();
+    pmp::SurfaceMesh meshGL = surfaceMesh;
+    pmp::triangulate(meshGL);
+    pmp::face_normals(meshGL);
     auto vpos = meshGL.get_vertex_property<pmp::Point>("v:point");
     auto vselected = meshGL.get_vertex_property<float>("v:selected");
     auto fnormal = meshGL.get_face_property<pmp::Normal>("f:normal");

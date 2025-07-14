@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include "pmp/surface_mesh.h"
 
 class Mesh
@@ -8,5 +10,8 @@ class Mesh
 
 public:
     Mesh();
-    pmp::SurfaceMesh& getSurfaceMesh();
+
+    const pmp::SurfaceMesh& getSurfaceMesh() const;
+
+    void setSelectedVertices(const std::vector<pmp::Vertex>& vertices);
 };
