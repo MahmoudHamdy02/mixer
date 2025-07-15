@@ -142,6 +142,7 @@ void Renderer::selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max)
 {
     for (MeshGL& meshGL : meshGLs) {
         const pmp::SurfaceMesh& s = meshGL.mesh->getSurfaceMesh();
+        auto vnormal = s.get_vertex_property<pmp::Normal>("v:normal");
 
         std::vector<pmp::Vertex> vertices;
 
@@ -149,8 +150,11 @@ void Renderer::selectInsideRectangle(const pmp::vec2& min, const pmp::vec2& max)
             pmp::vec4 c = projection * view * model * pmp::vec4(s.position(v), 1.0);
             // Clip space position
             pmp::vec3 pos = pmp::vec3(c[0] / c[3], c[1] / c[3], c[2] / c[3]);
+            // Select vertex only if it is inside rectangle and visible from the camera
             if (pos[0] > min[0] && pos[0] < max[0] && pos[1] > min[1] && pos[1] < max[1]) {
-                vertices.push_back(v);
+                if (pmp::dot(camera.front, vnormal[v]) < -0.1) {
+                    vertices.push_back(v);
+                }
             }
         }
 

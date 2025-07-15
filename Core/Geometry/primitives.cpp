@@ -34,6 +34,7 @@ void Primitives::createCube(pmp::SurfaceMesh& mesh)
         mesh.add_face({v[tri[0]], v[tri[1]], v[tri[2]]});
     }
 
+    pmp::vertex_normals(mesh);
     pmp::face_normals(mesh);
 }
 
@@ -41,5 +42,6 @@ void Primitives::createSphere(pmp::SurfaceMesh& mesh, int slices, int stacks)
 {
     mesh = pmp::uv_sphere(pmp::Point(0, 0, 0), 1.0, slices, stacks);
     mesh.add_vertex_property<float>("v:selected");
+    pmp::vertex_normals(mesh);
     pmp::face_normals(mesh);
 }
