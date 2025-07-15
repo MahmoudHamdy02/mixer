@@ -9,6 +9,9 @@ class MeshGL : private QOpenGLExtraFunctions
     unsigned int VBO, VAO, EBO;
     unsigned int numIndices;
 
+    unsigned int instancedVAO, instancedVBO, instancedEBO, instancedDataVBO;
+    unsigned int instancedNumIndices;
+
     void setup(Mesh& mesh);
 
 public:
