@@ -11,6 +11,7 @@
 #include "pmp/mat_vec.h"
 #include "selectionrectangle.h"
 #include "shader.h"
+#include "toolmanager.h"
 
 Renderer::Renderer(SceneController* scene) : scene(scene) {}
 
@@ -67,7 +68,7 @@ void Renderer::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    if (renderMode == RenderMode::Wireframe) {
+    if (ToolManager::selectedRenderMode == ToolManager::RenderMode::Wireframe) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         wireframeShader->use();
     } else {
@@ -94,7 +95,7 @@ void Renderer::render()
     grid->render();
 
     // TODO: Fix handles rendering through other objects
-    if (editMode == EditMode::Vertex) {
+    if (ToolManager::selectedEditMode == ToolManager::EditMode::Vertex) {
         // Vertex handles
         glDisable(GL_DEPTH_TEST);
         pointsShader->use();
@@ -159,21 +160,6 @@ void Renderer::updateMesh(const std::string& name)
             break;
         }
     }
-}
-
-void Renderer::setRenderMode(RenderMode mode)
-{
-    renderMode = mode;
-}
-
-Renderer::EditMode Renderer::getEditMode()
-{
-    return editMode;
-}
-
-void Renderer::setEditMode(EditMode mode)
-{
-    editMode = mode;
 }
 
 void Renderer::moveCamera(float offsetX, float offsetY)

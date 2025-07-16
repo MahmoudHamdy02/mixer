@@ -88,11 +88,11 @@ void MainWindow::setupTopToolbar()
     connect(topToolbar->renderModeActionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
         std::string mode = action->text().toStdString();
         if (mode == TopToolbar::RenderMode::FLAT)
-            renderer->setRenderMode(Renderer::RenderMode::Flat);
+            ToolManager::selectedRenderMode = ToolManager::RenderMode::Flat;
         else if (mode == TopToolbar::RenderMode::WIREFRAME)
-            renderer->setRenderMode(Renderer::RenderMode::Wireframe);
+            ToolManager::selectedRenderMode = ToolManager::RenderMode::Wireframe;
         else if (mode == TopToolbar::RenderMode::RENDERED)
-            renderer->setRenderMode(Renderer::RenderMode::Rendered);
+            ToolManager::selectedRenderMode = ToolManager::RenderMode::Rendered;
 
         glWidget->update();
     });
@@ -100,9 +100,9 @@ void MainWindow::setupTopToolbar()
     connect(topToolbar->editModeActionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
         std::string mode = action->text().toStdString();
         if (mode == TopToolbar::EditMode::OBJECT)
-            renderer->setEditMode(Renderer::EditMode::Object);
+            ToolManager::selectedEditMode = ToolManager::EditMode::Object;
         else if (mode == TopToolbar::EditMode::VERTEX)
-            renderer->setEditMode(Renderer::EditMode::Vertex);
+            ToolManager::selectedEditMode = ToolManager::EditMode::Vertex;
 
         glWidget->update();
     });

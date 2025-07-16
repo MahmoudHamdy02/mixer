@@ -1,5 +1,8 @@
 #pragma once
 
+#include <vector>
+
+#include "mesh.h"
 #include "pmp/mat_vec.h"
 #include "renderer.h"
 #include "scenecontroller.h"
@@ -14,4 +17,6 @@ public:
 private:
     Renderer* renderer;
     SceneController* scene;
+
+    std::vector<Mesh*> selectedMeshes;
 };
