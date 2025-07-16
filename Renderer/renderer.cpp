@@ -102,6 +102,12 @@ void Renderer::render()
     // Selection rectangle
     glEnable(GL_DEPTH_TEST);
     selectionRectangle->render();
+
+    // Workaround for Qt transparency issues on Wayland: set alpha manually to 1.0f at the end of the render loop
+    // See: https://github.com/FreeCAD/FreeCAD/pull/19499
+    glColorMask(false, false, false, true);
+    glClear(GL_COLOR_BUFFER_BIT);
+    glColorMask(true, true, true, true);
 }
 
 void Renderer::setRenderMode(RenderMode mode)
