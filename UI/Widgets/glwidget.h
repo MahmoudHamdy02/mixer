@@ -11,8 +11,7 @@ class GLWidget : public QOpenGLWidget, QOpenGLExtraFunctions
     Renderer* renderer;
     SelectionManager* selectionManager;
 
-    // Camera state
-    bool isMouseButtonDown = false;
+    bool isDrawingSelectionRectangle = false;
     bool isCtrlHeld = false;
     float mousePosX = 0;
     float mousePosY = 0;

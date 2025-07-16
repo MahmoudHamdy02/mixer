@@ -32,13 +32,8 @@ void GLWidget::paintGL()
 
 void GLWidget::mousePressEvent(QMouseEvent* event)
 {
-    if (event->button() == Qt::LeftButton) {
-        isMouseButtonDown = true;
-    }
     mousePosX = event->position().x();
     mousePosY = event->position().y();
-    Ray ray = renderer->mouseToWorldRay(mousePosX, mousePosY);
-    std::cout << ray.origin << ", " << ray.direction << std::endl;
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)
@@ -57,8 +52,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
         }
         mousePosX = newMousePosX;
         mousePosY = newMousePosY;
-    } else if (ToolManager::selectedEditMode == ToolManager::EditMode::Vertex &&
-               ToolManager::selectedTool == ToolManager::Tool::Select) {
+    } else if (ToolManager::selectedTool == ToolManager::Tool::Select) {
+        isDrawingSelectionRectangle = true;
         float minX = std::min(mousePosX, newMousePosX);
         float minY = height() - std::min(mousePosY, newMousePosY);
         float maxX = std::max(mousePosX, newMousePosX);
@@ -74,11 +69,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
 void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
     // TODO: Create InputHandler class
-    if (event->button() == Qt::LeftButton) {
-        isMouseButtonDown = false;
-    }
-    if (ToolManager::selectedEditMode == ToolManager::EditMode::Vertex &&
-        ToolManager::selectedTool == ToolManager::Tool::Select) {
+    if (ToolManager::selectedTool == ToolManager::Tool::Select) {
         float newMousePosX = event->position().x();
         float newMousePosY = event->position().y();
 
@@ -89,10 +80,25 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 
         pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
         pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
+        if (ToolManager::selectedEditMode == ToolManager::EditMode::Vertex) {
+            if (isDrawingSelectionRectangle) {
+                selectionManager->selectVerticesInRectangle(min, max);
+            } else {
+                Ray ray = renderer->mouseToWorldRay(newMousePosX, newMousePosY);
+                selectionManager->selectVertex(ray);
+            }
+        } else {
+            if (isDrawingSelectionRectangle) {
+                selectionManager->selectObjectsInRectangle(min, max);
+            } else {
+                Ray ray = renderer->mouseToWorldRay(newMousePosX, newMousePosY);
+                selectionManager->selectObject(ray);
+            }
+        }
         renderer->setSelectionRectangleVertices(pmp::vec2(0, 0), pmp::vec2(0, 0));
-        selectionManager->selectRectangle(min, max);
         update();
     }
+    isDrawingSelectionRectangle = false;
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event)

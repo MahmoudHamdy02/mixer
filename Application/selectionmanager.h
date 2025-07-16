@@ -4,6 +4,7 @@
 
 #include "mesh.h"
 #include "pmp/mat_vec.h"
+#include "ray.h"
 #include "renderer.h"
 #include "scenecontroller.h"
 
@@ -12,7 +13,10 @@ class SelectionManager
 public:
     SelectionManager(Renderer* renderer, SceneController* scene);
 
-    void selectRectangle(const pmp::vec2& min, const pmp::vec2& max) const;
+    void selectVerticesInRectangle(const pmp::vec2& min, const pmp::vec2& max) const;
+    void selectVertex(const Ray& ray) const;
+    void selectObjectsInRectangle(const pmp::vec2& min, const pmp::vec2& max) const;
+    void selectObject(const Ray& ray) const;
 
 private:
     Renderer* renderer;

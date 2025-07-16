@@ -1,5 +1,6 @@
 #include "selectionmanager.h"
 
+#include <iostream>
 #include <vector>
 
 #include "pmp/mat_vec.h"
@@ -7,7 +8,7 @@
 
 SelectionManager::SelectionManager(Renderer* renderer, SceneController* scene) : renderer(renderer), scene(scene) {}
 
-void SelectionManager::selectRectangle(const pmp::vec2& min, const pmp::vec2& max) const
+void SelectionManager::selectVerticesInRectangle(const pmp::vec2& min, const pmp::vec2& max) const
 {
     const pmp::mat4& model = renderer->getModelMatrix();
     const pmp::mat4& view = renderer->getViewMatrix();
@@ -36,4 +37,28 @@ void SelectionManager::selectRectangle(const pmp::vec2& min, const pmp::vec2& ma
         mesh.setSelectedVertices(vertices);
         renderer->updateMesh(mesh.getName());
     }
+}
+
+void SelectionManager::selectObjectsInRectangle(const pmp::vec2& min, const pmp::vec2& max) const
+{
+    const pmp::mat4& model = renderer->getModelMatrix();
+    const pmp::mat4& view = renderer->getViewMatrix();
+    const pmp::mat4& projection = renderer->getProjectionMatrix();
+    const Camera& camera = renderer->getCamera();
+
+    std::vector<Mesh>& meshes = scene->getMeshes();
+    for (Mesh& mesh : meshes) {
+        // Check if center+aabb side length is inside selection rectangle
+        std::cout << __func__ << std::endl;
+    }
+}
+
+void SelectionManager::selectVertex(const Ray& ray) const
+{
+    std::cout << __func__ << std::endl;
+}
+
+void SelectionManager::selectObject(const Ray& ray) const
+{
+    std::cout << __func__ << std::endl;
 }
