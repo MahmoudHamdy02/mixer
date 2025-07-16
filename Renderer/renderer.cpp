@@ -117,39 +117,18 @@ void Renderer::render()
 
 Ray Renderer::mouseToWorldRay(float mouseX, float mouseY) const
 {
-    // Screen to NDC
     float ndcX = (2.0f * mouseX) / screenWidth - 1.0f;
     float ndcY = 1.0f - (2.0f * mouseY) / screenHeight;
 
-    // NDC to Clip Space (using near plane projection in NDC)
-    pmp::vec4 ray_clip = pmp::vec4(ndcX, ndcY, -1.0f, 1.0f);
+    pmp::vec4 clipPos = pmp::vec4(ndcX, ndcY, 1.0f, 1.0f);
 
-    // Clip Space to View Space
-    pmp::mat4 inverseProjection = pmp::inverse(projection);
-    pmp::vec4 ray_eye_h = inverseProjection * ray_clip;
+    pmp::vec4 worldPos = pmp::inverse(projection * view) * clipPos;
+    pmp::vec3 pos = pmp::vec3(worldPos[0] / worldPos[3], worldPos[1] / worldPos[3], worldPos[2] / worldPos[3]);
 
-    // Check if perspective divide is needed (W might not be 1)
-    if (ray_eye_h[3] != 0.0f) {
-        ray_eye_h /= ray_eye_h[3];
-    } else {
-        // Handle potential error or orthographic projection case
-        // For standard perspective, w should not be 0 here.
-        // Maybe set ray_eye_h.w = 1.0f if needed, although the math should work out.
-        std::cout << "ERROR::CAMERA::SCREENPOSTOWORLDRAY::PERSPECTIVE_DIVIDE" << std::endl;
-    }
-    // The resulting ray_eye_h.xyz is now a point on the near plane in View Space.
-    // The direction vector in View Space goes from the origin (camera) to this point.
-    pmp::vec3 ray_view_dir = pmp::normalize(pmp::vec3(ray_eye_h[0], ray_eye_h[1], ray_eye_h[2]));
-
-    // 4. View Space to World Space
-    pmp::mat4 inverseView = pmp::inverse(view);
-    // Transform the direction from View Space to World Space
-    // Use w=0 for transforming directions
-    pmp::vec4 ray_world_dir_h = inverseView * pmp::vec4(ray_view_dir, 0.0f);
-    pmp::vec3 out_direction = pmp::normalize(pmp::vec3(ray_world_dir_h[0], ray_world_dir_h[1], ray_world_dir_h[2]));
+    pmp::vec3 direction = pmp::normalize(pos);
     pmp::vec3 origin = camera.position;
 
-    return Ray(origin, out_direction);
+    return Ray(origin, direction);
 }
 
 void Renderer::updateMesh(const std::string& name)
