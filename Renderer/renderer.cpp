@@ -40,8 +40,10 @@ void Renderer::initialize()
     wireframeShader->setMatrix4("model", model.data());
     pointsShader->setMatrix4("model", model.data());
 
-    Mesh& mesh = scene->getMeshes()[0];
-    meshGLs.emplace_back(mesh);
+    std::vector<Mesh>& meshes = scene->getMeshes();
+    for (Mesh& mesh : meshes) {
+        meshGLs.emplace_back(mesh);
+    }
 
     grid = std::make_unique<Grid>();
     selectionRectangle = std::make_unique<SelectionRectangle>();
@@ -49,6 +51,8 @@ void Renderer::initialize()
 
 void Renderer::resize(int width, int height)
 {
+    screenWidth = width;
+    screenHeight = height;
     // TODO: Bind near and far values to grid fragment shader
     projection = pmp::perspective_matrix(45.0f, (float)width / height, 0.1f, 200.0f);
     flatShader->setMatrix4("projection", projection.data());
@@ -89,7 +93,7 @@ void Renderer::render()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     grid->render();
 
-    // TODO: Test if disabling depth test is necessary
+    // TODO: Fix handles rendering through other objects
     if (editMode == EditMode::Vertex) {
         // Vertex handles
         glDisable(GL_DEPTH_TEST);
@@ -108,6 +112,43 @@ void Renderer::render()
     glColorMask(false, false, false, true);
     glClear(GL_COLOR_BUFFER_BIT);
     glColorMask(true, true, true, true);
+}
+
+Ray Renderer::mouseToWorldRay(float mouseX, float mouseY) const
+{
+    // Screen to NDC
+    float ndcX = (2.0f * mouseX) / screenWidth - 1.0f;
+    float ndcY = 1.0f - (2.0f * mouseY) / screenHeight;
+
+    // NDC to Clip Space (using near plane projection in NDC)
+    pmp::vec4 ray_clip = pmp::vec4(ndcX, ndcY, -1.0f, 1.0f);
+
+    // Clip Space to View Space
+    pmp::mat4 inverseProjection = pmp::inverse(projection);
+    pmp::vec4 ray_eye_h = inverseProjection * ray_clip;
+
+    // Check if perspective divide is needed (W might not be 1)
+    if (ray_eye_h[3] != 0.0f) {
+        ray_eye_h /= ray_eye_h[3];
+    } else {
+        // Handle potential error or orthographic projection case
+        // For standard perspective, w should not be 0 here.
+        // Maybe set ray_eye_h.w = 1.0f if needed, although the math should work out.
+        std::cout << "ERROR::CAMERA::SCREENPOSTOWORLDRAY::PERSPECTIVE_DIVIDE" << std::endl;
+    }
+    // The resulting ray_eye_h.xyz is now a point on the near plane in View Space.
+    // The direction vector in View Space goes from the origin (camera) to this point.
+    pmp::vec3 ray_view_dir = pmp::normalize(pmp::vec3(ray_eye_h[0], ray_eye_h[1], ray_eye_h[2]));
+
+    // 4. View Space to World Space
+    pmp::mat4 inverseView = pmp::inverse(view);
+    // Transform the direction from View Space to World Space
+    // Use w=0 for transforming directions
+    pmp::vec4 ray_world_dir_h = inverseView * pmp::vec4(ray_view_dir, 0.0f);
+    pmp::vec3 out_direction = pmp::normalize(pmp::vec3(ray_world_dir_h[0], ray_world_dir_h[1], ray_world_dir_h[2]));
+    pmp::vec3 origin = camera.position;
+
+    return Ray(origin, out_direction);
 }
 
 void Renderer::updateMesh(const std::string& name)

@@ -37,6 +37,8 @@ void GLWidget::mousePressEvent(QMouseEvent* event)
     }
     mousePosX = event->position().x();
     mousePosY = event->position().y();
+    Ray ray = renderer->mouseToWorldRay(mousePosX, mousePosY);
+    std::cout << ray.origin << ", " << ray.direction << std::endl;
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)

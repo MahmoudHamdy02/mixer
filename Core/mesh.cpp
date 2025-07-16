@@ -4,12 +4,12 @@
 #include <vector>
 
 #include "Geometry/primitives.h"
+#include "pmp/mat_vec.h"
 #include "pmp/surface_mesh.h"
 
-Mesh::Mesh()
+Mesh::Mesh(std::string name) : name(name)
 {
     // Primitives::createCube(surfaceMesh);
-    name = "Sphere";
     Primitives::createSphere(surfaceMesh, 32, 16);
 }
 
@@ -21,6 +21,13 @@ const std::string& Mesh::getName() const
 const pmp::SurfaceMesh& Mesh::getSurfaceMesh() const
 {
     return surfaceMesh;
+}
+
+void Mesh::translate(pmp::vec3 vec)
+{
+    for (pmp::Vertex v : surfaceMesh.vertices()) {
+        surfaceMesh.position(v) += vec;
+    }
 }
 
 void Mesh::setSelectedVertices(const std::vector<pmp::Vertex>& vertices)

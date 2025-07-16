@@ -48,6 +48,7 @@ set(CORE_SOURCES
     Core/mesh.h
     Core/Geometry/primitives.cpp
     Core/Geometry/primitives.h
+    Core/ray.h
 )
 
 set(APPLICATION_SOURCES
