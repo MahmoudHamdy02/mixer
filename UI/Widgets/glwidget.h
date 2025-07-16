@@ -4,10 +4,12 @@
 #include <qwidget.h>
 
 #include "renderer.h"
+#include "selectionmanager.h"
 
 class GLWidget : public QOpenGLWidget, QOpenGLExtraFunctions
 {
     Renderer* renderer;
+    SelectionManager* selectionManager;
 
     // Camera state
     bool isMouseButtonDown = false;
@@ -30,5 +32,5 @@ protected:
     void keyReleaseEvent(QKeyEvent* event) override;
 
 public:
-    GLWidget(Renderer* renderer, QWidget* parent = nullptr);
+    GLWidget(Renderer* renderer, SelectionManager* selectionManager, QWidget* parent = nullptr);
 };

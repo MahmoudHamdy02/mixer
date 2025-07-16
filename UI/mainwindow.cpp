@@ -17,7 +17,8 @@
 #include "renderer.h"
 #include "toolmanager.h"
 
-MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent), renderer(renderer)
+MainWindow::MainWindow(Renderer* renderer, SelectionManager* selectionManager, QWidget* parent)
+    : QMainWindow(parent), renderer(renderer), selectionManager(selectionManager)
 {
     setupMenubar();
     setupLeftToolbar();
@@ -31,7 +32,7 @@ MainWindow::MainWindow(Renderer* renderer, QWidget* parent) : QMainWindow(parent
     horizontalLayout->setChildrenCollapsible(false);
 
     // OpenGL Viewport
-    glWidget = new GLWidget(renderer, horizontalLayout);
+    glWidget = new GLWidget(renderer, selectionManager, horizontalLayout);
     glWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     glWidget->setMinimumWidth(300);
     horizontalLayout->addWidget(glWidget);

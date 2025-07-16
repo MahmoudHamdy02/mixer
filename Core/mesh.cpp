@@ -1,5 +1,6 @@
 #include "mesh.h"
 
+#include <string>
 #include <vector>
 
 #include "Geometry/primitives.h"
@@ -8,7 +9,13 @@
 Mesh::Mesh()
 {
     // Primitives::createCube(surfaceMesh);
+    name = "Sphere";
     Primitives::createSphere(surfaceMesh, 32, 16);
+}
+
+const std::string& Mesh::getName() const
+{
+    return name;
 }
 
 const pmp::SurfaceMesh& Mesh::getSurfaceMesh() const

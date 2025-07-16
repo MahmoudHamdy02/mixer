@@ -3,6 +3,7 @@
 #include "UI/mainwindow.h"
 #include "renderer.h"
 #include "scenecontroller.h"
+#include "selectionmanager.h"
 
 int main(int argc, char* argv[])
 {
@@ -11,7 +12,9 @@ int main(int argc, char* argv[])
     SceneController* scene = new SceneController();
     Renderer* renderer = new Renderer(scene);
 
-    MainWindow w(renderer);
+    SelectionManager* selectionManager = new SelectionManager(renderer, scene);
+
+    MainWindow w(renderer, selectionManager);
     w.setMinimumSize(400, 300);
     w.resize(1200, 900);
     w.show();

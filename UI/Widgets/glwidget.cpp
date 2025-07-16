@@ -9,7 +9,8 @@
 #include "renderer.h"
 #include "toolmanager.h"
 
-GLWidget::GLWidget(Renderer* renderer, QWidget* parent) : QOpenGLWidget(parent), renderer(renderer)
+GLWidget::GLWidget(Renderer* renderer, SelectionManager* selectionManager, QWidget* parent)
+    : QOpenGLWidget(parent), renderer(renderer), selectionManager(selectionManager)
 {
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
 }
@@ -87,7 +88,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
         pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
         pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
         renderer->setSelectionRectangleVertices(pmp::vec2(0, 0), pmp::vec2(0, 0));
-        renderer->selectInsideRectangle(min, max);
+        selectionManager->selectRectangle(min, max);
         update();
     }
 }

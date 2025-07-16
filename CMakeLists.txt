@@ -53,6 +53,8 @@ set(CORE_SOURCES
 set(APPLICATION_SOURCES
     Application/toolmanager.cpp
     Application/toolmanager.h
+    Application/selectionmanager.cpp
+    Application/selectionmanager.h
 )
 
 qt_add_resources(RESOURCES resources.qrc)
