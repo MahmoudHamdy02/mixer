@@ -89,6 +89,7 @@ void Renderer::render()
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     grid->render();
 
+    // TODO: Test if disabling depth test is necessary
     if (editMode == EditMode::Vertex) {
         // Vertex handles
         glDisable(GL_DEPTH_TEST);

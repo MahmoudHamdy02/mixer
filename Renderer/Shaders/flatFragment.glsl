@@ -3,9 +3,8 @@
 uniform vec3 cameraDirection;
 
 in vec3 normal;
-in vec3 FragPos;
 
-out vec4 FragColor;
+out vec4 fragColor;
 
 void main() {
     // Normalize the dot product from -1 -> 1 to 0 -> 1
@@ -13,5 +12,5 @@ void main() {
     float lightStrength = 0.5 + 0.5 * dot(normal, normalize(-cameraDirection));
     vec3 color = lightStrength * vec3(0.8); // Cap brightest color to 0.8
 
-    FragColor = vec4(color, 1.0);
+    fragColor = vec4(color, 1.0);
 };
