@@ -88,6 +88,7 @@ target_link_libraries(mixer
         Qt::Core
         Qt::Widgets
         Qt::OpenGLWidgets
+        opengl32
         pmp
 )
 
