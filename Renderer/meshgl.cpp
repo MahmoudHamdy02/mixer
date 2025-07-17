@@ -1,8 +1,5 @@
 #include "meshgl.h"
 
-#include <GL/glext.h>
-#include <qopenglext.h>
-
 #include <vector>
 
 #include "mesh.h"
