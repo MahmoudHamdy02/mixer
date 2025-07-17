@@ -78,6 +78,11 @@ target_include_directories(mixer
         ${CMAKE_CURRENT_SOURCE_DIR}/Application
 )
 
+# Enable all warnings on GCC/Clang
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(mixer PRIVATE -Wall -Wextra -Wpedantic)
+endif()
+
 target_link_libraries(mixer
     PRIVATE
         Qt::Core

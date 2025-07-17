@@ -6,6 +6,7 @@
 #include <qlabel.h>
 #include <qmenubar.h>
 #include <qnamespace.h>
+#include <qobject.h>
 #include <qsplitter.h>
 #include <qtextedit.h>
 #include <qwidget.h>
@@ -70,8 +71,8 @@ void MainWindow::setupLeftToolbar()
 {
     leftToolbar = new LeftToolbar(this);
 
-    connect(leftToolbar->actionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
-        std::string tool = action->text().toStdString();
+    connect(leftToolbar->actionGroup, &QActionGroup::triggered, this, [](QAction* action) {
+        QString tool = action->text();
         if (tool == LeftToolbar::Tools::CAMERA)
             ToolManager::selectedTool = ToolManager::Tool::Camera;
         if (tool == LeftToolbar::Tools::SELECT)
@@ -86,7 +87,7 @@ void MainWindow::setupTopToolbar()
     topToolbar = new TopToolbar(this);
 
     connect(topToolbar->renderModeActionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
-        std::string mode = action->text().toStdString();
+        QString mode = action->text();
         if (mode == TopToolbar::RenderMode::FLAT)
             ToolManager::selectedRenderMode = ToolManager::RenderMode::Flat;
         else if (mode == TopToolbar::RenderMode::WIREFRAME)
