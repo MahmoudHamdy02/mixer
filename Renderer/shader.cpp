@@ -1,6 +1,5 @@
 #include "shader.h"
 
-#include <GL/gl.h>
 #include <qfile.h>
 
 #include "pmp/mat_vec.h"

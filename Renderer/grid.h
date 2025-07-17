@@ -1,6 +1,5 @@
 #pragma once
 
-#include <GL/gl.h>
 #include <qopenglextrafunctions.h>
 
 #include "shader.h"

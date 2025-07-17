@@ -1,7 +1,5 @@
 #include "selectionrectangle.h"
 
-#include <GL/gl.h>
-
 SelectionRectangle::SelectionRectangle()
 {
     initializeOpenGLFunctions();

@@ -1,8 +1,5 @@
 #include "renderer.h"
 
-#include <GL/gl.h>
-#include <qopenglext.h>
-
 #include <memory>
 #include <vector>
 
