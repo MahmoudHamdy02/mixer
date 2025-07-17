@@ -99,7 +99,7 @@ void MainWindow::setupTopToolbar()
     });
 
     connect(topToolbar->editModeActionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
-        std::string mode = action->text().toStdString();
+        QString mode = action->text();
         if (mode == TopToolbar::EditMode::OBJECT)
             ToolManager::selectedEditMode = ToolManager::EditMode::Object;
         else if (mode == TopToolbar::EditMode::VERTEX)
