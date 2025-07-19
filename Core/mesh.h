@@ -21,4 +21,5 @@ public:
     void translate(pmp::vec3 vec);
 
     void setSelectedVertices(const std::vector<pmp::Vertex>& vertices);
+    void unselectVertices();
 };

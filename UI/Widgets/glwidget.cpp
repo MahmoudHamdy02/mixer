@@ -5,6 +5,7 @@
 
 #include <QMouseEvent>
 #include <algorithm>
+#include <iostream>
 
 #include "renderer.h"
 #include "toolmanager.h"
@@ -13,10 +14,18 @@ GLWidget::GLWidget(Renderer* renderer, SelectionManager* selectionManager, QWidg
     : QOpenGLWidget(parent), renderer(renderer), selectionManager(selectionManager)
 {
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
+    QSurfaceFormat format;
+    format.setDepthBufferSize(32);   // Request a 24-bit depth buffer
+    format.setStencilBufferSize(8);  // Stencil support
+    format.setVersion(4, 6);
+    format.setProfile(QSurfaceFormat::CoreProfile);
+    format.setSamples(0);
+    setFormat(format);
 }
 
 void GLWidget::initializeGL()
 {
+    initializeOpenGLFunctions();
     renderer->initialize();
 }
 
@@ -68,6 +77,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
 
 void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
+    makeCurrent();
     // TODO: Create InputHandler class
     if (ToolManager::selectedTool == ToolManager::Tool::Select) {
         float newMousePosX = event->position().x();
@@ -84,8 +94,12 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
             if (isDrawingSelectionRectangle) {
                 selectionManager->selectVerticesInRectangle(min, max);
             } else {
-                Ray ray = renderer->mouseToWorldRay(newMousePosX, newMousePosY);
-                selectionManager->selectVertex(ray);
+                pmp::vec2 ndcClickPos = screenSpaceToNDC(pmp::vec2(newMousePosX, height() - newMousePosY));
+                GLfloat depth;
+                glReadPixels((int)newMousePosX, (int)height() - newMousePosY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT,
+                             &depth);
+                std::cout << "Selecting vertex, depth: " << depth << std::endl;
+                selectionManager->selectVertex(ndcClickPos[0], ndcClickPos[1], depth);
             }
         } else {
             if (isDrawingSelectionRectangle) {

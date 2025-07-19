@@ -42,3 +42,12 @@ void Mesh::setSelectedVertices(const std::vector<pmp::Vertex>& vertices)
         selected[v] = 1.0f;
     }
 }
+
+void Mesh::unselectVertices()
+{
+    auto selected = surfaceMesh.get_vertex_property<float>("v:selected");
+
+    for (const pmp::Vertex& v : surfaceMesh.vertices()) {
+        selected[v] = 0.0f;
+    }
+}

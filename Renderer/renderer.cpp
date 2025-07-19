@@ -138,6 +138,13 @@ void Renderer::updateMesh(const std::string& name)
     }
 }
 
+void Renderer::updateMeshes()
+{
+    for (MeshGL& meshGL : meshGLs) {
+        meshGL.updateBuffers();
+    }
+}
+
 void Renderer::moveCamera(float offsetX, float offsetY)
 {
     camera.processMouse(offsetX, offsetY);

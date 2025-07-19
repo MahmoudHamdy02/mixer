@@ -14,7 +14,7 @@ public:
     SelectionManager(Renderer* renderer, SceneController* scene);
 
     void selectVerticesInRectangle(const pmp::vec2& min, const pmp::vec2& max) const;
-    void selectVertex(const Ray& ray) const;
+    void selectVertex(float ndcX, float ndcY, float depthBufferValue) const;
     void selectObjectsInRectangle(const pmp::vec2& min, const pmp::vec2& max) const;
     void selectObject(const Ray& ray) const;
 

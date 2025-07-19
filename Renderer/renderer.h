@@ -40,6 +40,7 @@ public:
 
     Ray mouseToWorldRay(float mouseX, float mouseY) const;
     void updateMesh(const std::string& name);
+    void updateMeshes();
 
     const pmp::mat4& getModelMatrix() const;
     const pmp::mat4& getViewMatrix() const;
