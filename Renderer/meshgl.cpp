@@ -195,6 +195,7 @@ void MeshGL::updateBuffers()
     numIndices = indices.size();
     instancedNumIndices = meshGL.n_faces() * 3;
 
+    glBindVertexArray(VAO);
     // Vertices VBO
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
