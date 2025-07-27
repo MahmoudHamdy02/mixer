@@ -116,7 +116,7 @@ void Renderer::render()
         if (selectionManager->isMeshSelected(mesh.mesh)) {
             pmp::Point center = mesh.mesh->getCenter();
             pmp::mat4 outlineModel = pmp::translation_matrix(-center);
-            outlineModel = pmp::scaling_matrix(1.05f) * outlineModel;
+            outlineModel = pmp::scaling_matrix(1.03f) * outlineModel;
             outlineModel = pmp::translation_matrix(center) * outlineModel;
             outlineShader->setMatrix4("model", outlineModel.data());
             mesh.draw();
