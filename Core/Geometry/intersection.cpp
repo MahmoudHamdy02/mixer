@@ -12,9 +12,6 @@ RayAABBIntersection rayIntersectsAABB(const Ray& ray, const pmp::BoundingBox& aa
 {
     RayAABBIntersection res;
 
-    // Point along ray: p = o + tr
-    // t = (p - o) / r
-
     pmp::Point l = aabb.min();
     pmp::Point h = aabb.max();
     pmp::vec3 o = ray.origin;
@@ -23,6 +20,7 @@ RayAABBIntersection rayIntersectsAABB(const Ray& ray, const pmp::BoundingBox& aa
     float close = 0.0f;
     float far = 100000.0f;
 
+    // Find intersection with the three plane pairs that define the AABB
     for (int i = 0; i < 3; i++) {
         float tLow = (l[i] - o[i]) / r[i];
         float tHigh = (h[i] - o[i]) / r[i];
@@ -30,6 +28,7 @@ RayAABBIntersection rayIntersectsAABB(const Ray& ray, const pmp::BoundingBox& aa
         float tClose = std::min(tLow, tHigh);
         float tFar = std::max(tLow, tHigh);
 
+        // Keep track of latest entry point and earliest exit point
         if (tClose > close)
             close = tClose;
         if (tFar < far)
@@ -37,7 +36,7 @@ RayAABBIntersection rayIntersectsAABB(const Ray& ray, const pmp::BoundingBox& aa
     }
 
     if (close > far)
-        return res;
+        return res;  // Hit = false
 
     res.hit = true;
     res.distance = close;

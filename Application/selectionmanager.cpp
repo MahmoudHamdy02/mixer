@@ -103,7 +103,7 @@ void SelectionManager::selectVertex(float ndcX, float ndcY, float depthBufferVal
     renderer->updateMeshes();
 }
 
-void SelectionManager::selectObjectsInRectangle(const pmp::vec2& min, const pmp::vec2& max) const
+void SelectionManager::selectObjectsInRectangle(const pmp::vec2& min, const pmp::vec2& max)
 {
     const pmp::mat4& model = renderer->getModelMatrix();
     const pmp::mat4& view = renderer->getViewMatrix();
@@ -117,15 +117,27 @@ void SelectionManager::selectObjectsInRectangle(const pmp::vec2& min, const pmp:
     }
 }
 
-void SelectionManager::selectObject(const Ray& ray) const
+void SelectionManager::selectObject(const Ray& ray)
 {
+    using namespace Intersection;
     std::vector<Mesh>& meshes = scene->getMeshes();
+
+    bool hit = false;
+    Mesh* hitMesh = nullptr;
+    float distance = 0.0f;
+
     for (Mesh& mesh : meshes) {
-        Intersection::RayAABBIntersection res = Intersection::rayIntersectsAABB(ray, mesh.getAABB());
+        RayAABBIntersection res = rayIntersectsAABB(ray, mesh.getAABB());
         if (res.hit) {
-            std::cout << "Mesh hit at distance: " << res.distance << std::endl;
-            return;
+            if (res.distance < distance || !hit) {
+                hit = true;
+                distance = res.distance;
+                hitMesh = &mesh;
+            }
         }
     }
-    std::cout << "No Mesh hit" << std::endl;
+
+    selectedMeshes.clear();
+    if (hit)
+        selectedMeshes.insert(hitMesh);
 }
