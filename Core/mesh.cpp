@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "Geometry/primitives.h"
+#include "pmp/algorithms/utilities.h"
+#include "pmp/bounding_box.h"
 #include "pmp/mat_vec.h"
 #include "pmp/surface_mesh.h"
 
@@ -11,6 +13,9 @@ Mesh::Mesh(std::string name) : name(name)
 {
     // Primitives::createCube(surfaceMesh);
     Primitives::createSphere(surfaceMesh, 32, 16);
+
+    aabb = pmp::bounds(surfaceMesh);
+    center = aabb.center();
 }
 
 const std::string& Mesh::getName() const
@@ -23,11 +28,18 @@ const pmp::SurfaceMesh& Mesh::getSurfaceMesh() const
     return surfaceMesh;
 }
 
+const pmp::BoundingBox& Mesh::getAABB() const
+{
+    return aabb;
+}
+
 void Mesh::translate(pmp::vec3 vec)
 {
     for (pmp::Vertex v : surfaceMesh.vertices()) {
         surfaceMesh.position(v) += vec;
     }
+    aabb = pmp::bounds(surfaceMesh);
+    center = aabb.center();
 }
 
 void Mesh::setSelectedVertices(const std::vector<pmp::Vertex>& vertices)

@@ -1,11 +1,10 @@
 #include "selectionmanager.h"
 
-#include <cmath>
 #include <iostream>
-#include <limits>
 #include <ostream>
 #include <vector>
 
+#include "Geometry/intersection.h"
 #include "pmp/mat_vec.h"
 #include "pmp/surface_mesh.h"
 #include "renderer.h"
@@ -120,5 +119,13 @@ void SelectionManager::selectObjectsInRectangle(const pmp::vec2& min, const pmp:
 
 void SelectionManager::selectObject(const Ray& ray) const
 {
-    std::cout << __func__ << std::endl;
+    std::vector<Mesh>& meshes = scene->getMeshes();
+    for (Mesh& mesh : meshes) {
+        Intersection::RayAABBIntersection res = Intersection::rayIntersectsAABB(ray, mesh.getAABB());
+        if (res.hit) {
+            std::cout << "Mesh hit at distance: " << res.distance << std::endl;
+            return;
+        }
+    }
+    std::cout << "No Mesh hit" << std::endl;
 }
