@@ -7,17 +7,17 @@
 #include "Geometry/intersection.h"
 #include "pmp/mat_vec.h"
 #include "pmp/surface_mesh.h"
-#include "renderer.h"
 
-SelectionManager::SelectionManager(Renderer* renderer, SceneController* scene) : renderer(renderer), scene(scene) {}
+SelectionManager::SelectionManager(SceneController* scene) : scene(scene) {}
 
-void SelectionManager::selectVerticesInRectangle(const pmp::vec2& min, const pmp::vec2& max) const
+bool SelectionManager::isMeshSelected(Mesh* mesh)
 {
-    const pmp::mat4& model = renderer->getModelMatrix();
-    const pmp::mat4& view = renderer->getViewMatrix();
-    const pmp::mat4& projection = renderer->getProjectionMatrix();
-    const Camera& camera = renderer->getCamera();
+    return selectedMeshes.contains(mesh);
+}
 
+void SelectionManager::selectVerticesInRectangle(const pmp::vec2& min, const pmp::vec2& max, const pmp::mat4& mvp,
+                                                 const pmp::vec3& cameraDir) const
+{
     std::vector<Mesh>& meshes = scene->getMeshes();
     for (Mesh& mesh : meshes) {
         const pmp::SurfaceMesh& s = mesh.getSurfaceMesh();
@@ -26,31 +26,26 @@ void SelectionManager::selectVerticesInRectangle(const pmp::vec2& min, const pmp
         std::vector<pmp::Vertex> vertices;
 
         for (pmp::Vertex v : s.vertices()) {
-            pmp::vec4 c = projection * view * model * pmp::vec4(s.position(v), 1.0);
+            pmp::vec4 c = mvp * pmp::vec4(s.position(v), 1.0);
             // Clip space position
             pmp::vec3 pos = pmp::vec3(c[0] / c[3], c[1] / c[3], c[2] / c[3]);
             // Select vertex only if it is inside rectangle and visible from the camera
             if (pos[0] > min[0] && pos[0] < max[0] && pos[1] > min[1] && pos[1] < max[1]) {
-                if (pmp::dot(camera.front, vnormal[v]) < -0.1) {
+                if (pmp::dot(cameraDir, vnormal[v]) < -0.1) {
                     vertices.push_back(v);
                 }
             }
         }
 
         mesh.setSelectedVertices(vertices);
-        renderer->updateMesh(mesh.getName());
     }
 }
 
-void SelectionManager::selectVertex(float ndcX, float ndcY, float depthBufferValue) const
+void SelectionManager::selectVertex(float ndcX, float ndcY, float depthBufferValue, const pmp::mat4& mvp,
+                                    const pmp::vec3& cameraDir) const
 {
     // TODO: Epsilon scaling
     const float EPSILON = 0.025f;
-    const Camera camera = renderer->getCamera();
-    const pmp::mat4& model = renderer->getModelMatrix();
-    const pmp::mat4& view = renderer->getViewMatrix();
-    const pmp::mat4& projection = renderer->getProjectionMatrix();
-    const pmp::mat4 mvp = projection * view * model;
 
     std::vector<Mesh>& meshes = scene->getMeshes();
     for (Mesh& mesh : meshes) {
@@ -70,7 +65,7 @@ void SelectionManager::selectVertex(float ndcX, float ndcY, float depthBufferVal
             pmp::vec3 ndcPos = pmp::vec3(c[0] / c[3], c[1] / c[3], c[2] / c[3]);
 
             // Only test vertices visible from the camera
-            if (pmp::dot(camera.front, vnormal[v]) > -0.1)
+            if (pmp::dot(cameraDir, vnormal[v]) > -0.1)
                 continue;
 
             // Only test vertices close enough to the click position
@@ -99,17 +94,10 @@ void SelectionManager::selectVertex(float ndcX, float ndcY, float depthBufferVal
     } else {
         std::cout << "No vertex hit" << std::endl;
     }
-
-    renderer->updateMeshes();
 }
 
 void SelectionManager::selectObjectsInRectangle(const pmp::vec2& min, const pmp::vec2& max)
 {
-    const pmp::mat4& model = renderer->getModelMatrix();
-    const pmp::mat4& view = renderer->getViewMatrix();
-    const pmp::mat4& projection = renderer->getProjectionMatrix();
-    const Camera& camera = renderer->getCamera();
-
     std::vector<Mesh>& meshes = scene->getMeshes();
     for (Mesh& mesh : meshes) {
         // Check if center+aabb side length is inside selection rectangle

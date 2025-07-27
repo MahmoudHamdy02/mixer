@@ -10,12 +10,14 @@
 #include "pmp/mat_vec.h"
 #include "ray.h"
 #include "scenecontroller.h"
+#include "selectionmanager.h"
 #include "selectionrectangle.h"
 #include "shader.h"
 
 class Renderer : private QOpenGLExtraFunctions
 {
     SceneController* scene;
+    SelectionManager* selectionManager;
 
     Camera camera;
     pmp::mat4 projection;
@@ -28,12 +30,13 @@ class Renderer : private QOpenGLExtraFunctions
     Shader* flatShader;
     Shader* wireframeShader;
     Shader* pointsShader;
+    Shader* outlineShader;
 
     std::unique_ptr<Grid> grid;
     std::unique_ptr<SelectionRectangle> selectionRectangle;
 
 public:
-    Renderer(SceneController* scene);
+    Renderer(SceneController* scene, SelectionManager* selectionManager);
     void initialize();
     void resize(int width, int height);
     void render();
@@ -45,6 +48,7 @@ public:
     const pmp::mat4& getModelMatrix() const;
     const pmp::mat4& getViewMatrix() const;
     const pmp::mat4& getProjectionMatrix() const;
+    const pmp::mat4 getMVPMatrix() const;
 
     const Camera& getCamera() const;
     void moveCamera(float offsetX, float offsetY);

@@ -10,9 +10,9 @@ int main(int argc, char* argv[])
     QApplication a(argc, argv);
 
     SceneController* scene = new SceneController();
-    Renderer* renderer = new Renderer(scene);
+    SelectionManager* selectionManager = new SelectionManager(scene);
 
-    SelectionManager* selectionManager = new SelectionManager(renderer, scene);
+    Renderer* renderer = new Renderer(scene, selectionManager);
 
     MainWindow w(renderer, selectionManager);
     w.setMinimumSize(400, 300);

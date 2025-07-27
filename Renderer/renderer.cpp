@@ -6,11 +6,15 @@
 #include "mesh.h"
 #include "meshgl.h"
 #include "pmp/mat_vec.h"
+#include "selectionmanager.h"
 #include "selectionrectangle.h"
 #include "shader.h"
 #include "toolmanager.h"
 
-Renderer::Renderer(SceneController* scene) : scene(scene) {}
+Renderer::Renderer(SceneController* scene, SelectionManager* selectionManager)
+    : scene(scene), selectionManager(selectionManager)
+{
+}
 
 void Renderer::initialize()
 {
@@ -18,6 +22,7 @@ void Renderer::initialize()
 
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
     glEnable(GL_PROGRAM_POINT_SIZE);
     glEnable(GL_POINT_SMOOTH);
     glEnable(GL_BLEND);
@@ -27,6 +32,7 @@ void Renderer::initialize()
     wireframeShader =
         new Shader(":/Renderer/Shaders/wireframeVertex.glsl", ":/Renderer/Shaders/wireframeFragment.glsl");
     flatShader = new Shader(":/Renderer/Shaders/flatVertex.glsl", ":/Renderer/Shaders/flatFragment.glsl");
+    outlineShader = new Shader(":/Renderer/Shaders/outlineVertex.glsl", ":/Renderer/Shaders/outlineFragment.glsl");
     pointsShader = new Shader(":/Renderer/Shaders/pointsVertex.glsl", ":/Renderer/Shaders/pointsFragment.glsl");
     flatShader->use();
 
@@ -37,6 +43,7 @@ void Renderer::initialize()
     flatShader->setMatrix4("model", model.data());
     wireframeShader->setMatrix4("model", model.data());
     pointsShader->setMatrix4("model", model.data());
+    outlineShader->setMatrix4("model", model.data());
 
     std::vector<Mesh>& meshes = scene->getMeshes();
     for (Mesh& mesh : meshes) {
@@ -54,6 +61,7 @@ void Renderer::resize(int width, int height)
     // TODO: Bind near and far values to grid fragment shader
     projection = pmp::perspective_matrix(45.0f, (float)width / height, 0.1f, 200.0f);
     flatShader->setMatrix4("projection", projection.data());
+    outlineShader->setMatrix4("projection", projection.data());
     wireframeShader->setMatrix4("projection", projection.data());
     pointsShader->setMatrix4("projection", projection.data());
     grid->shader->setMatrix4("projection", projection.data());
@@ -62,7 +70,7 @@ void Renderer::resize(int width, int height)
 
 void Renderer::render()
 {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
     if (ToolManager::selectedRenderMode == ToolManager::RenderMode::Wireframe) {
@@ -76,16 +84,47 @@ void Renderer::render()
     // Set camera view matrix
     view = camera.getViewMatrix();
     flatShader->setMatrix4("view", view.data());
+    outlineShader->setMatrix4("view", view.data());
     wireframeShader->setMatrix4("view", view.data());
     pointsShader->setMatrix4("view", view.data());
     grid->shader->setMatrix4("view", view.data());
     flatShader->setVec3("cameraDirection", camera.front);
     pointsShader->setVec3("cameraDirection", camera.front);
 
+    glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);  // all fragments should pass the stencil test
+    glStencilMask(0x00);                // Stencil buffer not written not by default
+
     // Scene meshes
     for (MeshGL& mesh : meshGLs) {
-        mesh.draw();
+        if (!selectionManager->isMeshSelected(mesh.mesh)) {
+            mesh.draw();
+        }
     }
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glStencilMask(0xFF);
+    for (MeshGL& mesh : meshGLs) {
+        if (selectionManager->isMeshSelected(mesh.mesh)) {
+            mesh.draw();
+        }
+    }
+    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+    glStencilMask(0x00);
+    glDisable(GL_DEPTH_TEST);
+    outlineShader->use();
+    for (MeshGL& mesh : meshGLs) {
+        if (selectionManager->isMeshSelected(mesh.mesh)) {
+            pmp::Point center = mesh.mesh->getCenter();
+            pmp::mat4 outlineModel = pmp::translation_matrix(-center);
+            outlineModel = pmp::scaling_matrix(1.05f) * outlineModel;
+            outlineModel = pmp::translation_matrix(center) * outlineModel;
+            outlineShader->setMatrix4("model", outlineModel.data());
+            mesh.draw();
+        }
+    }
+    glStencilMask(0xFF);
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);
+    glEnable(GL_DEPTH_TEST);
 
     // Floor grid
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -178,6 +217,11 @@ const pmp::mat4& Renderer::getViewMatrix() const
 const pmp::mat4& Renderer::getProjectionMatrix() const
 {
     return projection;
+}
+
+const pmp::mat4 Renderer::getMVPMatrix() const
+{
+    return projection * view * model;
 }
 
 const Camera& Renderer::getCamera() const

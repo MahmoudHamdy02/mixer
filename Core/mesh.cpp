@@ -33,6 +33,11 @@ const pmp::BoundingBox& Mesh::getAABB() const
     return aabb;
 }
 
+const pmp::Point& Mesh::getCenter() const
+{
+    return center;
+}
+
 void Mesh::translate(pmp::vec3 vec)
 {
     for (pmp::Vertex v : surfaceMesh.vertices()) {

@@ -92,14 +92,19 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
         pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
         if (ToolManager::selectedEditMode == ToolManager::EditMode::Vertex) {
             if (isDrawingSelectionRectangle) {
-                selectionManager->selectVerticesInRectangle(min, max);
+                selectionManager->selectVerticesInRectangle(min, max, renderer->getMVPMatrix(),
+                                                            renderer->getCamera().front);
+                // TODO: Only update buffers of changed meshes
+                renderer->updateMeshes();
             } else {
                 pmp::vec2 ndcClickPos = screenSpaceToNDC(pmp::vec2(newMousePosX, height() - newMousePosY));
                 GLfloat depth;
                 glReadPixels((int)newMousePosX, (int)height() - newMousePosY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT,
                              &depth);
                 std::cout << "Selecting vertex, depth: " << depth << std::endl;
-                selectionManager->selectVertex(ndcClickPos[0], ndcClickPos[1], depth);
+                selectionManager->selectVertex(ndcClickPos[0], ndcClickPos[1], depth, renderer->getMVPMatrix(),
+                                               renderer->getCamera().front);
+                renderer->updateMeshes();
             }
         } else {
             if (isDrawingSelectionRectangle) {

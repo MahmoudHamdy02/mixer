@@ -23,6 +23,7 @@ public:
     const std::string& getName() const;
     const pmp::SurfaceMesh& getSurfaceMesh() const;
     const pmp::BoundingBox& getAABB() const;
+    const pmp::Point& getCenter() const;
 
     void translate(pmp::vec3 vec);
 

@@ -2,6 +2,8 @@
     <qresource prefix="/">
         <file>Renderer/Shaders/flatVertex.glsl</file>
         <file>Renderer/Shaders/flatFragment.glsl</file>
+        <file>Renderer/Shaders/outlineVertex.glsl</file>
+        <file>Renderer/Shaders/outlineFragment.glsl</file>
         <file>Renderer/Shaders/gridVertex.glsl</file>
         <file>Renderer/Shaders/gridFragment.glsl</file>
         <file>Renderer/Shaders/wireframeVertex.glsl</file>
