@@ -8,6 +8,8 @@
 To build with CMake:
 
 ```bash
+git clone --recursive https://github.com/MahmoudHamdy02/mixer
+cd mixer
 mkdir build && cd build
 cmake -DCMAKE_BUILD_TYPE=Debug ..
 cmake --build .
@@ -20,15 +22,15 @@ Note: On Windows you might need to manually copy some needed dlls next to the `.
 - Qt 6
 - OpenGL 4.1+
 
-The Polygon Mesh Processing (PMP) library source code is included in `external/`
+The Polygon Mesh Processing (PMP) library source code is included as a git submodule in `external/`
 
 ## Architecture
 
-The application is split up into three layers: **UI**, **Renderer** and **Core**
+The application is split up into three main layers: **UI**, **Renderer** and **Core**, alongside **Application** which handles state management.
 
 ### UI:
 
-Build with Qt, includes the main OpenGL widget and other toolbars
+Built with Qt, includes the main OpenGL widget and other toolbars
 
 ### Renderer:
 
@@ -36,7 +38,7 @@ Handles OpenGL buffer management and different rendering modes
 
 ### Core:
 
-Contains the mesh data for all the objects in the scene
+Handles mesh data and geometry operations for all the objects in the scene
 
 ## Future Plans:
 
