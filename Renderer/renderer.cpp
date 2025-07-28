@@ -85,7 +85,6 @@ void Renderer::render()
 
     glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
     glStencilFunc(GL_ALWAYS, 1, 0xFF);  // All fragments should write to the stencil buffer
-    glStencilMask(0x00);                // Stencil buffer not written to by default
 
     // Scene meshes
     for (MeshGL& mesh : meshGLs) {
@@ -136,12 +135,12 @@ void Renderer::drawMesh(MeshGL& mesh, bool outlined)
 
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);  // Only draw where stencil != 1
         glStencilMask(0x00);
-        glDepthFunc(GL_ALWAYS);
+        glDepthFunc(GL_ALWAYS);  // Draw outline on top
 
         outlineShader->use();
         pmp::Point center = mesh.mesh->getCenter();
         pmp::mat4 outlineModel = pmp::translation_matrix(-center);
-        outlineModel = pmp::scaling_matrix(1.03f) * outlineModel;
+        outlineModel = pmp::scaling_matrix(1.025f) * outlineModel;
         outlineModel = pmp::translation_matrix(center) * outlineModel;
         outlineShader->setMatrix4("model", outlineModel.data());
         mesh.draw();
