@@ -108,7 +108,8 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
             }
         } else {
             if (isDrawingSelectionRectangle) {
-                selectionManager->selectObjectsInRectangle(min, max);
+                selectionManager->selectObjectsInRectangle(min, max, renderer->getViewMatrix(),
+                                                           renderer->getProjectionMatrix());
             } else {
                 Ray ray = renderer->mouseToWorldRay(newMousePosX, newMousePosY);
                 selectionManager->selectObject(ray);

@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include "plane.h"
+#include "pmp/bounding_box.h"
 #include "pmp/mat_vec.h"
 
 namespace Intersection {
@@ -41,6 +43,28 @@ RayAABBIntersection rayIntersectsAABB(const Ray& ray, const pmp::BoundingBox& aa
     res.hit = true;
     res.distance = close;
     return res;
+}
+
+bool aabbIntersectsFrustum(const pmp::BoundingBox& aabb, const std::array<Plane, 6>& planes)
+{
+    for (const Plane& plane : planes) {
+        // Get the most positive vertex relative to plane normal
+        pmp::vec3 p = aabb.min();
+        pmp::vec3 max = aabb.max();
+
+        if (plane.normal[0] >= 0)
+            p[0] = max[0];
+        if (plane.normal[1] >= 0)
+            p[1] = max[1];
+        if (plane.normal[2] >= 0)
+            p[2] = max[2];
+
+        if (plane.distance(p) < 0) {
+            // AABB is completely outside this plane
+            return false;
+        }
+    }
+    return true;
 }
 
 }  // namespace Intersection

@@ -18,7 +18,8 @@ public:
                                    const pmp::vec3& cameraDir) const;
     void selectVertex(float ndcX, float ndcY, float depthBufferValue, const pmp::mat4& mvp,
                       const pmp::vec3& cameraDir) const;
-    void selectObjectsInRectangle(const pmp::vec2& min, const pmp::vec2& max);
+    void selectObjectsInRectangle(const pmp::vec2& clipMin, const pmp::vec2& clipMax, const pmp::mat4& view,
+                                  const pmp::mat4& projection);
     void selectObject(const Ray& ray);
 
 private:

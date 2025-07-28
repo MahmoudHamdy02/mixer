@@ -51,6 +51,7 @@ set(CORE_SOURCES
     Core/Geometry/intersection.cpp
     Core/Geometry/intersection.h
     Core/ray.h
+    Core/plane.h
 )
 
 set(APPLICATION_SOURCES

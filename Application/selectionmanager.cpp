@@ -1,12 +1,21 @@
 #include "selectionmanager.h"
 
+#include <array>
 #include <iostream>
 #include <ostream>
 #include <vector>
 
 #include "Geometry/intersection.h"
+#include "plane.h"
 #include "pmp/mat_vec.h"
 #include "pmp/surface_mesh.h"
+
+pmp::vec3 unprojectNDCToWorld(float ndcX, float ndcY, float ndcZ, const pmp::mat4& invVP)
+{
+    pmp::vec4 ndc = pmp::vec4(ndcX, ndcY, ndcZ, 1.0f);
+    pmp::vec4 world = invVP * ndc;
+    return pmp::vec3(world[0] / world[3], world[1] / world[3], world[2] / world[3]);
+}
 
 SelectionManager::SelectionManager(SceneController* scene) : scene(scene) {}
 
@@ -96,12 +105,38 @@ void SelectionManager::selectVertex(float ndcX, float ndcY, float depthBufferVal
     }
 }
 
-void SelectionManager::selectObjectsInRectangle(const pmp::vec2& min, const pmp::vec2& max)
+void SelectionManager::selectObjectsInRectangle(const pmp::vec2& ndcMin, const pmp::vec2& ndcMax, const pmp::mat4& view,
+                                                const pmp::mat4& projection)
 {
+    pmp::mat4 invVP = pmp::inverse(projection * view);
+
+    // Get frustum matrix points
+    pmp::vec3 topLeftNear = unprojectNDCToWorld(ndcMin[0], ndcMax[1], -1.0f, invVP);
+    pmp::vec3 topRightNear = unprojectNDCToWorld(ndcMax[0], ndcMax[1], -1.0f, invVP);
+    pmp::vec3 bottomLeftNear = unprojectNDCToWorld(ndcMin[0], ndcMin[1], -1.0f, invVP);
+    pmp::vec3 bottomRightNear = unprojectNDCToWorld(ndcMax[0], ndcMin[1], -1.0f, invVP);
+
+    pmp::vec3 topLeftFar = unprojectNDCToWorld(ndcMin[0], ndcMax[1], 1.0f, invVP);
+    pmp::vec3 topRightFar = unprojectNDCToWorld(ndcMax[0], ndcMax[1], 1.0f, invVP);
+    pmp::vec3 bottomLeftFar = unprojectNDCToWorld(ndcMin[0], ndcMin[1], 1.0f, invVP);
+    pmp::vec3 bottomRightFar = unprojectNDCToWorld(ndcMax[0], ndcMin[1], 1.0f, invVP);
+
+    // Construct the 6 planes
+    std::array<Plane, 6> planes = {
+        Plane(topLeftNear, bottomLeftNear, bottomLeftFar),       // Left
+        Plane(bottomRightNear, topRightNear, bottomRightFar),    // Right
+        Plane(topRightNear, topLeftNear, topRightFar),           // Top
+        Plane(bottomLeftNear, bottomRightNear, bottomRightFar),  // Bottom
+        Plane(topLeftNear, topRightNear, bottomRightNear),       // Near
+        Plane(topRightFar, topLeftFar, bottomLeftFar)            // Far
+    };
+
+    selectedMeshes.clear();
     std::vector<Mesh>& meshes = scene->getMeshes();
     for (Mesh& mesh : meshes) {
-        // Check if center+aabb side length is inside selection rectangle
-        std::cout << __func__ << std::endl;
+        if (Intersection::aabbIntersectsFrustum(mesh.getAABB(), planes)) {
+            selectedMeshes.insert(&mesh);
+        }
     }
 }
 
