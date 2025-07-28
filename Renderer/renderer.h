@@ -35,6 +35,8 @@ class Renderer : private QOpenGLExtraFunctions
     std::unique_ptr<Grid> grid;
     std::unique_ptr<SelectionRectangle> selectionRectangle;
 
+    void drawMesh(MeshGL& meshGL, bool outlined);
+
 public:
     Renderer(SceneController* scene, SelectionManager* selectionManager);
     void initialize();

@@ -73,14 +73,6 @@ void Renderer::render()
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
 
-    if (ToolManager::selectedRenderMode == ToolManager::RenderMode::Wireframe) {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        wireframeShader->use();
-    } else {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        flatShader->use();
-    }
-
     // Set camera view matrix
     view = camera.getViewMatrix();
     flatShader->setMatrix4("view", view.data());
@@ -92,39 +84,13 @@ void Renderer::render()
     pointsShader->setVec3("cameraDirection", camera.front);
 
     glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);  // all fragments should pass the stencil test
-    glStencilMask(0x00);                // Stencil buffer not written not by default
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);  // All fragments should write to the stencil buffer
+    glStencilMask(0x00);                // Stencil buffer not written to by default
 
     // Scene meshes
     for (MeshGL& mesh : meshGLs) {
-        if (!selectionManager->isMeshSelected(mesh.mesh)) {
-            mesh.draw();
-        }
+        drawMesh(mesh, selectionManager->isMeshSelected(mesh.mesh));
     }
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glStencilMask(0xFF);
-    for (MeshGL& mesh : meshGLs) {
-        if (selectionManager->isMeshSelected(mesh.mesh)) {
-            mesh.draw();
-        }
-    }
-    glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-    glStencilMask(0x00);
-    glDisable(GL_DEPTH_TEST);
-    outlineShader->use();
-    for (MeshGL& mesh : meshGLs) {
-        if (selectionManager->isMeshSelected(mesh.mesh)) {
-            pmp::Point center = mesh.mesh->getCenter();
-            pmp::mat4 outlineModel = pmp::translation_matrix(-center);
-            outlineModel = pmp::scaling_matrix(1.03f) * outlineModel;
-            outlineModel = pmp::translation_matrix(center) * outlineModel;
-            outlineShader->setMatrix4("model", outlineModel.data());
-            mesh.draw();
-        }
-    }
-    glStencilMask(0xFF);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glEnable(GL_DEPTH_TEST);
 
     // Floor grid
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -149,6 +115,40 @@ void Renderer::render()
     glColorMask(false, false, false, true);
     glClear(GL_COLOR_BUFFER_BIT);
     glColorMask(true, true, true, true);
+}
+
+void Renderer::drawMesh(MeshGL& mesh, bool outlined)
+{
+    if (ToolManager::selectedRenderMode == ToolManager::RenderMode::Wireframe) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        wireframeShader->use();
+    } else {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+        flatShader->use();
+    }
+
+    if (!outlined) {
+        mesh.draw();
+    } else {
+        glStencilMask(0xFF);
+        glClear(GL_STENCIL_BUFFER_BIT);
+        mesh.draw();
+
+        glStencilFunc(GL_NOTEQUAL, 1, 0xFF);  // Only draw where stencil != 1
+        glStencilMask(0x00);
+        glDepthFunc(GL_ALWAYS);
+
+        outlineShader->use();
+        pmp::Point center = mesh.mesh->getCenter();
+        pmp::mat4 outlineModel = pmp::translation_matrix(-center);
+        outlineModel = pmp::scaling_matrix(1.03f) * outlineModel;
+        outlineModel = pmp::translation_matrix(center) * outlineModel;
+        outlineShader->setMatrix4("model", outlineModel.data());
+        mesh.draw();
+
+        glStencilFunc(GL_ALWAYS, 1, 0xFF);
+        glDepthFunc(GL_LESS);
+    }
 }
 
 Ray Renderer::mouseToWorldRay(float mouseX, float mouseY) const
