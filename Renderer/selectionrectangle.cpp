@@ -1,5 +1,9 @@
 #include "selectionrectangle.h"
 
+#include <memory>
+
+#include "shader.h"
+
 SelectionRectangle::SelectionRectangle()
 {
     initializeOpenGLFunctions();
@@ -30,8 +34,7 @@ SelectionRectangle::SelectionRectangle()
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
-    shader = new Shader(":/Renderer/Shaders/selectionRectangleVertex.glsl",
-                        ":/Renderer/Shaders/selectionRectangleFragment.glsl");
+    shader = std::make_unique<Shader>(":/selectionRectangleVertex.glsl", ":/selectionRectangleFragment.glsl");
 }
 
 void SelectionRectangle::setVertices(const pmp::vec2& min, const pmp::vec2& max)

@@ -29,11 +29,10 @@ void Renderer::initialize()
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Setup shaders
-    wireframeShader =
-        new Shader(":/Renderer/Shaders/wireframeVertex.glsl", ":/Renderer/Shaders/wireframeFragment.glsl");
-    flatShader = new Shader(":/Renderer/Shaders/flatVertex.glsl", ":/Renderer/Shaders/flatFragment.glsl");
-    outlineShader = new Shader(":/Renderer/Shaders/outlineVertex.glsl", ":/Renderer/Shaders/outlineFragment.glsl");
-    pointsShader = new Shader(":/Renderer/Shaders/pointsVertex.glsl", ":/Renderer/Shaders/pointsFragment.glsl");
+    wireframeShader = std::make_unique<Shader>(":/wireframeVertex.glsl", ":/wireframeFragment.glsl");
+    flatShader = std::make_unique<Shader>(":/flatVertex.glsl", ":/flatFragment.glsl");
+    outlineShader = std::make_unique<Shader>(":/outlineVertex.glsl", ":/outlineFragment.glsl");
+    pointsShader = std::make_unique<Shader>(":/pointsVertex.glsl", ":/pointsFragment.glsl");
     flatShader->use();
 
     // Setup model matrix

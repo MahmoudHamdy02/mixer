@@ -10,7 +10,7 @@ class SelectionRectangle : private QOpenGLExtraFunctions
     GLuint VAO, VBO, EBO;
 
 public:
-    Shader* shader;
+    std::unique_ptr<Shader> shader;
 
     SelectionRectangle();
 

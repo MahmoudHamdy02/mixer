@@ -2,6 +2,7 @@
 
 #include <qopenglextrafunctions.h>
 
+#include <memory>
 #include <vector>
 
 #include "camera.h"
@@ -27,10 +28,10 @@ class Renderer : private QOpenGLExtraFunctions
     int screenHeight;
 
     std::vector<MeshGL> meshGLs;
-    Shader* flatShader;
-    Shader* wireframeShader;
-    Shader* pointsShader;
-    Shader* outlineShader;
+    std::unique_ptr<Shader> flatShader;
+    std::unique_ptr<Shader> wireframeShader;
+    std::unique_ptr<Shader> pointsShader;
+    std::unique_ptr<Shader> outlineShader;
 
     std::unique_ptr<Grid> grid;
     std::unique_ptr<SelectionRectangle> selectionRectangle;

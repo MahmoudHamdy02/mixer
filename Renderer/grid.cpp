@@ -1,5 +1,9 @@
 #include "grid.h"
 
+#include <memory>
+
+#include "shader.h"
+
 Grid::Grid()
 {
     initializeOpenGLFunctions();
@@ -22,7 +26,7 @@ Grid::Grid()
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-    shader = new Shader(":/Renderer/Shaders/gridVertex.glsl", ":/Renderer/Shaders/gridFragment.glsl");
+    shader = std::make_unique<Shader>(":/gridVertex.glsl", ":/gridFragment.glsl");
 }
 
 void Grid::render()
