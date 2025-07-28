@@ -1,6 +1,6 @@
 # Mixer: A Blender clone
 
-![Object mode](./docs/images/object.png)
+![Object mode](./docs/images/objects.png)
 ![Vertex edit mode](./docs/images/vertices.png)
 
 ## Build
