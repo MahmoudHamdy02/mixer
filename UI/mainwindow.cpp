@@ -18,12 +18,13 @@
 #include "renderer.h"
 #include "toolmanager.h"
 
-MainWindow::MainWindow(Renderer* renderer, SelectionManager* selectionManager, QWidget* parent)
-    : QMainWindow(parent), renderer(renderer), selectionManager(selectionManager)
+MainWindow::MainWindow(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager, QWidget* parent)
+    : QMainWindow(parent), scene(scene), renderer(renderer), selectionManager(selectionManager)
 {
     setupMenubar();
     setupLeftToolbar();
     setupTopToolbar();
+    setupRightSidebar();
 
     addToolBar(Qt::LeftToolBarArea, leftToolbar);
     addToolBar(Qt::TopToolBarArea, topToolbar);
@@ -38,8 +39,6 @@ MainWindow::MainWindow(Renderer* renderer, SelectionManager* selectionManager, Q
     glWidget->setMinimumWidth(300);
     horizontalLayout->addWidget(glWidget);
 
-    // Right sidebar
-    rightSidebar = new RightSidebar(this);
     rightSidebar->setMinimumWidth(200);
     horizontalLayout->addWidget(rightSidebar);
 
@@ -107,4 +106,13 @@ void MainWindow::setupTopToolbar()
 
         glWidget->update();
     });
+}
+
+void MainWindow::setupRightSidebar()
+{
+    rightSidebar = new RightSidebar(this);
+
+    connect(scene, &SceneController::onMeshListChanged, rightSidebar, &RightSidebar::setMeshList);
+
+    rightSidebar->setMeshList(scene->getMeshes());
 }

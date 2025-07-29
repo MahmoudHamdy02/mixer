@@ -14,7 +14,7 @@ int main(int argc, char* argv[])
 
     Renderer* renderer = new Renderer(scene, selectionManager);
 
-    MainWindow w(renderer, selectionManager);
+    MainWindow w(scene, renderer, selectionManager);
     w.setMinimumSize(400, 300);
     w.resize(1200, 900);
     w.show();

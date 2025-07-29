@@ -1,6 +1,5 @@
 #include "rightsidebar.h"
 
-#include <qabstractspinbox.h>
 #include <qboxlayout.h>
 #include <qgridlayout.h>
 #include <qlabel.h>
@@ -14,16 +13,19 @@ RightSidebar::RightSidebar(QWidget* parent) : QWidget(parent)
     QSplitter* verticalLayout = new QSplitter(Qt::Orientation::Vertical, this);
     verticalLayout->setChildrenCollapsible(false);
 
+    // Scene objects label
     QLabel* sceneLabel = new QLabel("Scene objects");
     verticalLayout->addWidget(sceneLabel);
 
-    QListWidget* objectsList = new QListWidget(this);
-    new QListWidgetItem("Cube", objectsList);
+    // Scene objects list
+    objectsList = new QListWidget(this);
     verticalLayout->addWidget(objectsList);
 
+    // Object properties label
     QLabel* propertiesLabel = new QLabel("Properties");
     verticalLayout->addWidget(propertiesLabel);
 
+    // Object properties grid
     QWidget* propertiesGrid = new QWidget(this);
     QGridLayout* propertiesGridLayout = new QGridLayout(this);
     propertiesGrid->setLayout(propertiesGridLayout);
@@ -43,4 +45,13 @@ RightSidebar::RightSidebar(QWidget* parent) : QWidget(parent)
     propertiesGridLayout->addWidget(yPos, 1, 1);
     QLineEdit* zPos = new QLineEdit("0.0");
     propertiesGridLayout->addWidget(zPos, 2, 1);
+}
+
+void RightSidebar::setMeshList(const std::vector<Mesh>& meshes)
+{
+    objectsList->clear();
+    for (const Mesh& mesh : meshes) {
+        const std::string& name = mesh.getName();
+        new QListWidgetItem(QString::fromStdString(name), objectsList);
+    }
 }

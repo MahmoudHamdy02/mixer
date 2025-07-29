@@ -11,14 +11,16 @@
 #include "Widgets/rightsidebar.h"
 #include "Widgets/toptoolbar.h"
 #include "renderer.h"
+#include "scenecontroller.h"
 #include "selectionmanager.h"
 
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
+    SceneController *scene;
     Renderer *renderer;
-    SelectionManager* selectionManager;
+    SelectionManager *selectionManager;
 
     QMenuBar *menubar;
     LeftToolbar *leftToolbar;
@@ -29,8 +31,10 @@ class MainWindow : public QMainWindow
     void setupMenubar();
     void setupLeftToolbar();
     void setupTopToolbar();
+    void setupRightSidebar();
 
 public:
-    MainWindow(Renderer *renderer, SelectionManager *selectionManager, QWidget *parent = nullptr);
+    MainWindow(SceneController *scene, Renderer *renderer, SelectionManager *selectionManager,
+               QWidget *parent = nullptr);
     ~MainWindow();
 };
