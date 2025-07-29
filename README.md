@@ -15,7 +15,7 @@ cmake -DCMAKE_BUILD_TYPE=Debug ..
 cmake --build .
 ```
 
-Note: On Windows you might need to manually copy some needed dlls next to the `.exe`, including `qwindowsd.dll` in a `platforms/` folder next to it.
+Note: On Windows you might need to use `windeployqt` or manually copy some needed dlls next to the `.exe`, including `qwindowsd.dll` in a `platforms/` folder next to it.
 
 ## Dependencies
 
