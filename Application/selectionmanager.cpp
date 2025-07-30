@@ -19,6 +19,11 @@ pmp::vec3 unprojectNDCToWorld(float ndcX, float ndcY, float ndcZ, const pmp::mat
 
 SelectionManager::SelectionManager(SceneController* scene) : scene(scene) {}
 
+const std::unordered_set<Mesh*>& SelectionManager::getSelectedMeshes() const
+{
+    return selectedMeshes;
+}
+
 bool SelectionManager::isMeshSelected(Mesh* mesh)
 {
     return selectedMeshes.contains(mesh);
@@ -163,4 +168,9 @@ void SelectionManager::selectObject(const Ray& ray)
     selectedMeshes.clear();
     if (hit)
         selectedMeshes.insert(hitMesh);
+}
+
+void SelectionManager::resetSelectedObjects()
+{
+    selectedMeshes.clear();
 }

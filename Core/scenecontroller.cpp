@@ -16,3 +16,15 @@ std::vector<Mesh>& SceneController::getMeshes()
 {
     return meshes;
 }
+
+void SceneController::deleteMesh(Mesh* mesh)
+{
+    auto it = std::find_if(meshes.begin(), meshes.end(), [&](Mesh& elem) { return &elem == mesh; });
+
+    if (it != meshes.end()) {
+        emit(onMeshDeleted(mesh));
+        emit(onMeshListChanged(meshes));
+
+        meshes.erase(it);
+    }
+}

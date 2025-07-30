@@ -1,11 +1,13 @@
 #include "renderer.h"
 
+#include <iostream>
 #include <memory>
 #include <vector>
 
 #include "mesh.h"
 #include "meshgl.h"
 #include "pmp/mat_vec.h"
+#include "scenecontroller.h"
 #include "selectionmanager.h"
 #include "selectionrectangle.h"
 #include "shader.h"
@@ -14,6 +16,7 @@
 Renderer::Renderer(SceneController* scene, SelectionManager* selectionManager)
     : scene(scene), selectionManager(selectionManager)
 {
+    connect(scene, &SceneController::onMeshDeleted, this, &Renderer::deleteMesh);
 }
 
 void Renderer::initialize()
@@ -117,6 +120,7 @@ void Renderer::render()
 
 void Renderer::drawMesh(MeshGL& mesh, bool outlined)
 {
+    std::cout << mesh.mesh->getName() << " " << outlined << std::endl;
     if (ToolManager::selectedRenderMode == ToolManager::RenderMode::Wireframe) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         wireframeShader->use();
@@ -180,6 +184,18 @@ void Renderer::updateMeshes()
     for (MeshGL& meshGL : meshGLs) {
         meshGL.updateBuffers();
     }
+}
+
+void Renderer::deleteMesh(Mesh* mesh)
+{
+    std::cout << "MeshGL delete: " << mesh->getName() << std::endl;
+    auto it = std::find_if(meshGLs.begin(), meshGLs.end(), [&](MeshGL& elem) { return (&elem)->mesh == mesh; });
+
+    if (it != meshGLs.end()) {
+        meshGLs.erase(it);
+        std::cout << "MeshGL deleted" << std::endl;
+    }
+    std::cout << "MeshGLs: " << meshGLs.size() << " " << meshGLs[0].mesh->getAABB().center() << std::endl;
 }
 
 void Renderer::moveCamera(float offsetX, float offsetY)

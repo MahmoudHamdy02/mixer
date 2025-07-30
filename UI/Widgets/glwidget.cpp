@@ -6,12 +6,14 @@
 #include <QMouseEvent>
 #include <algorithm>
 #include <iostream>
+#include <unordered_set>
 
 #include "renderer.h"
+#include "scenecontroller.h"
 #include "toolmanager.h"
 
-GLWidget::GLWidget(Renderer* renderer, SelectionManager* selectionManager, QWidget* parent)
-    : QOpenGLWidget(parent), renderer(renderer), selectionManager(selectionManager)
+GLWidget::GLWidget(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager, QWidget* parent)
+    : QOpenGLWidget(parent), scene(scene), renderer(renderer), selectionManager(selectionManager)
 {
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
     QSurfaceFormat format;
@@ -149,6 +151,30 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Control) {
         isCtrlHeld = false;
+    }
+    switch (event->key()) {
+        case Qt::Key_Control: {
+            isCtrlHeld = false;
+            break;
+        }
+        case Qt::Key_Delete: {
+            // TODO: Vertex delete operation
+            if (ToolManager::selectedEditMode == ToolManager::EditMode::Object) {
+                const std::unordered_set<Mesh*>& meshes = selectionManager->getSelectedMeshes();
+                std::cout << "Selected meshes to be deleted: " << meshes.size() << std::endl;
+                for (Mesh* mesh : meshes) {
+                std::cout << "Selected mesh to be deleted: " << mesh->getName() << std::endl;
+                    scene->deleteMesh(mesh);
+                }
+                selectionManager->resetSelectedObjects();
+
+                int m = selectionManager->getSelectedMeshes().size();
+                std::cout << "Selected meshes size: " << m << std::endl;
+                int m2 = renderer->meshGLs.size();
+                std::cout << "Renderer meshes size: " << m2 << std::endl;
+                update();
+            }
+        }
     }
     QOpenGLWidget::keyReleaseEvent(event);
 }

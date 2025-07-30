@@ -15,8 +15,12 @@ class SceneController : public QObject
 
 public:
     SceneController();
+
     std::vector<Mesh>& getMeshes();
 
+    void deleteMesh(Mesh* mesh);
+
 signals:
+    void onMeshDeleted(Mesh* mesh);
     void onMeshListChanged(std::vector<Mesh>& meshes);
 };

@@ -34,7 +34,7 @@ MainWindow::MainWindow(SceneController* scene, Renderer* renderer, SelectionMana
     horizontalLayout->setChildrenCollapsible(false);
 
     // OpenGL Viewport
-    glWidget = new GLWidget(renderer, selectionManager, horizontalLayout);
+    glWidget = new GLWidget(scene, renderer, selectionManager, horizontalLayout);
     glWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     glWidget->setMinimumWidth(300);
     horizontalLayout->addWidget(glWidget);

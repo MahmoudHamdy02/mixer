@@ -17,6 +17,7 @@ class MeshGL : private QOpenGLExtraFunctions
 public:
     Mesh* mesh;
 
+    // TODO: Add destructor that frees buffers
     MeshGL(Mesh& mesh);
 
     void updateBuffers();

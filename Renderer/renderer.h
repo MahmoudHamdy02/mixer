@@ -1,12 +1,15 @@
 #pragma once
 
+#include <qobject.h>
 #include <qopenglextrafunctions.h>
+#include <qtmetamacros.h>
 
 #include <memory>
 #include <vector>
 
 #include "camera.h"
 #include "grid.h"
+#include "mesh.h"
 #include "meshgl.h"
 #include "pmp/mat_vec.h"
 #include "ray.h"
@@ -15,8 +18,10 @@
 #include "selectionrectangle.h"
 #include "shader.h"
 
-class Renderer : private QOpenGLExtraFunctions
+class Renderer : public QObject, private QOpenGLExtraFunctions
 {
+    Q_OBJECT
+
     SceneController* scene;
     SelectionManager* selectionManager;
 
@@ -27,7 +32,6 @@ class Renderer : private QOpenGLExtraFunctions
     int screenWidth;
     int screenHeight;
 
-    std::vector<MeshGL> meshGLs;
     std::unique_ptr<Shader> flatShader;
     std::unique_ptr<Shader> wireframeShader;
     std::unique_ptr<Shader> pointsShader;
@@ -39,6 +43,7 @@ class Renderer : private QOpenGLExtraFunctions
     void drawMesh(MeshGL& meshGL, bool outlined);
 
 public:
+    std::vector<MeshGL> meshGLs;
     Renderer(SceneController* scene, SelectionManager* selectionManager);
     void initialize();
     void resize(int width, int height);
@@ -59,4 +64,7 @@ public:
     void zoomCamera(float distance);
 
     void setSelectionRectangleVertices(const pmp::vec2& min, const pmp::vec2& max);
+
+public slots:
+    void deleteMesh(Mesh* mesh);
 };

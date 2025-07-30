@@ -9,8 +9,14 @@
 
 class SelectionManager
 {
+    SceneController* scene;
+
+    std::unordered_set<Mesh*> selectedMeshes;
+
 public:
     SelectionManager(SceneController* scene);
+
+    const std::unordered_set<Mesh*>& getSelectedMeshes() const;
 
     bool isMeshSelected(Mesh*);
 
@@ -22,8 +28,5 @@ public:
                                   const pmp::mat4& projection);
     void selectObject(const Ray& ray);
 
-private:
-    SceneController* scene;
-
-    std::unordered_set<Mesh*> selectedMeshes;
+    void resetSelectedObjects();
 };
