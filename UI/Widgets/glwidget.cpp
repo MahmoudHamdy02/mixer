@@ -5,7 +5,6 @@
 
 #include <QMouseEvent>
 #include <algorithm>
-#include <iostream>
 #include <unordered_set>
 
 #include "renderer.h"

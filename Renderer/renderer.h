@@ -25,6 +25,8 @@ class Renderer : public QObject, private QOpenGLExtraFunctions
     SceneController* scene;
     SelectionManager* selectionManager;
 
+    std::vector<MeshGL> meshGLs;
+
     Camera camera;
     pmp::mat4 projection;
     pmp::mat4 view;
@@ -43,7 +45,6 @@ class Renderer : public QObject, private QOpenGLExtraFunctions
     void drawMesh(MeshGL& meshGL, bool outlined);
 
 public:
-    std::vector<MeshGL> meshGLs;
     Renderer(SceneController* scene, SelectionManager* selectionManager);
     void initialize();
     void resize(int width, int height);
