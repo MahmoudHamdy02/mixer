@@ -47,11 +47,11 @@ RightSidebar::RightSidebar(QWidget* parent) : QWidget(parent)
     propertiesGridLayout->addWidget(zPos, 2, 1);
 }
 
-void RightSidebar::setMeshList(const std::vector<Mesh>& meshes)
+void RightSidebar::setMeshList(const std::vector<Mesh*>& meshes)
 {
     objectsList->clear();
-    for (const Mesh& mesh : meshes) {
-        const std::string& name = mesh.getName();
+    for (const Mesh* mesh : meshes) {
+        const std::string& name = mesh->getName();
         new QListWidgetItem(QString::fromStdString(name), objectsList);
     }
 }

@@ -11,16 +11,16 @@ class SceneController : public QObject
 {
     Q_OBJECT
 
-    std::vector<Mesh> meshes;
+    std::vector<Mesh*> meshes;
 
 public:
     SceneController();
 
-    std::vector<Mesh>& getMeshes();
+    const std::vector<Mesh*>& getMeshes() const;
 
     void deleteMesh(Mesh* mesh);
 
 signals:
     void onMeshDeleted(Mesh* mesh);
-    void onMeshListChanged(std::vector<Mesh>& meshes);
+    void onMeshListChanged(std::vector<Mesh*>& meshes);
 };

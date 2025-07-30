@@ -19,5 +19,5 @@ public:
     RightSidebar(QWidget* parent = nullptr);
 
 public slots:
-    void setMeshList(const std::vector<Mesh>& meshes);
+    void setMeshList(const std::vector<Mesh*>& meshes);
 };

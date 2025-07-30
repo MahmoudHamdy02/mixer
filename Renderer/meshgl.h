@@ -12,13 +12,13 @@ class MeshGL : private QOpenGLExtraFunctions
     unsigned int instancedVAO, instancedVBO, instancedEBO, instancedDataVBO;
     unsigned int instancedNumIndices;
 
-    void setup(Mesh& mesh);
+    void setup(Mesh* mesh);
 
 public:
     Mesh* mesh;
 
     // TODO: Add destructor that frees buffers
-    MeshGL(Mesh& mesh);
+    MeshGL(Mesh* mesh);
 
     void updateBuffers();
 

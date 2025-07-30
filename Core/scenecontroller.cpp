@@ -6,25 +6,27 @@
 
 SceneController::SceneController()
 {
-    meshes.emplace_back("Sphere1");
-    meshes.emplace_back("Sphere2");
-    meshes[1].translate(pmp::vec3(0, 0, -3));
+    meshes.emplace_back(new Mesh("Sphere1"));
+    meshes.emplace_back(new Mesh("Sphere2"));
+    meshes[1]->translate(pmp::vec3(0, 0, -3));
     emit(onMeshListChanged(meshes));
 }
 
-std::vector<Mesh>& SceneController::getMeshes()
+const std::vector<Mesh*>& SceneController::getMeshes() const
 {
     return meshes;
 }
 
 void SceneController::deleteMesh(Mesh* mesh)
 {
-    auto it = std::find_if(meshes.begin(), meshes.end(), [&](Mesh& elem) { return &elem == mesh; });
+    auto it = std::find(meshes.begin(), meshes.end(), mesh);
 
     if (it != meshes.end()) {
         emit(onMeshDeleted(mesh));
-        emit(onMeshListChanged(meshes));
 
+        delete *it;
         meshes.erase(it);
+
+        emit(onMeshListChanged(meshes));
     }
 }

@@ -103,7 +103,6 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
                 GLfloat depth;
                 glReadPixels((int)newMousePosX, (int)height() - newMousePosY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT,
                              &depth);
-                std::cout << "Selecting vertex, depth: " << depth << std::endl;
                 selectionManager->selectVertex(ndcClickPos[0], ndcClickPos[1], depth, renderer->getMVPMatrix(),
                                                renderer->getCamera().front);
                 renderer->updateMeshes();
@@ -161,17 +160,11 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
             // TODO: Vertex delete operation
             if (ToolManager::selectedEditMode == ToolManager::EditMode::Object) {
                 const std::unordered_set<Mesh*>& meshes = selectionManager->getSelectedMeshes();
-                std::cout << "Selected meshes to be deleted: " << meshes.size() << std::endl;
                 for (Mesh* mesh : meshes) {
-                std::cout << "Selected mesh to be deleted: " << mesh->getName() << std::endl;
                     scene->deleteMesh(mesh);
                 }
                 selectionManager->resetSelectedObjects();
 
-                int m = selectionManager->getSelectedMeshes().size();
-                std::cout << "Selected meshes size: " << m << std::endl;
-                int m2 = renderer->meshGLs.size();
-                std::cout << "Renderer meshes size: " << m2 << std::endl;
                 update();
             }
         }

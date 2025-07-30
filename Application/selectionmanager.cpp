@@ -32,9 +32,9 @@ bool SelectionManager::isMeshSelected(Mesh* mesh)
 void SelectionManager::selectVerticesInRectangle(const pmp::vec2& min, const pmp::vec2& max, const pmp::mat4& mvp,
                                                  const pmp::vec3& cameraDir) const
 {
-    std::vector<Mesh>& meshes = scene->getMeshes();
-    for (Mesh& mesh : meshes) {
-        const pmp::SurfaceMesh& s = mesh.getSurfaceMesh();
+    const std::vector<Mesh*>& meshes = scene->getMeshes();
+    for (Mesh* mesh : meshes) {
+        const pmp::SurfaceMesh& s = mesh->getSurfaceMesh();
         auto vnormal = s.get_vertex_property<pmp::Normal>("v:normal");
 
         std::vector<pmp::Vertex> vertices;
@@ -51,7 +51,7 @@ void SelectionManager::selectVerticesInRectangle(const pmp::vec2& min, const pmp
             }
         }
 
-        mesh.setSelectedVertices(vertices);
+        mesh->setSelectedVertices(vertices);
     }
 }
 
@@ -61,17 +61,17 @@ void SelectionManager::selectVertex(float ndcX, float ndcY, float depthBufferVal
     // TODO: Epsilon scaling
     const float EPSILON = 0.025f;
 
-    std::vector<Mesh>& meshes = scene->getMeshes();
-    for (Mesh& mesh : meshes) {
-        mesh.unselectVertices();
+    const std::vector<Mesh*>& meshes = scene->getMeshes();
+    for (Mesh* mesh : meshes) {
+        mesh->unselectVertices();
     }
 
     bool vertexHit = false;
     pmp::Vertex hitVertex;
     Mesh* hitMesh = nullptr;
     float vertexDistance = 100000.0f;
-    for (Mesh& mesh : meshes) {
-        pmp::SurfaceMesh s = mesh.getSurfaceMesh();
+    for (Mesh* mesh : meshes) {
+        pmp::SurfaceMesh s = mesh->getSurfaceMesh();
         auto vnormal = s.get_vertex_property<pmp::Normal>("v:normal");
 
         for (pmp::Vertex v : s.vertices()) {
@@ -96,7 +96,7 @@ void SelectionManager::selectVertex(float ndcX, float ndcY, float depthBufferVal
             // Select the vertex
             vertexHit = true;
             hitVertex = v;
-            hitMesh = &mesh;
+            hitMesh = mesh;
             vertexDistance = distance;
         }
     }
@@ -137,10 +137,10 @@ void SelectionManager::selectObjectsInRectangle(const pmp::vec2& ndcMin, const p
     };
 
     selectedMeshes.clear();
-    std::vector<Mesh>& meshes = scene->getMeshes();
-    for (Mesh& mesh : meshes) {
-        if (Intersection::aabbIntersectsFrustum(mesh.getAABB(), planes)) {
-            selectedMeshes.insert(&mesh);
+    const std::vector<Mesh*>& meshes = scene->getMeshes();
+    for (Mesh* mesh : meshes) {
+        if (Intersection::aabbIntersectsFrustum(mesh->getAABB(), planes)) {
+            selectedMeshes.insert(mesh);
         }
     }
 }
@@ -148,19 +148,19 @@ void SelectionManager::selectObjectsInRectangle(const pmp::vec2& ndcMin, const p
 void SelectionManager::selectObject(const Ray& ray)
 {
     using namespace Intersection;
-    std::vector<Mesh>& meshes = scene->getMeshes();
+    const std::vector<Mesh*>& meshes = scene->getMeshes();
 
     bool hit = false;
     Mesh* hitMesh = nullptr;
     float distance = 0.0f;
 
-    for (Mesh& mesh : meshes) {
-        RayAABBIntersection res = rayIntersectsAABB(ray, mesh.getAABB());
+    for (Mesh* mesh : meshes) {
+        RayAABBIntersection res = rayIntersectsAABB(ray, mesh->getAABB());
         if (res.hit) {
             if (res.distance < distance || !hit) {
                 hit = true;
                 distance = res.distance;
-                hitMesh = &mesh;
+                hitMesh = mesh;
             }
         }
     }
