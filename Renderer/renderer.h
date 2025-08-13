@@ -34,8 +34,11 @@ class Renderer : public QObject, private QOpenGLExtraFunctions
     int screenWidth;
     int screenHeight;
 
+    // Main rendering modes
     std::unique_ptr<Shader> flatShader;
     std::unique_ptr<Shader> wireframeShader;
+    std::unique_ptr<Shader> renderedShader;
+
     std::unique_ptr<Shader> pointsShader;
     std::unique_ptr<Shader> outlineShader;
 

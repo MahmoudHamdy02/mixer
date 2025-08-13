@@ -33,8 +33,11 @@ void Renderer::initialize()
     // Setup shaders
     wireframeShader = std::make_unique<Shader>(":/wireframeVertex.glsl", ":/wireframeFragment.glsl");
     flatShader = std::make_unique<Shader>(":/flatVertex.glsl", ":/flatFragment.glsl");
+    renderedShader = std::make_unique<Shader>(":/renderedVertex.glsl", ":/renderedFragment.glsl");
+
     outlineShader = std::make_unique<Shader>(":/outlineVertex.glsl", ":/outlineFragment.glsl");
     pointsShader = std::make_unique<Shader>(":/pointsVertex.glsl", ":/pointsFragment.glsl");
+
     flatShader->use();
 
     // Setup model matrix
@@ -43,6 +46,7 @@ void Renderer::initialize()
     // TODO: Figure this out
     flatShader->setMatrix4("model", model.data());
     wireframeShader->setMatrix4("model", model.data());
+    renderedShader->setMatrix4("model", model.data());
     pointsShader->setMatrix4("model", model.data());
     outlineShader->setMatrix4("model", model.data());
 
@@ -64,6 +68,7 @@ void Renderer::resize(int width, int height)
     flatShader->setMatrix4("projection", projection.data());
     outlineShader->setMatrix4("projection", projection.data());
     wireframeShader->setMatrix4("projection", projection.data());
+    renderedShader->setMatrix4("projection", projection.data());
     pointsShader->setMatrix4("projection", projection.data());
     grid->shader->setMatrix4("projection", projection.data());
     glViewport(0, 0, width, height);
@@ -79,11 +84,13 @@ void Renderer::render()
     // Set camera view matrix
     view = camera.getViewMatrix();
     flatShader->setMatrix4("view", view.data());
+    renderedShader->setMatrix4("view", view.data());
     outlineShader->setMatrix4("view", view.data());
     wireframeShader->setMatrix4("view", view.data());
     pointsShader->setMatrix4("view", view.data());
     grid->shader->setMatrix4("view", view.data());
     flatShader->setVec3("cameraDirection", camera.front);
+    renderedShader->setVec3("cameraDirection", camera.front);
     pointsShader->setVec3("cameraDirection", camera.front);
 
     // Scene meshes
@@ -122,7 +129,10 @@ void Renderer::drawMesh(MeshGL& mesh, bool outlined)
         wireframeShader->use();
     } else {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        flatShader->use();
+        if (ToolManager::selectedRenderMode == ToolManager::RenderMode::Flat)
+            flatShader->use();
+        else
+            renderedShader->use();
     }
 
     if (!outlined) {

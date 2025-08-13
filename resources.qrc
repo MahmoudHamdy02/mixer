@@ -2,6 +2,8 @@
     <qresource prefix="/">
         <file alias="flatVertex.glsl">Renderer/Shaders/flatVertex.glsl</file>
         <file alias="flatFragment.glsl">Renderer/Shaders/flatFragment.glsl</file>
+        <file alias="renderedVertex.glsl">Renderer/Shaders/renderedVertex.glsl</file>
+        <file alias="renderedFragment.glsl">Renderer/Shaders/renderedFragment.glsl</file>
         <file alias="outlineVertex.glsl">Renderer/Shaders/outlineVertex.glsl</file>
         <file alias="outlineFragment.glsl">Renderer/Shaders/outlineFragment.glsl</file>
         <file alias="gridVertex.glsl">Renderer/Shaders/gridVertex.glsl</file>
