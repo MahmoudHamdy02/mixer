@@ -9,9 +9,9 @@
 class Shader : protected QOpenGLExtraFunctions
 {
 public:
-    unsigned int ID;
-
     Shader(const char *vertexPath, const char *fragmentPath);
+    ~Shader();
+
     void use();
     void setBool(const std::string &name, bool value);
     void setInt(const std::string &name, int value);
@@ -21,5 +21,8 @@ public:
     void setMatrix4(const std::string &name, float *value);
 
 private:
+    GLuint ID;
+    GLuint vertexShader, fragmentShader;
+
     GLuint compileShader(const char *source, GLenum type);
 };

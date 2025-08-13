@@ -16,8 +16,8 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
     QByteArray vsrc = vfile.readAll();
     QByteArray fsrc = ffile.readAll();
 
-    GLuint vertexShader = compileShader(vsrc.constData(), GL_VERTEX_SHADER);
-    GLuint fragmentShader = compileShader(fsrc.constData(), GL_FRAGMENT_SHADER);
+    vertexShader = compileShader(vsrc.constData(), GL_VERTEX_SHADER);
+    fragmentShader = compileShader(fsrc.constData(), GL_FRAGMENT_SHADER);
 
     ID = glCreateProgram();
     glAttachShader(ID, vertexShader);
@@ -34,6 +34,13 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath)
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+}
+
+Shader::~Shader()
+{
+    glDetachShader(ID, vertexShader);
+    glDetachShader(ID, fragmentShader);
+    glDeleteProgram(ID);
 }
 
 // activate the shader
