@@ -10,6 +10,7 @@
 #include "renderer.h"
 #include "scenecontroller.h"
 #include "toolmanager.h"
+#include "toolmodes.h"
 
 GLWidget::GLWidget(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager, QWidget* parent)
     : QOpenGLWidget(parent), scene(scene), renderer(renderer), selectionManager(selectionManager)
@@ -54,7 +55,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
     float offsetX = newMousePosX - mousePosX;
     float offsetY = newMousePosY - mousePosY;
 
-    if (ToolManager::selectedTool == ToolManager::Tool::Camera) {
+    if (ToolManager::selectedTool == ToolMode::Camera) {
         if (isCtrlHeld) {
             renderer->panCamera(offsetX, offsetY);
         } else {
@@ -62,7 +63,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
         }
         mousePosX = newMousePosX;
         mousePosY = newMousePosY;
-    } else if (ToolManager::selectedTool == ToolManager::Tool::Select) {
+    } else if (ToolManager::selectedTool == ToolMode::Select) {
         isDrawingSelectionRectangle = true;
         float minX = std::min(mousePosX, newMousePosX);
         float minY = height() - std::min(mousePosY, newMousePosY);
@@ -80,7 +81,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
     makeCurrent();
     // TODO: Create InputHandler class
-    if (ToolManager::selectedTool == ToolManager::Tool::Select) {
+    if (ToolManager::selectedTool == ToolMode::Select) {
         float newMousePosX = event->position().x();
         float newMousePosY = event->position().y();
 
@@ -91,7 +92,7 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 
         pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
         pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
-        if (ToolManager::selectedEditMode == ToolManager::EditMode::Vertex) {
+        if (ToolManager::selectedEditMode == EditMode::Vertex) {
             if (isDrawingSelectionRectangle) {
                 selectionManager->selectVerticesInRectangle(min, max, renderer->getMVPMatrix(),
                                                             renderer->getCamera().front);
@@ -157,7 +158,7 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
         }
         case Qt::Key_Delete: {
             // TODO: Vertex delete operation
-            if (ToolManager::selectedEditMode == ToolManager::EditMode::Object) {
+            if (ToolManager::selectedEditMode == EditMode::Object) {
                 const std::unordered_set<Mesh*>& meshes = selectionManager->getSelectedMeshes();
                 for (Mesh* mesh : meshes) {
                     scene->deleteMesh(mesh);

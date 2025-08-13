@@ -1,12 +1,15 @@
 #pragma once
 
+#include "editmodes.h"
+#include "rendermodes.h"
+#include "toolmodes.h"
+
 class ToolManager
 {
 public:
-    enum class Tool { Camera, Select, Move };
-    static Tool selectedTool;
-    enum class EditMode { Object, Vertex };
+    static ToolMode selectedTool;
+
     static EditMode selectedEditMode;
-    enum class RenderMode { Wireframe, Flat, Rendered };
+
     static RenderMode selectedRenderMode;
 };

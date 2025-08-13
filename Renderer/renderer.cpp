@@ -101,7 +101,7 @@ void Renderer::render()
     // Reset in case GL_LINE was used for wireframe shader
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
-    if (ToolManager::selectedEditMode == ToolManager::EditMode::Vertex) {
+    if (ToolManager::selectedEditMode == EditMode::Vertex) {
         // Vertex handles
         pointsShader->use();
         for (MeshGL& mesh : meshGLs) {
@@ -124,12 +124,12 @@ void Renderer::render()
 
 void Renderer::drawMesh(MeshGL& mesh, bool outlined)
 {
-    if (ToolManager::selectedRenderMode == ToolManager::RenderMode::Wireframe) {
+    if (ToolManager::selectedRenderMode == RenderMode::Wireframe) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         wireframeShader->use();
     } else {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-        if (ToolManager::selectedRenderMode == ToolManager::RenderMode::Flat)
+        if (ToolManager::selectedRenderMode == RenderMode::Flat)
             flatShader->use();
         else
             renderedShader->use();

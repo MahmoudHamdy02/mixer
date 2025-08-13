@@ -17,6 +17,7 @@
 #include "Widgets/toptoolbar.h"
 #include "renderer.h"
 #include "toolmanager.h"
+#include "toolmodes.h"
 
 MainWindow::MainWindow(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager, QWidget* parent)
     : QMainWindow(parent), scene(scene), renderer(renderer), selectionManager(selectionManager)
@@ -73,11 +74,11 @@ void MainWindow::setupLeftToolbar()
     connect(leftToolbar->actionGroup, &QActionGroup::triggered, this, [](QAction* action) {
         QString tool = action->text();
         if (tool == LeftToolbar::Tools::CAMERA)
-            ToolManager::selectedTool = ToolManager::Tool::Camera;
+            ToolManager::selectedTool = ToolMode::Camera;
         if (tool == LeftToolbar::Tools::SELECT)
-            ToolManager::selectedTool = ToolManager::Tool::Select;
+            ToolManager::selectedTool = ToolMode::Select;
         if (tool == LeftToolbar::Tools::MOVE)
-            ToolManager::selectedTool = ToolManager::Tool::Move;
+            ToolManager::selectedTool = ToolMode::Move;
     });
 }
 
@@ -88,11 +89,11 @@ void MainWindow::setupTopToolbar()
     connect(topToolbar->renderModeActionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
         QString mode = action->text();
         if (mode == TopToolbar::RenderMode::FLAT)
-            ToolManager::selectedRenderMode = ToolManager::RenderMode::Flat;
+            ToolManager::selectedRenderMode = RenderMode::Flat;
         else if (mode == TopToolbar::RenderMode::WIREFRAME)
-            ToolManager::selectedRenderMode = ToolManager::RenderMode::Wireframe;
+            ToolManager::selectedRenderMode = RenderMode::Wireframe;
         else if (mode == TopToolbar::RenderMode::RENDERED)
-            ToolManager::selectedRenderMode = ToolManager::RenderMode::Rendered;
+            ToolManager::selectedRenderMode = RenderMode::Rendered;
 
         glWidget->update();
     });
@@ -100,9 +101,9 @@ void MainWindow::setupTopToolbar()
     connect(topToolbar->editModeActionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
         QString mode = action->text();
         if (mode == TopToolbar::EditMode::OBJECT)
-            ToolManager::selectedEditMode = ToolManager::EditMode::Object;
+            ToolManager::selectedEditMode = EditMode::Object;
         else if (mode == TopToolbar::EditMode::VERTEX)
-            ToolManager::selectedEditMode = ToolManager::EditMode::Vertex;
+            ToolManager::selectedEditMode = EditMode::Vertex;
 
         glWidget->update();
     });
