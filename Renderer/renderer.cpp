@@ -73,6 +73,8 @@ void Renderer::render()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
+    glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+    glStencilFunc(GL_ALWAYS, 1, 0xFF);  // All fragments should write to the stencil buffer
 
     // Set camera view matrix
     view = camera.getViewMatrix();
@@ -84,30 +86,26 @@ void Renderer::render()
     flatShader->setVec3("cameraDirection", camera.front);
     pointsShader->setVec3("cameraDirection", camera.front);
 
-    glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);  // All fragments should write to the stencil buffer
-
     // Scene meshes
     for (MeshGL& mesh : meshGLs) {
         drawMesh(mesh, selectionManager->isMeshSelected(mesh.mesh));
     }
 
-    // Floor grid
+    // Reset in case GL_LINE was used for wireframe shader
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    grid->render();
 
-    // TODO: Fix handles rendering through other objects
     if (ToolManager::selectedEditMode == ToolManager::EditMode::Vertex) {
         // Vertex handles
-        glDisable(GL_DEPTH_TEST);
         pointsShader->use();
         for (MeshGL& mesh : meshGLs) {
             mesh.drawVertices();
         }
     }
 
+    // Floor grid
+    grid->render();
+
     // Selection rectangle
-    glEnable(GL_DEPTH_TEST);
     selectionRectangle->render();
 
     // Workaround for Qt transparency issues on Wayland: set alpha manually to 1.0f at the end of the render loop
