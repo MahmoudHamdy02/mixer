@@ -30,4 +30,6 @@ public:
 
     void setSelectedVertices(const std::vector<pmp::Vertex>& vertices);
     void unselectVertices();
+
+    void deleteSelectedVertices();
 };

@@ -73,3 +73,13 @@ void Mesh::unselectVertices()
         selected[v] = 0.0f;
     }
 }
+
+void Mesh::deleteSelectedVertices()
+{
+    auto selected = surfaceMesh.get_vertex_property<float>("v:selected");
+    for (pmp::Vertex v : surfaceMesh.vertices()) {
+        if (selected[v] > 0.0f)
+            surfaceMesh.delete_vertex(v);
+    }
+    surfaceMesh.garbage_collection();
+}
