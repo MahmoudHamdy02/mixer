@@ -21,6 +21,7 @@ public:
     Mesh(std::string name);
 
     const std::string& getName() const;
+    pmp::SurfaceMesh& getSurfaceMesh();
     const pmp::SurfaceMesh& getSurfaceMesh() const;
     const pmp::BoundingBox& getAABB() const;
     const pmp::Point& getCenter() const;

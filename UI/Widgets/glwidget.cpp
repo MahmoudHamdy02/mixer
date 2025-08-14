@@ -157,7 +157,6 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
             break;
         }
         case Qt::Key_Delete: {
-            // TODO: Vertex delete operation
             if (ToolManager::selectedEditMode == EditMode::Object) {
                 const std::unordered_set<Mesh*>& meshes = selectionManager->getSelectedMeshes();
                 for (Mesh* mesh : meshes) {
@@ -165,6 +164,19 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
                 }
                 selectionManager->resetSelectedObjects();
 
+                update();
+            } else {
+                const std::vector<Mesh*>& meshes = scene->getMeshes();
+                for (Mesh* mesh : meshes) {
+                    pmp::SurfaceMesh& sm = mesh->getSurfaceMesh();
+                    auto selected = sm.get_vertex_property<float>("v:selected");
+                    for (pmp::Vertex v : sm.vertices()) {
+                        if (selected[v] > 0.0f)
+                            sm.delete_vertex(v);
+                    }
+                    sm.garbage_collection();
+                }
+                renderer->updateMeshes();
                 update();
             }
         }

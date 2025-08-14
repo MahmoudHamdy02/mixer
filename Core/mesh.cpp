@@ -23,6 +23,11 @@ const std::string& Mesh::getName() const
     return name;
 }
 
+pmp::SurfaceMesh& Mesh::getSurfaceMesh()
+{
+    return surfaceMesh;
+}
+
 const pmp::SurfaceMesh& Mesh::getSurfaceMesh() const
 {
     return surfaceMesh;
