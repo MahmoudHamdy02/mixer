@@ -15,7 +15,9 @@
 #include "Widgets/lefttoolbar.h"
 #include "Widgets/rightsidebar.h"
 #include "Widgets/toptoolbar.h"
+#include "editmodes.h"
 #include "renderer.h"
+#include "rendermodes.h"
 #include "toolmanager.h"
 #include "toolmodes.h"
 
@@ -73,11 +75,11 @@ void MainWindow::setupLeftToolbar()
 
     connect(leftToolbar->actionGroup, &QActionGroup::triggered, this, [](QAction* action) {
         QString tool = action->text();
-        if (tool == LeftToolbar::Tools::CAMERA)
+        if (tool == ToolModeString::CAMERA)
             ToolManager::selectedTool = ToolMode::Camera;
-        if (tool == LeftToolbar::Tools::SELECT)
+        if (tool == ToolModeString::SELECT)
             ToolManager::selectedTool = ToolMode::Select;
-        if (tool == LeftToolbar::Tools::MOVE)
+        if (tool == ToolModeString::MOVE)
             ToolManager::selectedTool = ToolMode::Move;
     });
 }
@@ -88,11 +90,11 @@ void MainWindow::setupTopToolbar()
 
     connect(topToolbar->renderModeActionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
         QString mode = action->text();
-        if (mode == TopToolbar::RenderMode::FLAT)
+        if (mode == RenderModeString::FLAT)
             ToolManager::selectedRenderMode = RenderMode::Flat;
-        else if (mode == TopToolbar::RenderMode::WIREFRAME)
+        else if (mode == RenderModeString::WIREFRAME)
             ToolManager::selectedRenderMode = RenderMode::Wireframe;
-        else if (mode == TopToolbar::RenderMode::RENDERED)
+        else if (mode == RenderModeString::RENDERED)
             ToolManager::selectedRenderMode = RenderMode::Rendered;
 
         glWidget->update();
@@ -100,9 +102,9 @@ void MainWindow::setupTopToolbar()
 
     connect(topToolbar->editModeActionGroup, &QActionGroup::triggered, this, [this](QAction* action) {
         QString mode = action->text();
-        if (mode == TopToolbar::EditMode::OBJECT)
+        if (mode == EditModeString::OBJECT)
             ToolManager::selectedEditMode = EditMode::Object;
-        else if (mode == TopToolbar::EditMode::VERTEX)
+        else if (mode == EditModeString::VERTEX)
             ToolManager::selectedEditMode = EditMode::Vertex;
 
         glWidget->update();

@@ -5,6 +5,8 @@
 #include <qnamespace.h>
 #include <qtoolbar.h>
 
+#include "toolmodes.h"
+
 LeftToolbar::LeftToolbar(QWidget* parent) : QToolBar(parent)
 {
     setFloatable(false);
@@ -13,14 +15,14 @@ LeftToolbar::LeftToolbar(QWidget* parent) : QToolBar(parent)
 
     actionGroup = new QActionGroup(this);
 
-    QAction* cameraAction = new QAction("Camera", actionGroup);
+    QAction* cameraAction = new QAction(ToolModeString::CAMERA, actionGroup);
     cameraAction->setCheckable(true);
     cameraAction->setChecked(true);
 
-    QAction* selectAction = new QAction("Select", actionGroup);
+    QAction* selectAction = new QAction(ToolModeString::SELECT, actionGroup);
     selectAction->setCheckable(true);
 
-    QAction* moveAction = new QAction("Move", actionGroup);
+    QAction* moveAction = new QAction(ToolModeString::MOVE, actionGroup);
     moveAction->setCheckable(true);
 
     addAction(cameraAction);
