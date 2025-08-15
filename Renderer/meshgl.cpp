@@ -216,6 +216,97 @@ MeshGL::MeshGL(const std::shared_ptr<Mesh>& mesh)
     setup(mesh);
 }
 
+MeshGL::MeshGL(MeshGL&& other)
+    : VBO(other.VBO),
+      VAO(other.VAO),
+      EBO(other.EBO),
+      numIndices(other.numIndices),
+      instancedVAO(other.instancedVAO),
+      instancedVBO(other.instancedVBO),
+      instancedEBO(other.instancedEBO),
+      instancedDataVBO(other.instancedDataVBO),
+      instancedNumIndices(other.instancedNumIndices),
+      mesh(std::move(other.mesh))
+{
+    initializeOpenGLFunctions();
+    setup(mesh);
+
+    other.VBO = 0;
+    other.VAO = 0;
+    other.EBO = 0;
+    other.numIndices = 0;
+    other.instancedVAO = 0;
+    other.instancedVBO = 0;
+    other.instancedEBO = 0;
+    other.instancedDataVBO = 0;
+    other.instancedNumIndices = 0;
+}
+
+MeshGL& MeshGL::operator=(MeshGL&& other)
+{
+    if (this != &other) {
+        this->~MeshGL();
+
+        mesh = std::move(other.mesh);
+        VBO = other.VBO;
+        VAO = other.VAO;
+        EBO = other.EBO;
+        numIndices = other.numIndices;
+        instancedVAO = other.instancedVAO;
+        instancedVBO = other.instancedVBO;
+        instancedEBO = other.instancedEBO;
+        instancedDataVBO = other.instancedDataVBO;
+        instancedNumIndices = other.instancedNumIndices;
+
+        other.VBO = 0;
+        other.VAO = 0;
+        other.EBO = 0;
+        other.numIndices = 0;
+        other.instancedVAO = 0;
+        other.instancedVBO = 0;
+        other.instancedEBO = 0;
+        other.instancedDataVBO = 0;
+        other.instancedNumIndices = 0;
+    }
+
+    return *this;
+}
+
+MeshGL::~MeshGL()
+{
+    // Delete instanced rendering buffers
+    if (instancedVBO) {
+        glDeleteBuffers(1, &instancedVBO);
+        instancedVBO = 0;
+    }
+    if (instancedEBO) {
+        glDeleteBuffers(1, &instancedEBO);
+        instancedEBO = 0;
+    }
+    if (instancedDataVBO) {
+        glDeleteBuffers(1, &instancedDataVBO);
+        instancedDataVBO = 0;
+    }
+    if (instancedVAO) {
+        glDeleteVertexArrays(1, &instancedVAO);
+        instancedVAO = 0;
+    }
+
+    // Delete main mesh buffers
+    if (VBO) {
+        glDeleteBuffers(1, &VBO);
+        VBO = 0;
+    }
+    if (EBO) {
+        glDeleteBuffers(1, &EBO);
+        EBO = 0;
+    }
+    if (VAO) {
+        glDeleteVertexArrays(1, &VAO);
+        VAO = 0;
+    }
+}
+
 void MeshGL::draw()
 {
     glBindVertexArray(VAO);

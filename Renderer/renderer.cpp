@@ -1,6 +1,7 @@
 #include "renderer.h"
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "mesh.h"
@@ -15,7 +16,6 @@
 Renderer::Renderer(SceneController* scene, SelectionManager* selectionManager)
     : scene(scene), selectionManager(selectionManager)
 {
-    connect(scene, &SceneController::onMeshDeleted, this, &Renderer::deleteMesh);
 }
 
 void Renderer::initialize()
@@ -52,7 +52,7 @@ void Renderer::initialize()
 
     const std::vector<std::shared_ptr<Mesh>>& meshes = scene->getMeshes();
     for (const std::shared_ptr<Mesh>& mesh : meshes) {
-        meshGLs.emplace_back(mesh);
+        meshGLs.push_back(std::make_shared<MeshGL>(mesh));
     }
 
     grid = std::make_unique<Grid>();
@@ -94,8 +94,8 @@ void Renderer::render()
     pointsShader->setVec3("cameraDirection", camera.front);
 
     // Scene meshes
-    for (MeshGL& mesh : meshGLs) {
-        drawMesh(mesh, selectionManager->isMeshSelected(mesh.mesh));
+    for (const std::shared_ptr<MeshGL>& mesh : meshGLs) {
+        drawMesh(mesh, selectionManager->isMeshSelected(mesh->mesh));
     }
 
     // Reset in case GL_LINE was used for wireframe shader
@@ -104,8 +104,8 @@ void Renderer::render()
     if (ToolManager::selectedEditMode == EditMode::Vertex) {
         // Vertex handles
         pointsShader->use();
-        for (MeshGL& mesh : meshGLs) {
-            mesh.drawVertices();
+        for (const std::shared_ptr<MeshGL>& mesh : meshGLs) {
+            mesh->drawVertices();
         }
     }
 
@@ -122,7 +122,7 @@ void Renderer::render()
     glColorMask(true, true, true, true);
 }
 
-void Renderer::drawMesh(MeshGL& mesh, bool outlined)
+void Renderer::drawMesh(const std::shared_ptr<MeshGL>& mesh, bool outlined)
 {
     if (ToolManager::selectedRenderMode == RenderMode::Wireframe) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -136,23 +136,23 @@ void Renderer::drawMesh(MeshGL& mesh, bool outlined)
     }
 
     if (!outlined) {
-        mesh.draw();
+        mesh->draw();
     } else {
         glStencilMask(0xFF);
         glClear(GL_STENCIL_BUFFER_BIT);
-        mesh.draw();
+        mesh->draw();
 
         glStencilFunc(GL_NOTEQUAL, 1, 0xFF);  // Only draw where stencil != 1
         glStencilMask(0x00);
         glDepthFunc(GL_ALWAYS);  // Draw outline on top
 
         outlineShader->use();
-        pmp::Point center = mesh.mesh->getCenter();
+        pmp::Point center = mesh->mesh->getCenter();
         pmp::mat4 outlineModel = pmp::translation_matrix(-center);
         outlineModel = pmp::scaling_matrix(1.025f) * outlineModel;
         outlineModel = pmp::translation_matrix(center) * outlineModel;
         outlineShader->setMatrix4("model", outlineModel.data());
-        mesh.draw();
+        mesh->draw();
 
         glStencilFunc(GL_ALWAYS, 1, 0xFF);
         glDepthFunc(GL_LESS);
@@ -175,11 +175,21 @@ Ray Renderer::mouseToWorldRay(float mouseX, float mouseY) const
     return Ray(origin, direction);
 }
 
+std::optional<const std::shared_ptr<MeshGL>> Renderer::getMeshGLFromMesh(const std::shared_ptr<Mesh>& mesh)
+{
+    for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
+        if (meshGL->mesh->getName() == mesh->getName()) {
+            return meshGL;
+        }
+    }
+    return {};
+}
+
 void Renderer::updateMesh(const std::string& name)
 {
-    for (MeshGL& meshGL : meshGLs) {
-        if (meshGL.mesh->getName() == name) {
-            meshGL.updateBuffers();
+    for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
+        if (meshGL->mesh->getName() == name) {
+            meshGL->updateBuffers();
             break;
         }
     }
@@ -187,14 +197,19 @@ void Renderer::updateMesh(const std::string& name)
 
 void Renderer::updateMeshes()
 {
-    for (MeshGL& meshGL : meshGLs) {
-        meshGL.updateBuffers();
+    for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
+        meshGL->updateBuffers();
     }
 }
 
-void Renderer::deleteMesh(const std::shared_ptr<Mesh>& mesh)
+void Renderer::addMeshGL(const std::shared_ptr<MeshGL>& meshGL)
 {
-    auto it = std::find_if(meshGLs.begin(), meshGLs.end(), [&](MeshGL& elem) { return (&elem)->mesh == mesh; });
+    meshGLs.push_back(meshGL);
+}
+
+void Renderer::deleteMeshGL(const std::shared_ptr<MeshGL>& meshGL)
+{
+    auto it = std::find(meshGLs.begin(), meshGLs.end(), meshGL);
 
     if (it != meshGLs.end()) {
         meshGLs.erase(it);

@@ -3,6 +3,7 @@
 #include <qopenglwidget.h>
 #include <qwidget.h>
 
+#include "historymanager.h"
 #include "renderer.h"
 #include "scenecontroller.h"
 #include "selectionmanager.h"
@@ -12,6 +13,7 @@ class GLWidget : public QOpenGLWidget, QOpenGLExtraFunctions
     SceneController* scene;
     Renderer* renderer;
     SelectionManager* selectionManager;
+    HistoryManager* historyManager;
 
     bool isDrawingSelectionRectangle = false;
     bool isCtrlHeld = false;
@@ -33,5 +35,6 @@ protected:
     void keyReleaseEvent(QKeyEvent* event) override;
 
 public:
-    GLWidget(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager, QWidget* parent = nullptr);
+    GLWidget(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager,
+             HistoryManager* historyManager, QWidget* parent = nullptr);
 };

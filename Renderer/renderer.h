@@ -5,11 +5,11 @@
 #include <qtmetamacros.h>
 
 #include <memory>
+#include <optional>
 #include <vector>
 
 #include "camera.h"
 #include "grid.h"
-#include "mesh.h"
 #include "meshgl.h"
 #include "pmp/mat_vec.h"
 #include "ray.h"
@@ -25,7 +25,7 @@ class Renderer : public QObject, private QOpenGLExtraFunctions
     SceneController* scene;
     SelectionManager* selectionManager;
 
-    std::vector<MeshGL> meshGLs;
+    std::vector<std::shared_ptr<MeshGL>> meshGLs;
 
     Camera camera;
     pmp::mat4 projection;
@@ -45,13 +45,15 @@ class Renderer : public QObject, private QOpenGLExtraFunctions
     std::unique_ptr<Grid> grid;
     std::unique_ptr<SelectionRectangle> selectionRectangle;
 
-    void drawMesh(MeshGL& meshGL, bool outlined);
+    void drawMesh(const std::shared_ptr<MeshGL>& meshGL, bool outlined);
 
 public:
     Renderer(SceneController* scene, SelectionManager* selectionManager);
     void initialize();
     void resize(int width, int height);
     void render();
+
+    std::optional<const std::shared_ptr<MeshGL>> getMeshGLFromMesh(const std::shared_ptr<Mesh>& mesh);
 
     Ray mouseToWorldRay(float mouseX, float mouseY) const;
     void updateMesh(const std::string& name);
@@ -69,6 +71,6 @@ public:
 
     void setSelectionRectangleVertices(const pmp::vec2& min, const pmp::vec2& max);
 
-public slots:
-    void deleteMesh(const std::shared_ptr<Mesh>& mesh);
+    void addMeshGL(const std::shared_ptr<MeshGL>& meshGL);
+    void deleteMeshGL(const std::shared_ptr<MeshGL>& MeshGL);
 };

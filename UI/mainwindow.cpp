@@ -21,8 +21,13 @@
 #include "toolmanager.h"
 #include "toolmodes.h"
 
-MainWindow::MainWindow(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager, QWidget* parent)
-    : QMainWindow(parent), scene(scene), renderer(renderer), selectionManager(selectionManager)
+MainWindow::MainWindow(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager,
+                       HistoryManager* historyManager, QWidget* parent)
+    : QMainWindow(parent),
+      scene(scene),
+      renderer(renderer),
+      selectionManager(selectionManager),
+      historyManager(historyManager)
 {
     setupMenubar();
     setupLeftToolbar();
@@ -37,7 +42,7 @@ MainWindow::MainWindow(SceneController* scene, Renderer* renderer, SelectionMana
     horizontalLayout->setChildrenCollapsible(false);
 
     // OpenGL Viewport
-    glWidget = new GLWidget(scene, renderer, selectionManager, horizontalLayout);
+    glWidget = new GLWidget(scene, renderer, selectionManager, historyManager, horizontalLayout);
     glWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     glWidget->setMinimumWidth(300);
     horizontalLayout->addWidget(glWidget);

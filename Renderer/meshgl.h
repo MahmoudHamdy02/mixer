@@ -8,19 +8,25 @@
 
 class MeshGL : private QOpenGLExtraFunctions
 {
-    unsigned int VBO, VAO, EBO;
-    unsigned int numIndices;
+    unsigned int VBO = 0, VAO = 0, EBO = 0;
+    unsigned int numIndices = 0;
 
-    unsigned int instancedVAO, instancedVBO, instancedEBO, instancedDataVBO;
-    unsigned int instancedNumIndices;
+    unsigned int instancedVAO = 0, instancedVBO = 0, instancedEBO = 0, instancedDataVBO = 0;
+    unsigned int instancedNumIndices = 0;
 
     void setup(const std::shared_ptr<Mesh>& mesh);
 
 public:
     std::shared_ptr<Mesh> mesh;
 
-    // TODO: Add destructor that frees buffers
     MeshGL(const std::shared_ptr<Mesh>& mesh);
+
+    MeshGL(const MeshGL& other) = delete;
+    MeshGL& operator=(const MeshGL& other) = delete;
+
+    MeshGL(MeshGL&& other);
+    MeshGL& operator=(MeshGL&& other);
+    ~MeshGL();
 
     void updateBuffers();
 

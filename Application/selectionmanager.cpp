@@ -112,9 +112,6 @@ void SelectionManager::selectVertex(float ndcX, float ndcY, float depthBufferVal
     if (vertexHit) {
         std::vector<pmp::Vertex> vertices = {hitVertex};
         hitMesh->setSelectedVertices(vertices);
-        std::cout << "Vertex hit: " << hitMesh->getSurfaceMesh().position(hitVertex) << std::endl;
-    } else {
-        std::cout << "No vertex hit" << std::endl;
     }
 }
 

@@ -1,6 +1,5 @@
 #include "mesh.h"
 
-#include <iostream>
 #include <string>
 #include <vector>
 
@@ -17,11 +16,6 @@ Mesh::Mesh(std::string name) : name(name)
 
     aabb = pmp::bounds(surfaceMesh);
     center = aabb.center();
-}
-
-Mesh::~Mesh()
-{
-    std::cout << "Mesh deleted: " << name << std::endl;
 }
 
 const std::string& Mesh::getName() const

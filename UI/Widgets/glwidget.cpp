@@ -6,14 +6,24 @@
 #include <QMouseEvent>
 #include <algorithm>
 #include <memory>
+#include <optional>
+#include <vector>
 
+#include "History/deletemeshcommand.h"
+#include "History/deletemeshescommand.h"
+#include "historymanager.h"
 #include "renderer.h"
 #include "scenecontroller.h"
 #include "toolmanager.h"
 #include "toolmodes.h"
 
-GLWidget::GLWidget(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager, QWidget* parent)
-    : QOpenGLWidget(parent), scene(scene), renderer(renderer), selectionManager(selectionManager)
+GLWidget::GLWidget(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager,
+                   HistoryManager* historyManager, QWidget* parent)
+    : QOpenGLWidget(parent),
+      scene(scene),
+      renderer(renderer),
+      selectionManager(selectionManager),
+      historyManager(historyManager)
 {
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
     QSurfaceFormat format;
@@ -148,9 +158,21 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
 
 void GLWidget::keyReleaseEvent(QKeyEvent* event)
 {
+    if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_Z) {
+        historyManager->undo();
+        event->accept();
+        return;
+    }
+    if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_Y) {
+        historyManager->redo();
+        event->accept();
+        return;
+    }
+
     if (event->key() == Qt::Key_Control) {
         isCtrlHeld = false;
     }
+
     switch (event->key()) {
         case Qt::Key_Control: {
             isCtrlHeld = false;
@@ -159,9 +181,29 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
         case Qt::Key_Delete: {
             if (ToolManager::selectedEditMode == EditMode::Object) {
                 const std::unordered_set<std::weak_ptr<Mesh>>& meshes = selectionManager->getSelectedMeshes();
-                for (const std::weak_ptr<Mesh>& w : meshes) {
-                    if (auto mesh = w.lock())
-                        scene->deleteMesh(mesh);
+                // TODO: Maybe move this inside the command?
+                // TODO: Vertex delete command
+                // TODO: Undo/redo UI
+                if (meshes.size() == 1) {
+                    if (auto mesh = meshes.begin()->lock()) {
+                        std::optional<const std::shared_ptr<MeshGL>> meshGL = renderer->getMeshGLFromMesh(mesh);
+                        if (meshGL.has_value())
+                            historyManager->executeCommand(
+                                std::make_unique<DeleteMeshCommand>(this, scene, renderer, mesh, meshGL.value()));
+                    }
+                } else if (meshes.size() > 1) {
+                    std::vector<std::shared_ptr<Mesh>> meshesToBeDeleted;
+                    std::vector<std::shared_ptr<MeshGL>> meshGLsToBeDeleted;
+                    for (const std::weak_ptr<Mesh>& w : meshes) {
+                        if (auto mesh = w.lock()) {
+                            meshesToBeDeleted.push_back(mesh);
+                            std::optional<const std::shared_ptr<MeshGL>> meshGL = renderer->getMeshGLFromMesh(mesh);
+                            if (meshGL.has_value())
+                                meshGLsToBeDeleted.push_back(meshGL.value());
+                        }
+                    }
+                    historyManager->executeCommand(std::make_unique<DeleteMeshesCommand>(
+                        this, scene, renderer, meshesToBeDeleted, meshGLsToBeDeleted));
                 }
                 selectionManager->resetSelectedObjects();
 

@@ -19,9 +19,9 @@ public:
 
     const std::vector<std::shared_ptr<Mesh>>& getMeshes() const;
 
+    void addMesh(const std::shared_ptr<Mesh>& mesh);
     void deleteMesh(const std::shared_ptr<Mesh>& mesh);
 
 signals:
-    void onMeshDeleted(const std::shared_ptr<Mesh>& mesh);
     void onMeshListChanged(std::vector<std::shared_ptr<Mesh>>& meshes);
 };

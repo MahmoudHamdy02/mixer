@@ -20,7 +20,6 @@ class Mesh
 
 public:
     Mesh(std::string name);
-    ~Mesh();
 
     const std::string& getName() const;
     pmp::SurfaceMesh& getSurfaceMesh();
