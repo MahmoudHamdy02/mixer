@@ -2,6 +2,8 @@
 
 #include <qopenglextrafunctions.h>
 
+#include <memory>
+
 #include "mesh.h"
 
 class MeshGL : private QOpenGLExtraFunctions
@@ -12,13 +14,13 @@ class MeshGL : private QOpenGLExtraFunctions
     unsigned int instancedVAO, instancedVBO, instancedEBO, instancedDataVBO;
     unsigned int instancedNumIndices;
 
-    void setup(Mesh* mesh);
+    void setup(const std::shared_ptr<Mesh>& mesh);
 
 public:
-    Mesh* mesh;
+    std::shared_ptr<Mesh> mesh;
 
     // TODO: Add destructor that frees buffers
-    MeshGL(Mesh* mesh);
+    MeshGL(const std::shared_ptr<Mesh>& mesh);
 
     void updateBuffers();
 

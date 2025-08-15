@@ -1,5 +1,6 @@
 #include "meshgl.h"
 
+#include <memory>
 #include <vector>
 
 #include "mesh.h"
@@ -7,7 +8,7 @@
 #include "pmp/algorithms/triangulation.h"
 #include "pmp/surface_mesh.h"
 
-void MeshGL::setup(Mesh* mesh)
+void MeshGL::setup(const std::shared_ptr<Mesh>& mesh)
 {
     this->mesh = mesh;
     const pmp::SurfaceMesh& surfaceMesh = mesh->getSurfaceMesh();
@@ -209,7 +210,7 @@ void MeshGL::updateBuffers()
     glBufferData(GL_ARRAY_BUFFER, instancedVertices.size() * sizeof(float), instancedVertices.data(), GL_STATIC_DRAW);
 }
 
-MeshGL::MeshGL(Mesh* mesh)
+MeshGL::MeshGL(const std::shared_ptr<Mesh>& mesh)
 {
     initializeOpenGLFunctions();
     setup(mesh);

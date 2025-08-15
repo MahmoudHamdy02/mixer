@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -19,6 +20,7 @@ class Mesh
 
 public:
     Mesh(std::string name);
+    ~Mesh();
 
     const std::string& getName() const;
     pmp::SurfaceMesh& getSurfaceMesh();
@@ -33,3 +35,23 @@ public:
 
     void deleteSelectedVertices();
 };
+
+namespace std {
+
+template <>
+struct hash<std::weak_ptr<Mesh>> {
+    size_t operator()(const std::weak_ptr<Mesh>& wp) const noexcept
+    {
+        return std::hash<Mesh*>{}(wp.lock().get());
+    }
+};
+
+template <>
+struct equal_to<std::weak_ptr<Mesh>> {
+    bool operator()(const std::weak_ptr<Mesh>& a, const std::weak_ptr<Mesh>& b) const noexcept
+    {
+        return a.lock().get() == b.lock().get();
+    }
+};
+
+}  // namespace std

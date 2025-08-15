@@ -5,7 +5,7 @@
 
 #include <QMouseEvent>
 #include <algorithm>
-#include <unordered_set>
+#include <memory>
 
 #include "renderer.h"
 #include "scenecontroller.h"
@@ -158,16 +158,17 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
         }
         case Qt::Key_Delete: {
             if (ToolManager::selectedEditMode == EditMode::Object) {
-                const std::unordered_set<Mesh*>& meshes = selectionManager->getSelectedMeshes();
-                for (Mesh* mesh : meshes) {
-                    scene->deleteMesh(mesh);
+                const std::unordered_set<std::weak_ptr<Mesh>>& meshes = selectionManager->getSelectedMeshes();
+                for (const std::weak_ptr<Mesh>& w : meshes) {
+                    if (auto mesh = w.lock())
+                        scene->deleteMesh(mesh);
                 }
                 selectionManager->resetSelectedObjects();
 
                 update();
             } else {
-                const std::vector<Mesh*>& meshes = scene->getMeshes();
-                for (Mesh* mesh : meshes) {
+                const std::vector<std::shared_ptr<Mesh>>& meshes = scene->getMeshes();
+                for (std::shared_ptr<Mesh> mesh : meshes) {
                     mesh->deleteSelectedVertices();
                 }
                 renderer->updateMeshes();

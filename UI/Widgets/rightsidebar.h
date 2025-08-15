@@ -5,6 +5,7 @@
 #include <qtmetamacros.h>
 #include <qwidget.h>
 
+#include <memory>
 #include <vector>
 
 #include "mesh.h"
@@ -19,5 +20,5 @@ public:
     RightSidebar(QWidget* parent = nullptr);
 
 public slots:
-    void setMeshList(const std::vector<Mesh*>& meshes);
+    void setMeshList(const std::vector<std::shared_ptr<Mesh>>& meshes);
 };

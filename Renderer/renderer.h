@@ -70,5 +70,5 @@ public:
     void setSelectionRectangleVertices(const pmp::vec2& min, const pmp::vec2& max);
 
 public slots:
-    void deleteMesh(Mesh* mesh);
+    void deleteMesh(const std::shared_ptr<Mesh>& mesh);
 };

@@ -8,6 +8,8 @@
 #include <qsplitter.h>
 #include <qwidget.h>
 
+#include <memory>
+
 RightSidebar::RightSidebar(QWidget* parent) : QWidget(parent)
 {
     QSplitter* verticalLayout = new QSplitter(Qt::Orientation::Vertical, this);
@@ -47,10 +49,10 @@ RightSidebar::RightSidebar(QWidget* parent) : QWidget(parent)
     propertiesGridLayout->addWidget(zPos, 2, 1);
 }
 
-void RightSidebar::setMeshList(const std::vector<Mesh*>& meshes)
+void RightSidebar::setMeshList(const std::vector<std::shared_ptr<Mesh>>& meshes)
 {
     objectsList->clear();
-    for (const Mesh* mesh : meshes) {
+    for (const std::shared_ptr<Mesh>& mesh : meshes) {
         const std::string& name = mesh->getName();
         new QListWidgetItem(QString::fromStdString(name), objectsList);
     }

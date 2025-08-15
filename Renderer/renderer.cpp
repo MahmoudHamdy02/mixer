@@ -50,8 +50,8 @@ void Renderer::initialize()
     pointsShader->setMatrix4("model", model.data());
     outlineShader->setMatrix4("model", model.data());
 
-    const std::vector<Mesh*>& meshes = scene->getMeshes();
-    for (Mesh* mesh : meshes) {
+    const std::vector<std::shared_ptr<Mesh>>& meshes = scene->getMeshes();
+    for (const std::shared_ptr<Mesh>& mesh : meshes) {
         meshGLs.emplace_back(mesh);
     }
 
@@ -192,7 +192,7 @@ void Renderer::updateMeshes()
     }
 }
 
-void Renderer::deleteMesh(Mesh* mesh)
+void Renderer::deleteMesh(const std::shared_ptr<Mesh>& mesh)
 {
     auto it = std::find_if(meshGLs.begin(), meshGLs.end(), [&](MeshGL& elem) { return (&elem)->mesh == mesh; });
 

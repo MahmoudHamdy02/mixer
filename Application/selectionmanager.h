@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <unordered_set>
 
 #include "mesh.h"
@@ -11,14 +12,14 @@ class SelectionManager
 {
     SceneController* scene;
 
-    std::unordered_set<Mesh*> selectedMeshes;
+    std::unordered_set<std::weak_ptr<Mesh>> selectedMeshes;
 
 public:
     SelectionManager(SceneController* scene);
 
-    const std::unordered_set<Mesh*>& getSelectedMeshes() const;
+    const std::unordered_set<std::weak_ptr<Mesh>>& getSelectedMeshes() const;
 
-    bool isMeshSelected(Mesh*);
+    bool isMeshSelected(const std::shared_ptr<Mesh>& mesh);
 
     void selectVerticesInRectangle(const pmp::vec2& min, const pmp::vec2& max, const pmp::mat4& mvp,
                                    const pmp::vec3& cameraDir) const;

@@ -2,7 +2,9 @@
 
 #include <array>
 #include <iostream>
+#include <memory>
 #include <ostream>
+#include <unordered_set>
 #include <vector>
 
 #include "Geometry/intersection.h"
@@ -19,21 +21,27 @@ pmp::vec3 unprojectNDCToWorld(float ndcX, float ndcY, float ndcZ, const pmp::mat
 
 SelectionManager::SelectionManager(SceneController* scene) : scene(scene) {}
 
-const std::unordered_set<Mesh*>& SelectionManager::getSelectedMeshes() const
+const std::unordered_set<std::weak_ptr<Mesh>>& SelectionManager::getSelectedMeshes() const
 {
     return selectedMeshes;
 }
 
-bool SelectionManager::isMeshSelected(Mesh* mesh)
+bool SelectionManager::isMeshSelected(const std::shared_ptr<Mesh>& mesh)
 {
-    return selectedMeshes.contains(mesh);
+    for (auto weak : selectedMeshes) {
+        if (auto m = weak.lock()) {
+            if (m == mesh)
+                return true;
+        }
+    }
+    return false;
 }
 
 void SelectionManager::selectVerticesInRectangle(const pmp::vec2& min, const pmp::vec2& max, const pmp::mat4& mvp,
                                                  const pmp::vec3& cameraDir) const
 {
-    const std::vector<Mesh*>& meshes = scene->getMeshes();
-    for (Mesh* mesh : meshes) {
+    const std::vector<std::shared_ptr<Mesh>>& meshes = scene->getMeshes();
+    for (const std::shared_ptr<Mesh>& mesh : meshes) {
         const pmp::SurfaceMesh& s = mesh->getSurfaceMesh();
         auto vnormal = s.get_vertex_property<pmp::Normal>("v:normal");
 
@@ -61,16 +69,16 @@ void SelectionManager::selectVertex(float ndcX, float ndcY, float depthBufferVal
     // TODO: Epsilon scaling
     const float EPSILON = 0.025f;
 
-    const std::vector<Mesh*>& meshes = scene->getMeshes();
-    for (Mesh* mesh : meshes) {
+    const std::vector<std::shared_ptr<Mesh>>& meshes = scene->getMeshes();
+    for (const std::shared_ptr<Mesh>& mesh : meshes) {
         mesh->unselectVertices();
     }
 
     bool vertexHit = false;
     pmp::Vertex hitVertex;
-    Mesh* hitMesh = nullptr;
+    std::shared_ptr<Mesh> hitMesh = nullptr;
     float vertexDistance = 100000.0f;
-    for (Mesh* mesh : meshes) {
+    for (const std::shared_ptr<Mesh>& mesh : meshes) {
         pmp::SurfaceMesh s = mesh->getSurfaceMesh();
         auto vnormal = s.get_vertex_property<pmp::Normal>("v:normal");
 
@@ -137,8 +145,8 @@ void SelectionManager::selectObjectsInRectangle(const pmp::vec2& ndcMin, const p
     };
 
     selectedMeshes.clear();
-    const std::vector<Mesh*>& meshes = scene->getMeshes();
-    for (Mesh* mesh : meshes) {
+    const std::vector<std::shared_ptr<Mesh>>& meshes = scene->getMeshes();
+    for (std::shared_ptr<Mesh> mesh : meshes) {
         if (Intersection::aabbIntersectsFrustum(mesh->getAABB(), planes)) {
             selectedMeshes.insert(mesh);
         }
@@ -148,13 +156,13 @@ void SelectionManager::selectObjectsInRectangle(const pmp::vec2& ndcMin, const p
 void SelectionManager::selectObject(const Ray& ray)
 {
     using namespace Intersection;
-    const std::vector<Mesh*>& meshes = scene->getMeshes();
+    const std::vector<std::shared_ptr<Mesh>>& meshes = scene->getMeshes();
 
     bool hit = false;
-    Mesh* hitMesh = nullptr;
+    std::shared_ptr<Mesh> hitMesh = nullptr;
     float distance = 0.0f;
 
-    for (Mesh* mesh : meshes) {
+    for (std::shared_ptr<Mesh> mesh : meshes) {
         RayAABBIntersection res = rayIntersectsAABB(ray, mesh->getAABB());
         if (res.hit) {
             if (res.distance < distance || !hit) {
