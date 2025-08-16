@@ -175,14 +175,14 @@ Ray Renderer::mouseToWorldRay(float mouseX, float mouseY) const
     return Ray(origin, direction);
 }
 
-std::optional<const std::shared_ptr<MeshGL>> Renderer::getMeshGLFromMesh(const std::shared_ptr<Mesh>& mesh)
+const std::shared_ptr<MeshGL> Renderer::getMeshGLFromMesh(const std::shared_ptr<Mesh>& mesh)
 {
     for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
         if (meshGL->mesh->getName() == mesh->getName()) {
             return meshGL;
         }
     }
-    return {};
+    return std::shared_ptr<MeshGL>(nullptr);
 }
 
 void Renderer::updateMesh(const std::string& name)

@@ -53,7 +53,7 @@ public:
     void resize(int width, int height);
     void render();
 
-    std::optional<const std::shared_ptr<MeshGL>> getMeshGLFromMesh(const std::shared_ptr<Mesh>& mesh);
+    const std::shared_ptr<MeshGL> getMeshGLFromMesh(const std::shared_ptr<Mesh>& mesh);
 
     Ray mouseToWorldRay(float mouseX, float mouseY) const;
     void updateMesh(const std::string& name);

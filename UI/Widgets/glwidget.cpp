@@ -186,10 +186,10 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
                 // TODO: Undo/redo UI
                 if (meshes.size() == 1) {
                     if (auto mesh = meshes.begin()->lock()) {
-                        std::optional<const std::shared_ptr<MeshGL>> meshGL = renderer->getMeshGLFromMesh(mesh);
-                        if (meshGL.has_value())
+                        const std::shared_ptr<MeshGL> meshGL = renderer->getMeshGLFromMesh(mesh);
+                        if (meshGL)
                             historyManager->executeCommand(
-                                std::make_unique<DeleteMeshCommand>(this, scene, renderer, mesh, meshGL.value()));
+                                std::make_unique<DeleteMeshCommand>(this, scene, renderer, mesh, meshGL));
                     }
                 } else if (meshes.size() > 1) {
                     std::vector<std::shared_ptr<Mesh>> meshesToBeDeleted;
@@ -197,9 +197,9 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
                     for (const std::weak_ptr<Mesh>& w : meshes) {
                         if (auto mesh = w.lock()) {
                             meshesToBeDeleted.push_back(mesh);
-                            std::optional<const std::shared_ptr<MeshGL>> meshGL = renderer->getMeshGLFromMesh(mesh);
-                            if (meshGL.has_value())
-                                meshGLsToBeDeleted.push_back(meshGL.value());
+                            const std::shared_ptr<MeshGL> meshGL = renderer->getMeshGLFromMesh(mesh);
+                            if (meshGL)
+                                meshGLsToBeDeleted.push_back(meshGL);
                         }
                     }
                     historyManager->executeCommand(std::make_unique<DeleteMeshesCommand>(
