@@ -18,16 +18,17 @@ class DeleteMeshCommand : public Command
     std::shared_ptr<MeshGL> meshGL;
 
 public:
-    DeleteMeshCommand(GLWidget* glWidget, SceneController* scene, Renderer* renderer, std::shared_ptr<Mesh> mesh,
-                      std::shared_ptr<MeshGL> meshGL)
-        : glWidget(glWidget), scene(scene), renderer(renderer), mesh(mesh), meshGL(meshGL)
+    DeleteMeshCommand(GLWidget* glWidget, SceneController* scene, Renderer* renderer, std::shared_ptr<Mesh> mesh)
+        : glWidget(glWidget), scene(scene), renderer(renderer), mesh(mesh)
     {
+        meshGL = renderer->getMeshGLFromMesh(mesh);
     }
 
     void execute() override
     {
         scene->deleteMesh(mesh);
-        renderer->deleteMeshGL(meshGL);
+        if (meshGL)
+            renderer->deleteMeshGL(meshGL);
 
         glWidget->update();
     }
@@ -35,7 +36,8 @@ public:
     void undo() override
     {
         scene->addMesh(mesh);
-        renderer->addMeshGL(meshGL);
+        if (meshGL)
+            renderer->addMeshGL(meshGL);
 
         glWidget->update();
     }

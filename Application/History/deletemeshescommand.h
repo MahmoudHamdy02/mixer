@@ -19,10 +19,14 @@ class DeleteMeshesCommand : public Command
 
 public:
     DeleteMeshesCommand(GLWidget* glWidget, SceneController* scene, Renderer* renderer,
-                        const std::vector<std::shared_ptr<Mesh>>& meshes,
-                        const std::vector<std::shared_ptr<MeshGL>>& meshGLs)
-        : glWidget(glWidget), scene(scene), renderer(renderer), meshes(meshes), meshGLs(meshGLs)
+                        const std::vector<std::shared_ptr<Mesh>>& meshes)
+        : glWidget(glWidget), scene(scene), renderer(renderer), meshes(meshes)
     {
+        for (const std::shared_ptr<Mesh>& mesh : meshes) {
+            const std::shared_ptr<MeshGL> meshGL = renderer->getMeshGLFromMesh(mesh);
+            if (meshGL)
+                meshGLs.push_back(meshGL);
+        }
     }
 
     void execute() override
