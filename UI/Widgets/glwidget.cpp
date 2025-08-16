@@ -6,7 +6,6 @@
 #include <QMouseEvent>
 #include <algorithm>
 #include <memory>
-#include <optional>
 #include <vector>
 
 #include "History/deletemeshcommand.h"

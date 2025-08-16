@@ -5,7 +5,6 @@
 #include <qtmetamacros.h>
 
 #include <memory>
-#include <optional>
 #include <vector>
 
 #include "camera.h"

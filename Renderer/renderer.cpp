@@ -1,7 +1,6 @@
 #include "renderer.h"
 
 #include <memory>
-#include <optional>
 #include <vector>
 
 #include "mesh.h"
