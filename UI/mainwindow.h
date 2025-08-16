@@ -1,13 +1,13 @@
 #pragma once
 
 #include <qboxlayout.h>
-#include <qmenubar.h>
 #include <qopenglwidget.h>
 
 #include <QHBoxLayout>
 #include <QMainWindow>
 
 #include "Widgets/lefttoolbar.h"
+#include "Widgets/menubar.h"
 #include "Widgets/rightsidebar.h"
 #include "Widgets/toptoolbar.h"
 #include "historymanager.h"
@@ -24,7 +24,7 @@ class MainWindow : public QMainWindow
     SelectionManager *selectionManager;
     HistoryManager *historyManager;
 
-    QMenuBar *menubar;
+    MenuBar *menubar;
     LeftToolbar *leftToolbar;
     TopToolbar *topToolbar;
     RightSidebar *rightSidebar;

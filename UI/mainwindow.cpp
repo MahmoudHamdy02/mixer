@@ -4,7 +4,6 @@
 #include <qactiongroup.h>
 #include <qboxlayout.h>
 #include <qlabel.h>
-#include <qmenubar.h>
 #include <qnamespace.h>
 #include <qobject.h>
 #include <qsplitter.h>
@@ -13,9 +12,11 @@
 
 #include "Widgets/glwidget.h"
 #include "Widgets/lefttoolbar.h"
+#include "Widgets/menubar.h"
 #include "Widgets/rightsidebar.h"
 #include "Widgets/toptoolbar.h"
 #include "editmodes.h"
+#include "historymanager.h"
 #include "renderer.h"
 #include "rendermodes.h"
 #include "toolmanager.h"
@@ -60,16 +61,14 @@ MainWindow::~MainWindow() {}
 
 void MainWindow::setupMenubar()
 {
-    menubar = new QMenuBar(this);
+    menubar = new MenuBar(this);
 
-    // File menu
-    QMenu* file = new QMenu("File", this);
-    menubar->addMenu(file);
+    connect(historyManager, &HistoryManager::onUndoStackSizeChanged, menubar, &MenuBar::toggleUndoButtonStatus);
+    connect(historyManager, &HistoryManager::onRedoStackSizeChanged, menubar, &MenuBar::toggleRedoButtonStatus);
 
-    // File -> Exit
-    QAction* exitAction = new QAction("Exit", this);
-    file->addAction(exitAction);
-    connect(exitAction, &QAction::triggered, this, &MainWindow::close);
+    connect(menubar->exitAction, &QAction::triggered, this, &MainWindow::close);
+    connect(menubar->undoAction, &QAction::triggered, this, [&]() { historyManager->undo(); });
+    connect(menubar->redoAction, &QAction::triggered, this, [&]() { historyManager->redo(); });
 
     setMenuBar(menubar);
 }

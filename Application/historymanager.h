@@ -1,11 +1,16 @@
 #pragma once
 
+#include <qobject.h>
+
 #include <memory>
 #include <stack>
 
 #include "History/command.h"
-class HistoryManager
+
+class HistoryManager : public QObject
 {
+    Q_OBJECT
+
     std::stack<std::unique_ptr<Command>> undoStack;
     std::stack<std::unique_ptr<Command>> redoStack;
 
@@ -16,4 +21,8 @@ public:
 
     void undo();
     void redo();
+
+signals:
+    void onUndoStackSizeChanged(int size);
+    void onRedoStackSizeChanged(int size);
 };

@@ -12,6 +12,9 @@ void HistoryManager::executeCommand(std::unique_ptr<Command>&& command)
 
     // Empty redo stack
     while (!redoStack.empty()) redoStack.pop();
+
+    emit(onUndoStackSizeChanged(undoStack.size()));
+    emit(onRedoStackSizeChanged(redoStack.size()));
 }
 
 void HistoryManager::undo()
@@ -24,6 +27,9 @@ void HistoryManager::undo()
 
     command->undo();
     redoStack.push(std::move(command));
+
+    emit(onUndoStackSizeChanged(undoStack.size()));
+    emit(onRedoStackSizeChanged(redoStack.size()));
 }
 
 void HistoryManager::redo()
@@ -36,4 +42,7 @@ void HistoryManager::redo()
 
     command->execute();
     undoStack.push(std::move(command));
+
+    emit(onUndoStackSizeChanged(undoStack.size()));
+    emit(onRedoStackSizeChanged(redoStack.size()));
 }

@@ -157,17 +157,6 @@ void GLWidget::keyPressEvent(QKeyEvent* event)
 
 void GLWidget::keyReleaseEvent(QKeyEvent* event)
 {
-    if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_Z) {
-        historyManager->undo();
-        event->accept();
-        return;
-    }
-    if (event->modifiers() == Qt::ControlModifier && event->key() == Qt::Key_Y) {
-        historyManager->redo();
-        event->accept();
-        return;
-    }
-
     if (event->key() == Qt::Key_Control) {
         isCtrlHeld = false;
     }
@@ -180,9 +169,7 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
         case Qt::Key_Delete: {
             if (ToolManager::selectedEditMode == EditMode::Object) {
                 const std::unordered_set<std::weak_ptr<Mesh>>& meshes = selectionManager->getSelectedMeshes();
-                // TODO: Maybe move this inside the command?
                 // TODO: Vertex delete command
-                // TODO: Undo/redo UI
                 if (meshes.size() == 1) {
                     if (auto mesh = meshes.begin()->lock()) {
                         historyManager->executeCommand(
