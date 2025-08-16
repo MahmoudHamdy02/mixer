@@ -63,8 +63,9 @@ set(APPLICATION_SOURCES
     Application/selectionmanager.h
     Application/historymanager.cpp
     Application/historymanager.h
-    Application/History/command.h
-    Application/History/deletemeshcommand.h
+    Application/Commands/command.h
+    Application/Commands/deletemeshcommand.h
+    Application/Commands/deletemeshescommand.h
 )
 
 qt_add_resources(RESOURCES resources.qrc)

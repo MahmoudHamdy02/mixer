@@ -5,7 +5,7 @@
 #include <memory>
 #include <stack>
 
-#include "History/command.h"
+#include "Commands/command.h"
 
 class HistoryManager : public QObject
 {

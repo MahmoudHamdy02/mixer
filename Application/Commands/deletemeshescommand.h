@@ -3,7 +3,7 @@
 #include <memory>
 #include <vector>
 
-#include "History/command.h"
+#include "Commands/command.h"
 #include "Widgets/glwidget.h"
 #include "mesh.h"
 #include "renderer.h"

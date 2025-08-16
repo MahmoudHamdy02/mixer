@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "History/command.h"
+#include "Commands/command.h"
 #include "Widgets/glwidget.h"
 #include "mesh.h"
 #include "meshgl.h"

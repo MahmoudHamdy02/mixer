@@ -8,8 +8,8 @@
 #include <memory>
 #include <vector>
 
-#include "History/deletemeshcommand.h"
-#include "History/deletemeshescommand.h"
+#include "Commands/deletemeshcommand.h"
+#include "Commands/deletemeshescommand.h"
 #include "historymanager.h"
 #include "renderer.h"
 #include "scenecontroller.h"
