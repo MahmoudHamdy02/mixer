@@ -24,13 +24,6 @@ GLWidget::GLWidget(SceneController* scene, Renderer* renderer, ToolManager* tool
       historyManager(historyManager)
 {
     setFocusPolicy(Qt::FocusPolicy::StrongFocus);
-    QSurfaceFormat format;
-    format.setDepthBufferSize(32);   // Request a 24-bit depth buffer
-    format.setStencilBufferSize(8);  // Stencil support
-    format.setVersion(4, 6);
-    format.setProfile(QSurfaceFormat::CoreProfile);
-    format.setSamples(0);
-    setFormat(format);
 }
 
 void GLWidget::initializeGL()
