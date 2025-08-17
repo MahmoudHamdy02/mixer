@@ -40,6 +40,10 @@ Handles OpenGL buffer management and different rendering modes
 
 Handles mesh data and geometry operations for all the objects in the scene
 
+## Testing
+
+After building, run the `mixer_test` executable to run all tests
+
 ## Future Plans:
 
 - Geometry operations such as extrude and bevel
