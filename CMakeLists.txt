@@ -57,8 +57,6 @@ set(CORE_SOURCES
 )
 
 set(APPLICATION_SOURCES
-    Application/toolmanager.cpp
-    Application/toolmanager.h
     Application/selectionmanager.cpp
     Application/selectionmanager.h
     Application/historymanager.cpp
@@ -66,6 +64,11 @@ set(APPLICATION_SOURCES
     Application/Commands/command.h
     Application/Commands/deletemeshcommand.h
     Application/Commands/deletemeshescommand.h
+    Application/toolmanager.cpp
+    Application/toolmanager.h
+    Application/Tools/tool.h
+    Application/Tools/selecttool.cpp
+    Application/Tools/selecttool.h
 )
 
 qt_add_resources(RESOURCES resources.qrc)

@@ -6,6 +6,7 @@
 #include <QHBoxLayout>
 #include <QMainWindow>
 
+#include "Widgets/glwidget.h"
 #include "Widgets/lefttoolbar.h"
 #include "Widgets/menubar.h"
 #include "Widgets/rightsidebar.h"
@@ -14,6 +15,7 @@
 #include "renderer.h"
 #include "scenecontroller.h"
 #include "selectionmanager.h"
+#include "toolmanager.h"
 
 class MainWindow : public QMainWindow
 {
@@ -21,6 +23,7 @@ class MainWindow : public QMainWindow
 
     SceneController *scene;
     Renderer *renderer;
+    ToolManager *toolManager;
     SelectionManager *selectionManager;
     HistoryManager *historyManager;
 
@@ -28,7 +31,7 @@ class MainWindow : public QMainWindow
     LeftToolbar *leftToolbar;
     TopToolbar *topToolbar;
     RightSidebar *rightSidebar;
-    QOpenGLWidget *glWidget;
+    GLWidget *glWidget;
 
     void setupMenubar();
     void setupLeftToolbar();
@@ -36,7 +39,9 @@ class MainWindow : public QMainWindow
     void setupRightSidebar();
 
 public:
-    MainWindow(SceneController *scene, Renderer *renderer, SelectionManager *selectionManager,
+    MainWindow(SceneController *scene, Renderer *renderer, ToolManager *toolManager, SelectionManager *selectionManager,
                HistoryManager *historyManager, QWidget *parent = nullptr);
     ~MainWindow();
+
+    GLWidget *getGLWidget();
 };

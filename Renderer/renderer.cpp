@@ -184,6 +184,13 @@ const std::shared_ptr<MeshGL> Renderer::getMeshGLFromMesh(const std::shared_ptr<
     return std::shared_ptr<MeshGL>(nullptr);
 }
 
+float Renderer::getPixelDepth(int screenX, int screenY)
+{
+    GLfloat depth;
+    glReadPixels(screenX, screenY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+    return depth;
+}
+
 void Renderer::updateMesh(const std::string& name)
 {
     for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {

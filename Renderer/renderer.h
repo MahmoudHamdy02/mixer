@@ -53,6 +53,7 @@ public:
     void render();
 
     const std::shared_ptr<MeshGL> getMeshGLFromMesh(const std::shared_ptr<Mesh>& mesh);
+    float getPixelDepth(int screenX, int screenY);
 
     Ray mouseToWorldRay(float mouseX, float mouseY) const;
     void updateMesh(const std::string& name);

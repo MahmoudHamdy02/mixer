@@ -4,7 +4,6 @@
 #include <qopenglwidget.h>
 
 #include <QMouseEvent>
-#include <algorithm>
 #include <memory>
 #include <vector>
 
@@ -16,11 +15,12 @@
 #include "toolmanager.h"
 #include "toolmodes.h"
 
-GLWidget::GLWidget(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager,
-                   HistoryManager* historyManager, QWidget* parent)
+GLWidget::GLWidget(SceneController* scene, Renderer* renderer, ToolManager* toolManager,
+                   SelectionManager* selectionManager, HistoryManager* historyManager, QWidget* parent)
     : QOpenGLWidget(parent),
       scene(scene),
       renderer(renderer),
+      toolManager(toolManager),
       selectionManager(selectionManager),
       historyManager(historyManager)
 {
@@ -54,6 +54,7 @@ void GLWidget::mousePressEvent(QMouseEvent* event)
 {
     mousePosX = event->position().x();
     mousePosY = event->position().y();
+    toolManager->onMousePress(event->position());
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)
@@ -64,7 +65,7 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
     float offsetX = newMousePosX - mousePosX;
     float offsetY = newMousePosY - mousePosY;
 
-    if (ToolManager::selectedTool == ToolMode::Camera) {
+    if (toolManager->getActiveTool() == ToolMode::Camera) {
         if (isCtrlHeld) {
             renderer->panCamera(offsetX, offsetY);
         } else {
@@ -72,16 +73,8 @@ void GLWidget::mouseMoveEvent(QMouseEvent* event)
         }
         mousePosX = newMousePosX;
         mousePosY = newMousePosY;
-    } else if (ToolManager::selectedTool == ToolMode::Select) {
-        isDrawingSelectionRectangle = true;
-        float minX = std::min(mousePosX, newMousePosX);
-        float minY = height() - std::min(mousePosY, newMousePosY);
-        float maxX = std::max(mousePosX, newMousePosX);
-        float maxY = height() - std::max(mousePosY, newMousePosY);
-
-        pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
-        pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
-        renderer->setSelectionRectangleVertices(min, max);
+    } else if (toolManager->getActiveTool() == ToolMode::Select) {
+        toolManager->onMouseMove(event->position());
     }
     update();
 }
@@ -90,45 +83,10 @@ void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
     makeCurrent();
     // TODO: Create InputHandler class
-    if (ToolManager::selectedTool == ToolMode::Select) {
-        float newMousePosX = event->position().x();
-        float newMousePosY = event->position().y();
-
-        float minX = std::min(mousePosX, newMousePosX);
-        float maxY = height() - std::min(mousePosY, newMousePosY);
-        float maxX = std::max(mousePosX, newMousePosX);
-        float minY = height() - std::max(mousePosY, newMousePosY);
-
-        pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
-        pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
-        if (ToolManager::selectedEditMode == EditMode::Vertex) {
-            if (isDrawingSelectionRectangle) {
-                selectionManager->selectVerticesInRectangle(min, max, renderer->getMVPMatrix(),
-                                                            renderer->getCamera().front);
-                // TODO: Only update buffers of changed meshes
-                renderer->updateMeshes();
-            } else {
-                pmp::vec2 ndcClickPos = screenSpaceToNDC(pmp::vec2(newMousePosX, height() - newMousePosY));
-                GLfloat depth;
-                glReadPixels((int)newMousePosX, (int)height() - newMousePosY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT,
-                             &depth);
-                selectionManager->selectVertex(ndcClickPos[0], ndcClickPos[1], depth, renderer->getMVPMatrix(),
-                                               renderer->getCamera().front);
-                renderer->updateMeshes();
-            }
-        } else {
-            if (isDrawingSelectionRectangle) {
-                selectionManager->selectObjectsInRectangle(min, max, renderer->getViewMatrix(),
-                                                           renderer->getProjectionMatrix());
-            } else {
-                Ray ray = renderer->mouseToWorldRay(newMousePosX, newMousePosY);
-                selectionManager->selectObject(ray);
-            }
-        }
-        renderer->setSelectionRectangleVertices(pmp::vec2(0, 0), pmp::vec2(0, 0));
-        update();
+    if (toolManager->getActiveTool() == ToolMode::Select) {
+        toolManager->onMouseRelease(event->position());
     }
-    isDrawingSelectionRectangle = false;
+    update();
 }
 
 void GLWidget::wheelEvent(QWheelEvent* event)

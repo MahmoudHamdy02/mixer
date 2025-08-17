@@ -22,11 +22,12 @@
 #include "toolmanager.h"
 #include "toolmodes.h"
 
-MainWindow::MainWindow(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager,
-                       HistoryManager* historyManager, QWidget* parent)
+MainWindow::MainWindow(SceneController* scene, Renderer* renderer, ToolManager* toolManager,
+                       SelectionManager* selectionManager, HistoryManager* historyManager, QWidget* parent)
     : QMainWindow(parent),
       scene(scene),
       renderer(renderer),
+      toolManager(toolManager),
       selectionManager(selectionManager),
       historyManager(historyManager)
 {
@@ -43,7 +44,7 @@ MainWindow::MainWindow(SceneController* scene, Renderer* renderer, SelectionMana
     horizontalLayout->setChildrenCollapsible(false);
 
     // OpenGL Viewport
-    glWidget = new GLWidget(scene, renderer, selectionManager, historyManager, horizontalLayout);
+    glWidget = new GLWidget(scene, renderer, toolManager, selectionManager, historyManager, horizontalLayout);
     glWidget->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     glWidget->setMinimumWidth(300);
     horizontalLayout->addWidget(glWidget);
@@ -58,6 +59,11 @@ MainWindow::MainWindow(SceneController* scene, Renderer* renderer, SelectionMana
 }
 
 MainWindow::~MainWindow() {}
+
+GLWidget* MainWindow::getGLWidget()
+{
+    return glWidget;
+}
 
 void MainWindow::setupMenubar()
 {
@@ -77,14 +83,14 @@ void MainWindow::setupLeftToolbar()
 {
     leftToolbar = new LeftToolbar(this);
 
-    connect(leftToolbar->actionGroup, &QActionGroup::triggered, this, [](QAction* action) {
+    connect(leftToolbar->actionGroup, &QActionGroup::triggered, this, [&](QAction* action) {
         QString tool = action->text();
         if (tool == ToolModeString::CAMERA)
-            ToolManager::selectedTool = ToolMode::Camera;
+            toolManager->setActiveTool(ToolMode::Camera);
         if (tool == ToolModeString::SELECT)
-            ToolManager::selectedTool = ToolMode::Select;
+            toolManager->setActiveTool(ToolMode::Select);
         if (tool == ToolModeString::MOVE)
-            ToolManager::selectedTool = ToolMode::Move;
+            toolManager->setActiveTool(ToolMode::Move);
     });
 }
 

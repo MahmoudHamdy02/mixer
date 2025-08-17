@@ -7,11 +7,13 @@
 #include "renderer.h"
 #include "scenecontroller.h"
 #include "selectionmanager.h"
+#include "toolmanager.h"
 
 class GLWidget : public QOpenGLWidget, QOpenGLExtraFunctions
 {
     SceneController* scene;
     Renderer* renderer;
+    ToolManager* toolManager;
     SelectionManager* selectionManager;
     HistoryManager* historyManager;
 
@@ -35,6 +37,6 @@ protected:
     void keyReleaseEvent(QKeyEvent* event) override;
 
 public:
-    GLWidget(SceneController* scene, Renderer* renderer, SelectionManager* selectionManager,
+    GLWidget(SceneController* scene, Renderer* renderer, ToolManager* toolManager, SelectionManager* selectionManager,
              HistoryManager* historyManager, QWidget* parent = nullptr);
 };
