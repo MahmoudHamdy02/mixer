@@ -1,9 +1,7 @@
 #include "selectionmanager.h"
 
 #include <array>
-#include <iostream>
 #include <memory>
-#include <ostream>
 #include <unordered_set>
 #include <vector>
 

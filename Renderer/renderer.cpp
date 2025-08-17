@@ -112,7 +112,8 @@ void Renderer::render()
     grid->render();
 
     // Selection rectangle
-    selectionRectangle->render();
+    if (drawSelectionRectangle)
+        selectionRectangle->render();
 
     // Workaround for Qt transparency issues on Wayland: set alpha manually to 1.0f at the end of the render loop
     // See: https://github.com/FreeCAD/FreeCAD/pull/19499
@@ -265,4 +266,9 @@ const pmp::mat4 Renderer::getMVPMatrix() const
 const Camera& Renderer::getCamera() const
 {
     return camera;
+}
+
+void Renderer::setDrawSelectionRectangle(bool value)
+{
+    drawSelectionRectangle = value;
 }

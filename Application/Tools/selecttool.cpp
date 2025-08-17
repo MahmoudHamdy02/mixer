@@ -23,6 +23,7 @@ void SelectTool::onMouseMove(QPointF pos)
     QPointF newMousePos = pos;
 
     isDrawingSelectionRectangle = true;
+    renderer->setDrawSelectionRectangle(true);
     float minX = std::min(mousePos.x(), newMousePos.x());
     float minY = glWidget->height() - std::min(mousePos.y(), newMousePos.y());
     float maxX = std::max(mousePos.x(), newMousePos.x());
@@ -68,6 +69,7 @@ void SelectTool::onMouseRelease(QPointF pos)
     }
     renderer->setSelectionRectangleVertices(pmp::vec2(0, 0), pmp::vec2(0, 0));
     isDrawingSelectionRectangle = false;
+    renderer->setDrawSelectionRectangle(false);
 }
 
 pmp::vec2 SelectTool::screenSpaceToNDC(pmp::vec2 point)
