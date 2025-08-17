@@ -13,6 +13,7 @@ MenuBar::MenuBar(QWidget* parent) : QMenuBar(parent)
 
     // File -> Exit
     exitAction = new QAction("Exit", this);
+    exitAction->setShortcut(Qt::CTRL | Qt::Key_Q);
     file->addAction(exitAction);
 
     // Edit menu
