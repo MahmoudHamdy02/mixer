@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.19)
 project(mixer LANGUAGES CXX)
 
-find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets OpenGLWidgets)
+find_package(Qt6 6.5 REQUIRED COMPONENTS Core Widgets OpenGLWidgets Test)
 
 qt_standard_project_setup()
 
@@ -124,3 +124,15 @@ qt_generate_deploy_app_script(
     NO_UNSUPPORTED_PLATFORM_ERROR
 )
 install(SCRIPT ${deploy_script})
+
+add_executable(mixer_test
+    tests/basictest.cpp
+    tests/basictest.h
+    tests/main.cpp
+)
+
+target_link_libraries(mixer_test
+    Qt::Core
+    Qt::Gui
+    Qt::Test
+)
