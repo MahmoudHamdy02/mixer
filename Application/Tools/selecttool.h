@@ -13,7 +13,7 @@ class SelectTool : public Tool
     SelectionManager* selectionManager;
 
     QPointF mousePos;
-    bool isDrawingSelectionRectangle;
+    bool isDrawingSelectionRectangle = false;
 
 public:
     // TODO: Use interfaces here?
