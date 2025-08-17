@@ -17,13 +17,6 @@ class GLWidget : public QOpenGLWidget, QOpenGLExtraFunctions
     SelectionManager* selectionManager;
     HistoryManager* historyManager;
 
-    bool isDrawingSelectionRectangle = false;
-    bool isCtrlHeld = false;
-    float mousePosX = 0;
-    float mousePosY = 0;
-
-    pmp::vec2 screenSpaceToNDC(pmp::vec2);
-
 protected:
     void initializeGL() override;
     void resizeGL(int w, int h) override;

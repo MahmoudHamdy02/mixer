@@ -67,6 +67,8 @@ set(APPLICATION_SOURCES
     Application/toolmanager.cpp
     Application/toolmanager.h
     Application/Tools/tool.h
+    Application/Tools/cameratool.cpp
+    Application/Tools/cameratool.h
     Application/Tools/selecttool.cpp
     Application/Tools/selecttool.h
 )

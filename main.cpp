@@ -1,5 +1,6 @@
 #include <QApplication>
 
+#include "Tools/cameratool.h"
 #include "Tools/selecttool.h"
 #include "UI/mainwindow.h"
 #include "historymanager.h"
@@ -13,6 +14,8 @@ int main(int argc, char* argv[])
 {
     QApplication a(argc, argv);
 
+    // TODO: Tests
+
     HistoryManager* historyManager = new HistoryManager();
     ToolManager* toolManager = new ToolManager();
 
@@ -24,6 +27,8 @@ int main(int argc, char* argv[])
     MainWindow w(scene, renderer, toolManager, selectionManager, historyManager);
 
     toolManager->addTool(ToolMode::Select, new SelectTool(w.getGLWidget(), renderer, selectionManager));
+    toolManager->addTool(ToolMode::Camera, new CameraTool(renderer));
+    toolManager->setActiveTool(ToolMode::Camera);
 
     w.setMinimumSize(400, 300);
     w.resize(1200, 900);

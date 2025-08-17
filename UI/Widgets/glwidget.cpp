@@ -13,7 +13,6 @@
 #include "renderer.h"
 #include "scenecontroller.h"
 #include "toolmanager.h"
-#include "toolmodes.h"
 
 GLWidget::GLWidget(SceneController* scene, Renderer* renderer, ToolManager* toolManager,
                    SelectionManager* selectionManager, HistoryManager* historyManager, QWidget* parent)
@@ -52,40 +51,20 @@ void GLWidget::paintGL()
 
 void GLWidget::mousePressEvent(QMouseEvent* event)
 {
-    mousePosX = event->position().x();
-    mousePosY = event->position().y();
     toolManager->onMousePress(event->position());
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)
 {
-    float newMousePosX = event->position().x();
-    float newMousePosY = event->position().y();
-
-    float offsetX = newMousePosX - mousePosX;
-    float offsetY = newMousePosY - mousePosY;
-
-    if (toolManager->getActiveTool() == ToolMode::Camera) {
-        if (isCtrlHeld) {
-            renderer->panCamera(offsetX, offsetY);
-        } else {
-            renderer->moveCamera(offsetX, offsetY);
-        }
-        mousePosX = newMousePosX;
-        mousePosY = newMousePosY;
-    } else if (toolManager->getActiveTool() == ToolMode::Select) {
-        toolManager->onMouseMove(event->position());
-    }
+    // TODO: Invert y axis
+    toolManager->onMouseMove(event->position());
     update();
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
-    makeCurrent();
     // TODO: Create InputHandler class
-    if (toolManager->getActiveTool() == ToolMode::Select) {
-        toolManager->onMouseRelease(event->position());
-    }
+    toolManager->onMouseRelease(event->position());
     update();
 }
 
@@ -107,23 +86,14 @@ void GLWidget::wheelEvent(QWheelEvent* event)
 
 void GLWidget::keyPressEvent(QKeyEvent* event)
 {
-    if (event->key() == Qt::Key_Control) {
-        isCtrlHeld = true;
-    }
-    QOpenGLWidget::keyPressEvent(event);
+    toolManager->onKeyDown((Qt::Key)event->key());
 }
 
 void GLWidget::keyReleaseEvent(QKeyEvent* event)
 {
-    if (event->key() == Qt::Key_Control) {
-        isCtrlHeld = false;
-    }
+    toolManager->onKeyUp((Qt::Key)event->key());
 
     switch (event->key()) {
-        case Qt::Key_Control: {
-            isCtrlHeld = false;
-            break;
-        }
         case Qt::Key_Delete: {
             if (ToolManager::selectedEditMode == EditMode::Object) {
                 const std::unordered_set<std::weak_ptr<Mesh>>& meshes = selectionManager->getSelectedMeshes();
@@ -157,13 +127,4 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
         }
     }
     QOpenGLWidget::keyReleaseEvent(event);
-}
-
-pmp::vec2 GLWidget::screenSpaceToNDC(pmp::vec2 point)
-{
-    pmp::vec2 ndc;
-    // Map 0 -> width to -1 -> 1
-    ndc[0] = 2.0f * point[0] / width() - 1.0f;
-    ndc[1] = 2.0f * point[1] / height() - 1.0f;
-    return ndc;
 }
