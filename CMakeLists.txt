@@ -78,39 +78,45 @@ set(APPLICATION_SOURCES
 
 qt_add_resources(RESOURCES resources.qrc)
 
-qt_add_executable(mixer
-    WIN32 MACOSX_BUNDLE
-    main.cpp
+# Compile into standalone binary so tests can link to it
+add_library(mixer_lib
     ${UI_SOURCES}
     ${RENDERER_SOURCES}
     ${CORE_SOURCES}
     ${APPLICATION_SOURCES}
-    ${RESOURCES}
 )
-
-target_include_directories(mixer
-    PRIVATE
+target_link_libraries(mixer_lib
+    PUBLIC
+        Qt::Core
+        Qt::Widgets
+        Qt::OpenGLWidgets
+        pmp
+)
+if(WIN32)
+    target_link_libraries(mixer_lib PUBLIC opengl32)
+endif()
+target_include_directories(mixer_lib
+    PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/Core
         ${CMAKE_CURRENT_SOURCE_DIR}/Renderer
         ${CMAKE_CURRENT_SOURCE_DIR}/UI
         ${CMAKE_CURRENT_SOURCE_DIR}/Application
 )
 
-# Enable all warnings on GCC/Clang
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    target_compile_options(mixer PRIVATE -Wall -Wextra -Wpedantic)
-endif()
-
-target_link_libraries(mixer
-    PRIVATE
-        Qt::Core
-        Qt::Widgets
-        Qt::OpenGLWidgets
-        pmp
+qt_add_executable(mixer
+    WIN32 MACOSX_BUNDLE
+    main.cpp
+    ${RESOURCES}
 )
 
-if(WIN32)
-    target_link_libraries(mixer PRIVATE opengl32)
+target_link_libraries(mixer
+    PUBLIC
+        mixer_lib
+)
+
+# Enable all warnings on GCC/Clang
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+    target_compile_options(mixer PUBLIC -Wall -Wextra -Wpedantic)
 endif()
 
 include(GNUInstallDirs)

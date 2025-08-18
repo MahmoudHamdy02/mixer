@@ -11,7 +11,19 @@ foreach(test_src ${TEST_SOURCES})
     # Create test executable
     add_executable(${test_name} ${test_src})
 
-    target_link_libraries(${test_name} PRIVATE Qt6::Test) # or Qt5::Test
+    target_link_libraries(${test_name} 
+    PRIVATE 
+        Qt6::Test
+        mixer_lib
+    )
+
+    target_include_directories(${test_name}
+    PRIVATE
+        ${CMAKE_SOURCE_DIR}/Core
+        ${CMAKE_SOURCE_DIR}/Renderer
+        ${CMAKE_SOURCE_DIR}/UI
+        ${CMAKE_SOURCE_DIR}/Application
+)
 
     # Register with CTest
     add_test(NAME ${test_name} COMMAND ${test_name})
