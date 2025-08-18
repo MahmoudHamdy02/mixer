@@ -7,6 +7,9 @@ qt_standard_project_setup()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+add_subdirectory(tests)
+
+# PMP configuration
 set(PMP_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
 set(PMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(PMP_BUILD_DOCS OFF CACHE BOOL "" FORCE)
@@ -124,15 +127,3 @@ qt_generate_deploy_app_script(
     NO_UNSUPPORTED_PLATFORM_ERROR
 )
 install(SCRIPT ${deploy_script})
-
-add_executable(mixer_test
-    tests/basictest.cpp
-    tests/basictest.h
-    tests/main.cpp
-)
-
-target_link_libraries(mixer_test
-    Qt::Core
-    Qt::Gui
-    Qt::Test
-)
