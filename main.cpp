@@ -20,6 +20,15 @@ int main(int argc, char* argv[])
     ToolManager* toolManager = new ToolManager();
 
     SceneController* scene = new SceneController();
+
+    // Add some default objects to the scene
+    scene->addMesh(std::make_shared<Mesh>("Sphere1"));
+    scene->getMeshes()[0]->translate(pmp::vec3(3, 0, 0));
+    scene->addMesh(std::make_shared<Mesh>("Sphere2"));
+    scene->getMeshes()[1]->translate(pmp::vec3(0, 0, -3));
+    scene->addMesh(std::make_shared<Mesh>("Sphere3"));
+    scene->getMeshes()[2]->translate(pmp::vec3(0, 0, -9));
+
     SelectionManager* selectionManager = new SelectionManager(scene);
 
     Renderer* renderer = new Renderer(scene, selectionManager);

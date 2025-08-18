@@ -7,13 +7,6 @@
 
 SceneController::SceneController()
 {
-    meshes.push_back(std::make_unique<Mesh>("Sphere1"));
-    meshes[0]->translate(pmp::vec3(3, 0, 0));
-    meshes.push_back(std::make_unique<Mesh>("Sphere2"));
-    meshes[1]->translate(pmp::vec3(0, 0, -3));
-    meshes.push_back(std::make_unique<Mesh>("Sphere3"));
-    meshes[2]->translate(pmp::vec3(0, 0, -9));
-    emit(onMeshListChanged(meshes));
 }
 
 const std::vector<std::shared_ptr<Mesh>>& SceneController::getMeshes() const
