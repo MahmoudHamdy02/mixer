@@ -42,7 +42,14 @@ Handles mesh data and geometry operations for all the objects in the scene
 
 ## Testing
 
-After building, run the `mixer_test` executable to run all tests
+After building, each test file will be compiled to an executable in the `build/tests` folder that can be run separately.
+
+To run all tests:
+
+```bash
+cd tests
+ctest
+```
 
 ## Future Plans:
 
