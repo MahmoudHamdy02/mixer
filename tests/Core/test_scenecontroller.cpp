@@ -51,6 +51,23 @@ private slots:
         QCOMPARE(meshes.size(), 1);
     }
 
+    void testAddingMeshTwiceDoesntAdd()
+    {
+        auto mesh = std::make_shared<Mesh>("AddedTwice");
+        QSignalSpy spy(scene, &SceneController::onMeshListChanged);
+
+        scene->addMesh(mesh);
+        scene->addMesh(mesh);
+
+        QCOMPARE(scene->getMeshes().size(), 1);
+        QCOMPARE(scene->getMeshes()[0], mesh);
+
+        QCOMPARE(spy.count(), 1);
+        auto args = spy.takeFirst();
+        auto meshes = args.at(0).value<std::vector<std::shared_ptr<Mesh>>>();
+        QCOMPARE(meshes.size(), 1);
+    }
+
     void testDeleteMesh()
     {
         auto mesh = std::make_shared<Mesh>("Mesh2");

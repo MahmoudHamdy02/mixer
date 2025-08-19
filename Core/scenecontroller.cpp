@@ -5,10 +5,6 @@
 
 #include "mesh.h"
 
-SceneController::SceneController()
-{
-}
-
 const std::vector<std::shared_ptr<Mesh>>& SceneController::getMeshes() const
 {
     return meshes;
@@ -17,6 +13,12 @@ const std::vector<std::shared_ptr<Mesh>>& SceneController::getMeshes() const
 void SceneController::addMesh(const std::shared_ptr<Mesh>& mesh)
 {
     // TODO: Check mesh name conflict
+    auto it = std::find(meshes.begin(), meshes.end(), mesh);
+
+    // Don't add if it already exists
+    if (it != meshes.end())
+        return;
+
     meshes.push_back(mesh);
 
     emit(onMeshListChanged(meshes));

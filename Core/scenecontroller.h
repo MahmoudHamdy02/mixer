@@ -15,8 +15,6 @@ class SceneController : public QObject
     std::vector<std::shared_ptr<Mesh>> meshes;
 
 public:
-    SceneController();
-
     const std::vector<std::shared_ptr<Mesh>>& getMeshes() const;
 
     void addMesh(const std::shared_ptr<Mesh>& mesh);
