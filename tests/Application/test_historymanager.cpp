@@ -52,13 +52,11 @@ private slots:
         QCOMPARE(value, 5);
 
         QCOMPARE(undoSpy.count(), 1);
-        auto undoArgs = undoSpy.takeFirst();
-        int undoStackSize = undoArgs.at(0).value<int>();
+        int undoStackSize = undoSpy.takeFirst().at(0).value<int>();
         QCOMPARE(undoStackSize, 1);
 
         QCOMPARE(redoSpy.count(), 1);
-        auto redoArgs = redoSpy.takeFirst();
-        int redoStackSize = redoArgs.at(0).value<int>();
+        int redoStackSize = redoSpy.takeFirst().at(0).value<int>();
         QCOMPARE(redoStackSize, 0);
     }
 
@@ -76,8 +74,7 @@ private slots:
         QCOMPARE(undoStackSize, 1);
 
         QCOMPARE(redoSpy.count(), 1);
-        auto redoArgs = redoSpy.takeFirst();
-        int redoStackSize = redoArgs.at(0).value<int>();
+        int redoStackSize = redoSpy.takeFirst().at(0).value<int>();
         QCOMPARE(redoStackSize, 0);
 
         historyManager->undo();
@@ -92,6 +89,7 @@ private slots:
         redoStackSize = redoSpy.takeFirst().at(0).value<int>();
         QCOMPARE(redoStackSize, 1);
     }
+
     void testExecuteUndoRedoCommand()
     {
         QSignalSpy undoSpy(historyManager, &HistoryManager::onUndoStackSizeChanged);
@@ -106,8 +104,7 @@ private slots:
         QCOMPARE(undoStackSize, 1);
 
         QCOMPARE(redoSpy.count(), 1);
-        auto redoArgs = redoSpy.takeFirst();
-        int redoStackSize = redoArgs.at(0).value<int>();
+        int redoStackSize = redoSpy.takeFirst().at(0).value<int>();
         QCOMPARE(redoStackSize, 0);
 
         historyManager->undo();
@@ -123,6 +120,48 @@ private slots:
         QCOMPARE(redoStackSize, 1);
 
         historyManager->redo();
+
+        QCOMPARE(value, 5);
+
+        QCOMPARE(undoSpy.count(), 1);
+        undoStackSize = undoSpy.takeFirst().at(0).value<int>();
+        QCOMPARE(undoStackSize, 1);
+
+        QCOMPARE(redoSpy.count(), 1);
+        redoStackSize = redoSpy.takeFirst().at(0).value<int>();
+        QCOMPARE(redoStackSize, 0);
+    }
+
+    void testExecuteResetsRedoStack()
+    {
+        QSignalSpy undoSpy(historyManager, &HistoryManager::onUndoStackSizeChanged);
+        QSignalSpy redoSpy(historyManager, &HistoryManager::onRedoStackSizeChanged);
+
+        historyManager->executeCommand(std::make_unique<Add5Command>());
+
+        QCOMPARE(value, 5);
+
+        QCOMPARE(undoSpy.count(), 1);
+        int undoStackSize = undoSpy.takeFirst().at(0).value<int>();
+        QCOMPARE(undoStackSize, 1);
+
+        QCOMPARE(redoSpy.count(), 1);
+        int redoStackSize = redoSpy.takeFirst().at(0).value<int>();
+        QCOMPARE(redoStackSize, 0);
+
+        historyManager->undo();
+
+        QCOMPARE(value, 0);
+
+        QCOMPARE(undoSpy.count(), 1);
+        undoStackSize = undoSpy.takeFirst().at(0).value<int>();
+        QCOMPARE(undoStackSize, 0);
+
+        QCOMPARE(redoSpy.count(), 1);
+        redoStackSize = redoSpy.takeFirst().at(0).value<int>();
+        QCOMPARE(redoStackSize, 1);
+
+        historyManager->executeCommand(std::make_unique<Add5Command>());
 
         QCOMPARE(value, 5);
 
