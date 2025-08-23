@@ -11,6 +11,7 @@
 
 Mesh::Mesh(std::string name) : name(name)
 {
+    // TODO: Specify primitive type in constructor parameters
     // Primitives::createCube(surfaceMesh);
     Primitives::createSphere(surfaceMesh, 32, 16);
 

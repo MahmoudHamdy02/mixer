@@ -5,6 +5,7 @@
 #include <qtmetamacros.h>
 
 #include <memory>
+#include <queue>
 #include <vector>
 
 #include "camera.h"
@@ -25,6 +26,7 @@ class Renderer : public QObject, private QOpenGLExtraFunctions
     SelectionManager* selectionManager;
 
     std::vector<std::shared_ptr<MeshGL>> meshGLs;
+    std::queue<std::shared_ptr<Mesh>> meshQueue;
 
     Camera camera;
     pmp::mat4 projection;
@@ -76,4 +78,6 @@ public:
 
     void addMeshGL(const std::shared_ptr<MeshGL>& meshGL);
     void deleteMeshGL(const std::shared_ptr<MeshGL>& MeshGL);
+
+    void queueCreateMeshGL(const std::shared_ptr<Mesh>& mesh);
 };

@@ -10,6 +10,8 @@
 #include <qtextedit.h>
 #include <qwidget.h>
 
+#include <memory>
+
 #include "Widgets/glwidget.h"
 #include "Widgets/lefttoolbar.h"
 #include "Widgets/menubar.h"
@@ -75,6 +77,13 @@ void MainWindow::setupMenubar()
     connect(menubar->exitAction, &QAction::triggered, this, &MainWindow::close);
     connect(menubar->undoAction, &QAction::triggered, this, [&]() { historyManager->undo(); });
     connect(menubar->redoAction, &QAction::triggered, this, [&]() { historyManager->redo(); });
+    connect(menubar->addSphereAction, &QAction::triggered, this, [&]() {
+        // TODO: Create AddMeshCommand
+        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>("Sphere");
+        scene->addMesh(mesh);
+        renderer->queueCreateMeshGL(mesh);
+        glWidget->update();
+    });
 
     setMenuBar(menubar);
 }
