@@ -18,6 +18,11 @@ public:
     QAction* undoAction;
     QAction* redoAction;
 
+    QMenu* add;
+    QMenu* addMesh;
+    QAction* addCubeAction;
+    QAction* addSphereAction;
+
     MenuBar(QWidget* parent = nullptr);
 
 public slots:

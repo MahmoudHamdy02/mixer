@@ -1,6 +1,7 @@
 #include "menubar.h"
 
 #include <qkeysequence.h>
+#include <qmenu.h>
 #include <qmenubar.h>
 #include <qnamespace.h>
 #include <qwidget.h>
@@ -31,6 +32,22 @@ MenuBar::MenuBar(QWidget* parent) : QMenuBar(parent)
     redoAction->setShortcut(Qt::CTRL | Qt::Key_Y);
     redoAction->setDisabled(true);
     edit->addAction(redoAction);
+
+    // Add menu
+    add = new QMenu("Add", this);
+    addMenu(add);
+
+    // Add -> Mesh
+    addMesh = new QMenu("Mesh", add);
+    add->addMenu(addMesh);
+
+    // Add -> Mesh -> Cube
+    addCubeAction = new QAction("Cube", addMesh);
+    addMesh->addAction(addCubeAction);
+
+    // Add -> Mesh -> Sphere
+    addSphereAction = new QAction("Sphere", addMesh);
+    addMesh->addAction(addSphereAction);
 }
 
 void MenuBar::toggleUndoButtonStatus(int stackSize)
