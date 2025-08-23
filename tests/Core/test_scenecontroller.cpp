@@ -6,6 +6,7 @@
 #include <memory>
 #include <vector>
 
+#include "Geometry/primitives.h"
 #include "scenecontroller.h"
 
 class TestSceneController : public QObject
@@ -37,7 +38,7 @@ private slots:
 
     void testAddMesh()
     {
-        auto mesh = std::make_shared<Mesh>("Mesh1");
+        auto mesh = std::make_shared<Mesh>(Primitives::Type::Sphere, "Mesh1");
         QSignalSpy spy(scene, &SceneController::onMeshListChanged);
 
         scene->addMesh(mesh);
@@ -53,7 +54,7 @@ private slots:
 
     void testAddingMeshTwiceDoesntAdd()
     {
-        auto mesh = std::make_shared<Mesh>("AddedTwice");
+        auto mesh = std::make_shared<Mesh>(Primitives::Type::Sphere, "AddedTwice");
         QSignalSpy spy(scene, &SceneController::onMeshListChanged);
 
         scene->addMesh(mesh);
@@ -70,7 +71,7 @@ private slots:
 
     void testDeleteMesh()
     {
-        auto mesh = std::make_shared<Mesh>("Mesh2");
+        auto mesh = std::make_shared<Mesh>(Primitives::Type::Sphere, "Mesh2");
         scene->addMesh(mesh);
 
         QSignalSpy spy(scene, &SceneController::onMeshListChanged);
@@ -82,7 +83,7 @@ private slots:
 
     void testDeleteNonExistentMesh()
     {
-        auto mesh = std::make_shared<Mesh>("Mesh3");
+        auto mesh = std::make_shared<Mesh>(Primitives::Type::Sphere, "Mesh3");
         QSignalSpy spy(scene, &SceneController::onMeshListChanged);
 
         scene->deleteMesh(mesh);

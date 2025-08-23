@@ -77,9 +77,15 @@ void MainWindow::setupMenubar()
     connect(menubar->exitAction, &QAction::triggered, this, &MainWindow::close);
     connect(menubar->undoAction, &QAction::triggered, this, [&]() { historyManager->undo(); });
     connect(menubar->redoAction, &QAction::triggered, this, [&]() { historyManager->redo(); });
+    connect(menubar->addCubeAction, &QAction::triggered, this, [&]() {
+        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(Primitives::Type::Cube, "Cube");
+        scene->addMesh(mesh);
+        renderer->queueCreateMeshGL(mesh);
+        glWidget->update();
+    });
     connect(menubar->addSphereAction, &QAction::triggered, this, [&]() {
         // TODO: Create AddMeshCommand
-        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>("Sphere");
+        std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(Primitives::Type::Sphere, "Sphere");
         scene->addMesh(mesh);
         renderer->queueCreateMeshGL(mesh);
         glWidget->update();

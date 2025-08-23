@@ -1,5 +1,6 @@
 #include <QApplication>
 
+#include "Geometry/primitives.h"
 #include "Tools/cameratool.h"
 #include "Tools/selecttool.h"
 #include "UI/mainwindow.h"
@@ -22,11 +23,11 @@ int main(int argc, char* argv[])
     SceneController* scene = new SceneController();
 
     // Add some default objects to the scene
-    scene->addMesh(std::make_shared<Mesh>("Sphere1"));
+    scene->addMesh(std::make_shared<Mesh>(Primitives::Type::Sphere, "Sphere1"));
     scene->getMeshes()[0]->translate(pmp::vec3(3, 0, 0));
-    scene->addMesh(std::make_shared<Mesh>("Sphere2"));
+    scene->addMesh(std::make_shared<Mesh>(Primitives::Type::Sphere, "Sphere2"));
     scene->getMeshes()[1]->translate(pmp::vec3(0, 0, -3));
-    scene->addMesh(std::make_shared<Mesh>("Sphere3"));
+    scene->addMesh(std::make_shared<Mesh>(Primitives::Type::Sphere, "Sphere3"));
     scene->getMeshes()[2]->translate(pmp::vec3(0, 0, -9));
 
     SelectionManager* selectionManager = new SelectionManager(scene);

@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "Geometry/primitives.h"
 #include "pmp/bounding_box.h"
 #include "pmp/mat_vec.h"
 #include "pmp/surface_mesh.h"
@@ -19,7 +20,7 @@ class Mesh
     pmp::BoundingBox aabb;
 
 public:
-    Mesh(std::string name);
+    Mesh(Primitives::Type type, std::string name);
 
     const std::string& getName() const;
     pmp::SurfaceMesh& getSurfaceMesh();

@@ -9,11 +9,16 @@
 #include "pmp/mat_vec.h"
 #include "pmp/surface_mesh.h"
 
-Mesh::Mesh(std::string name) : name(name)
+Mesh::Mesh(Primitives::Type type, std::string name) : name(name)
 {
-    // TODO: Specify primitive type in constructor parameters
-    // Primitives::createCube(surfaceMesh);
-    Primitives::createSphere(surfaceMesh, 32, 16);
+    switch (type) {
+        case Primitives::Type::Cube:
+            Primitives::createCube(surfaceMesh);
+            break;
+        case Primitives::Type::Sphere:
+            Primitives::createSphere(surfaceMesh, 32, 16);
+            break;
+    }
 
     aabb = pmp::bounds(surfaceMesh);
     center = aabb.center();
