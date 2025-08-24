@@ -8,13 +8,15 @@
 
 class MeshGL : private QOpenGLExtraFunctions
 {
+    bool gpuInitalized = false;
+
     unsigned int VBO = 0, VAO = 0, EBO = 0;
     unsigned int numIndices = 0;
 
     unsigned int instancedVAO = 0, instancedVBO = 0, instancedEBO = 0, instancedDataVBO = 0;
     unsigned int instancedNumIndices = 0;
 
-    void setup(const std::shared_ptr<Mesh>& mesh);
+    void setup();
 
 public:
     std::shared_ptr<Mesh> mesh;

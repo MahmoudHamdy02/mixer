@@ -75,13 +75,6 @@ void Renderer::resize(int width, int height)
 
 void Renderer::render()
 {
-    // MeshGL creation must happen within a current OpenGL context in initialize() or render()
-    // Create queued MeshGLs
-    while (!meshQueue.empty()) {
-        meshGLs.push_back(std::make_shared<MeshGL>(meshQueue.front()));
-        meshQueue.pop();
-    }
-
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
@@ -228,11 +221,6 @@ void Renderer::deleteMeshGL(const std::shared_ptr<MeshGL>& meshGL)
     if (it != meshGLs.end()) {
         meshGLs.erase(it);
     }
-}
-
-void Renderer::queueCreateMeshGL(const std::shared_ptr<Mesh>& mesh)
-{
-    meshQueue.push(mesh);
 }
 
 void Renderer::moveCamera(float offsetX, float offsetY)
