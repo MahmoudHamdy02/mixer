@@ -83,7 +83,6 @@ void MainWindow::setupMenubar()
         historyManager->executeCommand(std::make_unique<AddMeshCommand>(glWidget, scene, renderer, mesh));
     });
     connect(menubar->addSphereAction, &QAction::triggered, this, [&]() {
-        // TODO: Create AddMeshCommand
         std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(Primitives::Type::Sphere, "Sphere");
         historyManager->executeCommand(std::make_unique<AddMeshCommand>(glWidget, scene, renderer, mesh));
     });

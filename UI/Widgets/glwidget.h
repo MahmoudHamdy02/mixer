@@ -32,4 +32,6 @@ protected:
 public:
     GLWidget(SceneController* scene, Renderer* renderer, ToolManager* toolManager, SelectionManager* selectionManager,
              HistoryManager* historyManager, QWidget* parent = nullptr);
+
+    float getPixelDepth(int screenX, int screenY);
 };

@@ -41,22 +41,30 @@ void GLWidget::paintGL()
     renderer->render();
 }
 
+float GLWidget::getPixelDepth(int screenX, int screenY)
+{
+    makeCurrent();
+    GLfloat depth;
+    glReadPixels(screenX, screenY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
+    doneCurrent();
+    return depth;
+}
+
 void GLWidget::mousePressEvent(QMouseEvent* event)
 {
-    toolManager->onMousePress(event->position());
+    toolManager->onMousePress(QPointF(event->position().x(), height() - event->position().y()));
 }
 
 void GLWidget::mouseMoveEvent(QMouseEvent* event)
 {
-    // TODO: Invert y axis
-    toolManager->onMouseMove(event->position());
+    toolManager->onMouseMove(QPointF(event->position().x(), height() - event->position().y()));
     update();
 }
 
 void GLWidget::mouseReleaseEvent(QMouseEvent* event)
 {
     // TODO: Create InputHandler class
-    toolManager->onMouseRelease(event->position());
+    toolManager->onMouseRelease(QPointF(event->position().x(), height() - event->position().y()));
     update();
 }
 
@@ -106,7 +114,7 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
                 for (std::shared_ptr<Mesh> mesh : meshes) {
                     mesh->deleteSelectedVertices();
                 }
-                renderer->updateMeshes();
+                renderer->queueUpdateMeshes();
                 update();
             }
         }

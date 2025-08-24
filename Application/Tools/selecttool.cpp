@@ -25,9 +25,9 @@ void SelectTool::onMouseMove(QPointF pos)
     isDrawingSelectionRectangle = true;
     renderer->setDrawSelectionRectangle(true);
     float minX = std::min(mousePos.x(), newMousePos.x());
-    float minY = glWidget->height() - std::min(mousePos.y(), newMousePos.y());
+    float minY = std::min(mousePos.y(), newMousePos.y());
     float maxX = std::max(mousePos.x(), newMousePos.x());
-    float maxY = glWidget->height() - std::max(mousePos.y(), newMousePos.y());
+    float maxY = std::max(mousePos.y(), newMousePos.y());
 
     pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
     pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
@@ -39,24 +39,26 @@ void SelectTool::onMouseRelease(QPointF pos)
     QPointF newMousePos = pos;
 
     float minX = std::min(mousePos.x(), newMousePos.x());
-    float minY = glWidget->height() - std::min(mousePos.y(), newMousePos.y());
+    float minY = std::min(mousePos.y(), newMousePos.y());
     float maxX = std::max(mousePos.x(), newMousePos.x());
-    float maxY = glWidget->height() - std::max(mousePos.y(), newMousePos.y());
+    float maxY = std::max(mousePos.y(), newMousePos.y());
 
-    pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, maxY));
-    pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, minY));
+    pmp::vec2 min = screenSpaceToNDC(pmp::vec2(minX, minY));
+    pmp::vec2 max = screenSpaceToNDC(pmp::vec2(maxX, maxY));
     if (ToolManager::selectedEditMode == EditMode::Vertex) {
         if (isDrawingSelectionRectangle) {
             selectionManager->selectVerticesInRectangle(min, max, renderer->getMVPMatrix(),
                                                         renderer->getCamera().front);
             // TODO: Only update buffers of changed meshes
-            renderer->updateMeshes();
+            renderer->queueUpdateMeshes();
+            glWidget->update();
         } else {
-            pmp::vec2 ndcClickPos = screenSpaceToNDC(pmp::vec2(newMousePos.x(), glWidget->height() - newMousePos.y()));
-            float depth = renderer->getPixelDepth((int)newMousePos.x(), (int)glWidget->height() - newMousePos.y());
+            pmp::vec2 ndcClickPos = screenSpaceToNDC(pmp::vec2(newMousePos.x(), newMousePos.y()));
+            float depth = glWidget->getPixelDepth((int)newMousePos.x(), (int)glWidget->height() - newMousePos.y());
             selectionManager->selectVertex(ndcClickPos[0], ndcClickPos[1], depth, renderer->getMVPMatrix(),
                                            renderer->getCamera().front);
-            renderer->updateMeshes();
+            renderer->queueUpdateMeshes();
+            glWidget->update();
         }
     } else {
         if (isDrawingSelectionRectangle) {

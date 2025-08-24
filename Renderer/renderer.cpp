@@ -75,6 +75,13 @@ void Renderer::resize(int width, int height)
 
 void Renderer::render()
 {
+    // TODO: store needsUpdate inside MeshGL
+    if (shouldUpdateMeshes) {
+        for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
+            meshGL->updateBuffers();
+        }
+    }
+
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
     glEnable(GL_DEPTH_TEST);
     glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
@@ -162,7 +169,7 @@ void Renderer::drawMesh(const std::shared_ptr<MeshGL>& mesh, bool outlined)
 Ray Renderer::mouseToWorldRay(float mouseX, float mouseY) const
 {
     float ndcX = (2.0f * mouseX) / screenWidth - 1.0f;
-    float ndcY = 1.0f - (2.0f * mouseY) / screenHeight;
+    float ndcY = (2.0f * mouseY) / screenHeight - 1.0f;
 
     pmp::vec4 clipPos = pmp::vec4(ndcX, ndcY, 1.0f, 1.0f);
 
@@ -202,11 +209,12 @@ void Renderer::updateMesh(const std::string& name)
     }
 }
 
-void Renderer::updateMeshes()
+void Renderer::queueUpdateMeshes()
 {
-    for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
-        meshGL->updateBuffers();
-    }
+    shouldUpdateMeshes = true;
+    // for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
+    //     meshGL->updateBuffers();
+    // }
 }
 
 void Renderer::addMeshGL(const std::shared_ptr<MeshGL>& meshGL)

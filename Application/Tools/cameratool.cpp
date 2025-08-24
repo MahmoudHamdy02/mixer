@@ -18,9 +18,9 @@ void CameraTool::onMouseMove(QPointF pos)
     QPointF offset = newMousePos - mousePos;
 
     if (isCtrlHeld) {
-        renderer->panCamera(offset.x(), offset.y());
+        renderer->panCamera(offset.x(), -offset.y());
     } else {
-        renderer->moveCamera(offset.x(), offset.y());
+        renderer->moveCamera(offset.x(), -offset.y());
     }
     mousePos = pos;
 }
