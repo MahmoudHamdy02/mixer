@@ -114,7 +114,6 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
                 for (std::shared_ptr<Mesh> mesh : meshes) {
                     mesh->deleteSelectedVertices();
                 }
-                renderer->queueUpdateMeshes();
                 update();
             }
         }

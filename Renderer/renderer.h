@@ -25,7 +25,6 @@ class Renderer : public QObject, private QOpenGLExtraFunctions
     SelectionManager* selectionManager;
 
     std::vector<std::shared_ptr<MeshGL>> meshGLs;
-    bool shouldUpdateMeshes = false;
 
     Camera camera;
     pmp::mat4 projection;
@@ -56,12 +55,10 @@ public:
     void render();
 
     const std::shared_ptr<MeshGL> getMeshGLFromMesh(const std::shared_ptr<Mesh>& mesh);
-    float getPixelDepth(int screenX, int screenY);
     void setDrawSelectionRectangle(bool value);
 
     Ray mouseToWorldRay(float mouseX, float mouseY) const;
     void updateMesh(const std::string& name);
-    void queueUpdateMeshes();
 
     const pmp::mat4& getModelMatrix() const;
     const pmp::mat4& getViewMatrix() const;

@@ -19,6 +19,9 @@ class Mesh
     // Axis Aligned Bounding Box
     pmp::BoundingBox aabb;
 
+    // Tracks if mesh has been changed since last read
+    bool dirty = false;
+
 public:
     Mesh(Primitives::Type type, std::string name);
 
@@ -27,9 +30,11 @@ public:
     const pmp::SurfaceMesh& getSurfaceMesh() const;
     const pmp::BoundingBox& getAABB() const;
     const pmp::Point& getCenter() const;
+    bool isDirty() const;
 
     void translate(pmp::vec3 vec);
 
+    void resetDirtyFlag();
     void setSelectedVertices(const std::vector<pmp::Vertex>& vertices);
     void unselectVertices();
 

@@ -49,6 +49,11 @@ const pmp::Point& Mesh::getCenter() const
     return center;
 }
 
+bool Mesh::isDirty() const
+{
+    return dirty;
+}
+
 void Mesh::translate(pmp::vec3 vec)
 {
     for (pmp::Vertex v : surfaceMesh.vertices()) {
@@ -56,6 +61,12 @@ void Mesh::translate(pmp::vec3 vec)
     }
     aabb = pmp::bounds(surfaceMesh);
     center = aabb.center();
+    dirty = true;
+}
+
+void Mesh::resetDirtyFlag()
+{
+    dirty = false;
 }
 
 void Mesh::setSelectedVertices(const std::vector<pmp::Vertex>& vertices)
@@ -69,6 +80,7 @@ void Mesh::setSelectedVertices(const std::vector<pmp::Vertex>& vertices)
     for (const pmp::Vertex& v : vertices) {
         selected[v] = 1.0f;
     }
+    dirty = true;
 }
 
 void Mesh::unselectVertices()
@@ -78,6 +90,7 @@ void Mesh::unselectVertices()
     for (const pmp::Vertex& v : surfaceMesh.vertices()) {
         selected[v] = 0.0f;
     }
+    dirty = true;
 }
 
 void Mesh::deleteSelectedVertices()
@@ -88,4 +101,5 @@ void Mesh::deleteSelectedVertices()
             surfaceMesh.delete_vertex(v);
     }
     surfaceMesh.garbage_collection();
+    dirty = true;
 }

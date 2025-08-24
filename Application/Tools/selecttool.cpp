@@ -49,15 +49,12 @@ void SelectTool::onMouseRelease(QPointF pos)
         if (isDrawingSelectionRectangle) {
             selectionManager->selectVerticesInRectangle(min, max, renderer->getMVPMatrix(),
                                                         renderer->getCamera().front);
-            // TODO: Only update buffers of changed meshes
-            renderer->queueUpdateMeshes();
             glWidget->update();
         } else {
             pmp::vec2 ndcClickPos = screenSpaceToNDC(pmp::vec2(newMousePos.x(), newMousePos.y()));
             float depth = glWidget->getPixelDepth((int)newMousePos.x(), (int)glWidget->height() - newMousePos.y());
             selectionManager->selectVertex(ndcClickPos[0], ndcClickPos[1], depth, renderer->getMVPMatrix(),
                                            renderer->getCamera().front);
-            renderer->queueUpdateMeshes();
             glWidget->update();
         }
     } else {

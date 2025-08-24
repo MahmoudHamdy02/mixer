@@ -75,10 +75,10 @@ void Renderer::resize(int width, int height)
 
 void Renderer::render()
 {
-    // TODO: store needsUpdate inside MeshGL
-    if (shouldUpdateMeshes) {
-        for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
+    for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
+        if (meshGL->mesh->isDirty()) {
             meshGL->updateBuffers();
+            meshGL->mesh->resetDirtyFlag();
         }
     }
 
@@ -192,13 +192,6 @@ const std::shared_ptr<MeshGL> Renderer::getMeshGLFromMesh(const std::shared_ptr<
     return std::shared_ptr<MeshGL>(nullptr);
 }
 
-float Renderer::getPixelDepth(int screenX, int screenY)
-{
-    GLfloat depth;
-    glReadPixels(screenX, screenY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &depth);
-    return depth;
-}
-
 void Renderer::updateMesh(const std::string& name)
 {
     for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
@@ -207,14 +200,6 @@ void Renderer::updateMesh(const std::string& name)
             break;
         }
     }
-}
-
-void Renderer::queueUpdateMeshes()
-{
-    shouldUpdateMeshes = true;
-    // for (const std::shared_ptr<MeshGL>& meshGL : meshGLs) {
-    //     meshGL->updateBuffers();
-    // }
 }
 
 void Renderer::addMeshGL(const std::shared_ptr<MeshGL>& meshGL)
