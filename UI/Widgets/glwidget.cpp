@@ -7,7 +7,6 @@
 #include <memory>
 #include <vector>
 
-#include "Commands/deletemeshcommand.h"
 #include "Commands/deletemeshescommand.h"
 #include "historymanager.h"
 #include "renderer.h"
@@ -91,21 +90,14 @@ void GLWidget::keyReleaseEvent(QKeyEvent* event)
             if (ToolManager::selectedEditMode == EditMode::Object) {
                 const std::unordered_set<std::weak_ptr<Mesh>>& meshes = selectionManager->getSelectedMeshes();
                 // TODO: Vertex delete command
-                if (meshes.size() == 1) {
-                    if (auto mesh = meshes.begin()->lock()) {
-                        historyManager->executeCommand(
-                            std::make_unique<DeleteMeshCommand>(this, scene, renderer, mesh));
+                std::vector<std::shared_ptr<Mesh>> meshesToBeDeleted;
+                for (const std::weak_ptr<Mesh>& w : meshes) {
+                    if (auto mesh = w.lock()) {
+                        meshesToBeDeleted.push_back(mesh);
                     }
-                } else if (meshes.size() > 1) {
-                    std::vector<std::shared_ptr<Mesh>> meshesToBeDeleted;
-                    for (const std::weak_ptr<Mesh>& w : meshes) {
-                        if (auto mesh = w.lock()) {
-                            meshesToBeDeleted.push_back(mesh);
-                        }
-                    }
-                    historyManager->executeCommand(
-                        std::make_unique<DeleteMeshesCommand>(this, scene, renderer, meshesToBeDeleted));
                 }
+                historyManager->executeCommand(
+                    std::make_unique<DeleteMeshesCommand>(this, scene, renderer, meshesToBeDeleted));
                 selectionManager->resetSelectedObjects();
 
                 update();
