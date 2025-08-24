@@ -12,6 +12,7 @@
 
 #include <memory>
 
+#include "Commands/addmeshcommand.h"
 #include "Widgets/glwidget.h"
 #include "Widgets/lefttoolbar.h"
 #include "Widgets/menubar.h"
@@ -79,16 +80,12 @@ void MainWindow::setupMenubar()
     connect(menubar->redoAction, &QAction::triggered, this, [&]() { historyManager->redo(); });
     connect(menubar->addCubeAction, &QAction::triggered, this, [&]() {
         std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(Primitives::Type::Cube, "Cube");
-        scene->addMesh(mesh);
-        renderer->addMeshGL(std::make_shared<MeshGL>(mesh));
-        glWidget->update();
+        historyManager->executeCommand(std::make_unique<AddMeshCommand>(glWidget, scene, renderer, mesh));
     });
     connect(menubar->addSphereAction, &QAction::triggered, this, [&]() {
         // TODO: Create AddMeshCommand
         std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(Primitives::Type::Sphere, "Sphere");
-        scene->addMesh(mesh);
-        renderer->addMeshGL(std::make_shared<MeshGL>(mesh));
-        glWidget->update();
+        historyManager->executeCommand(std::make_unique<AddMeshCommand>(glWidget, scene, renderer, mesh));
     });
 
     setMenuBar(menubar);

@@ -65,6 +65,7 @@ set(APPLICATION_SOURCES
     Application/historymanager.cpp
     Application/historymanager.h
     Application/Commands/command.h
+    Application/Commands/addmeshcommand.h
     Application/Commands/deletemeshescommand.h
     Application/toolmanager.cpp
     Application/toolmanager.h
