@@ -15,6 +15,8 @@ cmake -DCMAKE_BUILD_TYPE=Debug ..
 cmake --build .
 ```
 
+You can use `cmake --build . --target mixer_lib` to skip compiling the tests.
+
 Note: On Windows you might need to use `windeployqt` or manually copy some needed dlls next to the `.exe`, including `qwindowsd.dll` in a `platforms/` folder next to it.
 
 ## Dependencies
