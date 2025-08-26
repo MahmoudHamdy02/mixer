@@ -34,6 +34,7 @@ public:
 
     void translate(pmp::vec3 vec);
 
+    void setName(const std::string& name);
     void resetDirtyFlag();
     void setSelectedVertices(const std::vector<pmp::Vertex>& vertices);
     void unselectVertices();
