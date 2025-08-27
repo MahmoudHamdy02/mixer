@@ -103,8 +103,3 @@ void Mesh::deleteSelectedVertices()
     surfaceMesh.garbage_collection();
     dirty = true;
 }
-
-void Mesh::setName(const std::string& name)
-{
-    this->name = name;
-}
